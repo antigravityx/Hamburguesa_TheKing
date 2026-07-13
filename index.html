@@ -23,94 +23,21 @@
     </header>
 
     <main class="container">
-        <!-- Categorías / Tabs -->
+        <!-- Categorías / Tabs de navegación -->
         <nav class="categories">
-            <button class="category-btn active" data-target="burgers">Hamburguesas</button>
-            <button class="category-btn" data-target="milanesas">Milanesas</button>
-            <button class="category-btn" data-target="empanadas">Empanadas</button>
+            <button class="category-btn active" data-target="promos">Promociones</button>
+            <button class="category-btn" data-target="premium">Hamburguesas Premium</button>
+            <button class="category-btn" data-target="clasicas">Hamburguesas Clásicas</button>
+            <button class="category-btn" data-target="pizzas">Pizzas</button>
+            <button class="category-btn" data-target="papas">Papas Fritas</button>
+            <button class="category-btn" data-target="bebidas">Bebidas</button>
         </nav>
 
-        <!-- Sección Hamburguesas -->
-        <section id="burgers" class="menu-section active">
-            <h2 class="section-title">Clásicos The King</h2>
-            <div class="products-grid">
-                <!-- Producto 1 -->
-                <article class="product-card glassmorphism">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Doble King">
-                    </div>
-                    <div class="product-info">
-                        <h3>Doble King</h3>
-                        <p>Doble carne, doble cheddar, bacon crujiente, cebolla caramelizada y salsa The King.</p>
-                        <div class="product-action">
-                            <span class="price">$15000</span>
-                            <button class="add-to-cart" data-id="1" data-name="Doble King" data-price="15000">
-                                <i class="ri-add-line"></i> Agregar
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Producto 2 -->
-                <article class="product-card glassmorphism">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1594212202875-10ebdb9276d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Crispy Chicken">
-                    </div>
-                    <div class="product-info">
-                        <h3>Crispy Chicken</h3>
-                        <p>Pollo frito extra crujiente, lechuga, tomate y mayonesa al ajo.</p>
-                        <div class="product-action">
-                            <span class="price">$13500</span>
-                            <button class="add-to-cart" data-id="2" data-name="Crispy Chicken" data-price="13500">
-                                <i class="ri-add-line"></i> Agregar
-                            </button>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <!-- Sección Milanesas -->
-        <section id="milanesas" class="menu-section">
-            <h2 class="section-title">Milanesas XL</h2>
-            <div class="products-grid">
-                <article class="product-card glassmorphism">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Napolitana King">
-                    </div>
-                    <div class="product-info">
-                        <h3>Napolitana King</h3>
-                        <p>Salsa de tomate, jamón, muzzarella abundante y orégano. Para compartir.</p>
-                        <div class="product-action">
-                            <span class="price">$22000</span>
-                            <button class="add-to-cart" data-id="3" data-name="Napolitana King" data-price="22000">
-                                <i class="ri-add-line"></i> Agregar
-                            </button>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <!-- Sección Empanadas -->
-        <section id="empanadas" class="menu-section">
-            <h2 class="section-title">Nuestras Empanadas</h2>
-            <div class="products-grid">
-                <article class="product-card glassmorphism">
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1626200419199-391ae4be7a41?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Docena Carne">
-                    </div>
-                    <div class="product-info">
-                        <h3>Docena Carne Cortada a Cuchillo</h3>
-                        <p>Carne seleccionada, huevo, aceitunas y especias. Jugosas y espectaculares.</p>
-                        <div class="product-action">
-                            <span class="price">$14000</span>
-                            <button class="add-to-cart" data-id="4" data-name="Docena Empanadas Carne" data-price="14000">
-                                <i class="ri-add-line"></i> Agregar
-                            </button>
-                        </div>
-                    </div>
-                </article>
+        <!-- Contenedor único dinámico para productos -->
+        <section id="menu-section" class="menu-section active">
+            <h2 class="section-title" id="section-title">Promociones</h2>
+            <div class="products-grid" id="products-grid">
+                <!-- Se inyecta dinámicamente con JS -->
             </div>
         </section>
     </main>
