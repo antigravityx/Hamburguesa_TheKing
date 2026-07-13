@@ -18,6 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutBtn = document.getElementById('checkout-btn');
     const toast = document.getElementById('toast');
 
+    // Formulario de datos
+    const checkoutForm = document.getElementById('checkout-form');
+    const customerName = document.getElementById('customer-name');
+    const customerAddress = document.getElementById('customer-address');
+    const paymentMethod = document.getElementById('payment-method');
+
     // --- NAVEGACIÓN DE CATEGORÍAS ---
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -81,8 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<p class="empty-cart-msg">Tu carrito está vacío</p>';
             cartTotal.textContent = '$0';
+            if (checkoutForm) checkoutForm.style.display = 'none';
             return;
         }
+
+        if (checkoutForm) checkoutForm.style.display = 'flex';
 
         let total = 0;
         cart.forEach(item => {
@@ -132,18 +141,32 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast("El carrito está vacío");
             return;
         }
+        
+        const name = customerName.value.trim();
+        const address = customerAddress.value.trim();
+        const payment = paymentMethod.value;
+
+        if (!name || !address) {
+            showToast("¡Por favor completa tu Nombre y Dirección!");
+            return;
+        }
 
         let total = 0;
         let message = `👑 *NUEVO PEDIDO - THE KING BURGER* 👑%0A%0A`;
         
+        message += `👤 *Cliente:* ${name}%0A`;
+        message += `📍 *Dirección:* ${address}%0A`;
+        message += `💵 *Pago:* ${payment}%0A%0A`;
+        message += `🍔 *DETALLE DEL PEDIDO:*%0A`;
+
         cart.forEach(item => {
             const subtotal = item.price * item.quantity;
             total += subtotal;
             message += `▪ ${item.quantity}x ${item.name} ($${item.price}) = $${subtotal}%0A`;
         });
 
-        message += `%0A*TOTAL: $${total.toLocaleString('es-AR')}*%0A%0A`;
-        message += `📍 _Por favor, envíame los datos para la entrega._`;
+        message += `%0A*TOTAL A PAGAR: $${total.toLocaleString('es-AR')}*%0A%0A`;
+        message += `_¡Muchas gracias por elegirnos!_`;
 
         const url = `https://wa.me/${phoneWhatsApp}?text=${message}`;
         window.open(url, '_blank');

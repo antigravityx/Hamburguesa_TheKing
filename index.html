@@ -125,6 +125,17 @@
             <!-- Items se insertan aquí vía JS -->
             <p class="empty-cart-msg">Tu carrito está vacío</p>
         </div>
+        
+        <!-- Formulario de Datos para WhatsApp -->
+        <div class="checkout-form" id="checkout-form" style="display: none;">
+            <input type="text" id="customer-name" placeholder="Tu Nombre y Apellido" required>
+            <input type="text" id="customer-address" placeholder="Dirección de Envío" required>
+            <select id="payment-method">
+                <option value="Efectivo">Pago en Efectivo</option>
+                <option value="Transferencia">Transferencia (Alias/CBU)</option>
+            </select>
+        </div>
+
         <div class="cart-footer">
             <div class="total">
                 <span>Total:</span>
