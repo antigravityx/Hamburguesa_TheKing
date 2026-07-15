@@ -8,94 +8,94 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 id: "promo-1",
                 name: "3 Hambur Gruesas Especiales",
-                desc: "Pan Brioche, Blend de Carne, Queso, Tomate, Huevo, Jamon, Mayonesa Casera. + Papas Fritas.",
+                desc: "Pan Brioche, Blend de Carne, Queso, Tomate, Huevo, Jamón, Mayonesa Casera. + Papas Fritas.",
                 price: 19000,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "promo-2",
-                name: "2 Bur Gruesas Cheese \"Doble !\"",
+                name: "2 Bur Gruesas Cheese \"Doble!\"",
                 desc: "Pan Brioche, Blend de Carne, Queso Cheddar, Mayonesa Casera. + Papas Fritas.",
                 price: 18000,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "promo-3",
                 name: "2 Hambur Provolone Simple",
-                desc: "Pan Brioche, Blend de Carne, Queso (Provolone), Mayonesa Casera. + Papas Fritas.",
+                desc: "Pan Brioche, Blend de Carne, Queso Provolone, Mayonesa Casera. + Papas Fritas.",
                 price: 10000,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "promo-4",
-                name: "2 Provolone \"Doble !\"",
-                desc: "Pan Brioche, Blend de Carne, Queso (Provolone), Mayonesa Casera. + Papas Fritas.",
+                name: "2 Provolone \"Doble!\"",
+                desc: "Pan Brioche, Blend de Carne, Queso Provolone, Mayonesa Casera. + Papas Fritas.",
                 price: 18000,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "promo-5",
                 name: "2 Cleopatra Simple",
                 desc: "Pan Brioche, Blend de Carne, Queso Cheddar, Panceta, Mayonesa Casera. + Papas Fritas.",
                 price: 12000,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "promo-6",
                 name: "2 Arturo Simple",
                 desc: "Pan Brioche, Blend de Carne, Queso Tybo, Mayonesa Casera. + Papas Fritas.",
                 price: 12000,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             }
         ],
         premium: [
             {
                 id: "premium-arturo",
-                name: "Arturo Premium",
-                desc: "Pan Brioche, Blend de Carne, Queso Tybo, Huevo, Mayonesa Casera. Incluye papas.",
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                name: "Arturo",
+                desc: "Pan Brioche, Blend de Carne, Queso Tybo, Huevo, Mayonesa Casera. ¡Incluye papas!",
+                img: "",
                 sizes: { doble: 9000, triple: 12000 }
             },
             {
                 id: "premium-alejandro",
                 name: "Alejandro Magno",
-                desc: "Pan Brioche, Blend de Carne, Queso Cheddar, Cebolla Caramelizada, Mayonesa Casera. Incluye papas.",
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                desc: "Pan Brioche, Blend de Carne, Queso Cheddar, Cebolla Caramelizada, Mayonesa Casera. ¡Incluye papas!",
+                img: "",
                 sizes: { doble: 9500, triple: 13000 }
             },
             {
                 id: "premium-cleopatra",
-                name: "Cleopatra Premium",
-                desc: "Pan Brioche, Blend de Carne, Queso Cheddar, Panceta, Mayonesa Casera. Incluye papas.",
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                name: "Cleopatra",
+                desc: "Pan Brioche, Blend de Carne, Queso Cheddar, Panceta, Mayonesa Casera. ¡Incluye papas!",
+                img: "",
                 sizes: { doble: 9500, triple: 13000 }
             },
             {
                 id: "premium-leonidas",
                 name: "Leónidas",
-                desc: "Pan Brioche, Mayonesa casera, Blend de Carne, Queso Tybo, Jamón y Morrones Ahumados. Incluye papas.",
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                desc: "Pan Brioche, Mayonesa Casera, Blend de Carne, Queso Tybo, Jamón y Morrones Ahumados. ¡Incluye papas!",
+                img: "",
                 sizes: { doble: 9500, triple: 13000 }
             },
             {
                 id: "premium-ragnar",
                 name: "Ragnar",
-                desc: "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Cheddar, Queso Tybo, Panceta, Huevo, Mayonesa Casera. Incluye papas.",
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                desc: "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Cheddar, Queso Tybo, Panceta, Huevo, Mayonesa Casera. ¡Incluye papas!",
+                img: "",
                 sizes: { doble: 10000, triple: 14000 }
             },
             {
                 id: "premium-lathgertha",
                 name: "Lathgertha",
-                desc: "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Tybo, Jamon Cocido, Huevo, Lechuga Repollada, Tomate, Mayonesa Casera. Incluye papas.",
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                desc: "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Tybo, Jamón Cocido, Huevo, Lechuga Repollada, Tomate, Mayonesa Casera. ¡Incluye papas!",
+                img: "",
                 sizes: { doble: 10000, triple: 14000 }
             },
             {
                 id: "premium-marcus",
                 name: "Marcus Aurelius",
-                desc: "Pan Brioche con Queso Parmesano, Blend de carne, Queso Cheddar x4, Panceta Ahumada, Pepinillos, Mayonesa Casera. Incluye papas.",
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                desc: "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Cheddar x4, Panceta Ahumada, Pepinillos, Mayonesa Casera. ¡Incluye papas!",
+                img: "",
                 sizes: { doble: 10000, triple: 14000 }
             }
         ],
@@ -103,16 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 id: "clasica-comun",
                 name: "Común",
-                desc: "Pan de papa, mayonesa casera, blend de carne, queso, tomate.",
+                desc: "Pan de papa, Mayonesa Casera, Blend de Carne, Queso, Tomate.",
                 price: 6500,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "clasica-especial",
                 name: "Especial",
-                desc: "Pan de papa, mayonesa casera, blend de carne, queso, jamón cocido, huevo, tomate.",
+                desc: "Pan de papa, Mayonesa Casera, Blend de Carne, Queso, Jamón Cocido, Huevo, Tomate.",
                 price: 7000,
-                img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             }
         ],
         pizzas: [
@@ -121,35 +121,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: "Pizza Mozzarella",
                 desc: "Masa casera, salsa, queso mozzarella, orégano, aceitunas.",
                 price: 8500,
-                img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "pizza-morrones",
                 name: "Pizza Morrones Ahumados",
                 desc: "Masa casera, salsa, queso mozzarella, jamón cocido, morrones ahumados, orégano, aceitunas.",
                 price: 9500,
-                img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "pizza-fugazzeta",
                 name: "Pizza Fugazzeta",
                 desc: "Masa casera, salsa, queso mozzarella, orégano, aceitunas, cebollas salteadas.",
                 price: 9000,
-                img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "pizza-calabresa",
                 name: "Pizza Calabresa",
                 desc: "Masa casera, salsa, queso mozzarella, orégano, calabresa.",
                 price: 9500,
-                img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "pizza-theking",
                 name: "Pizza The King",
                 desc: "Masa casera, salsa, queso mozzarella, tomates, orégano, huevos fritos.",
                 price: 10500,
-                img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             }
         ],
         papas: [
@@ -158,21 +158,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: "Papas Clásicas",
                 desc: "Papas fritas clásicas bastón crujientes.",
                 price: 9000,
-                img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "papas-cheddar",
-                name: "Papas Clásicas con Cheddar",
+                name: "Papas con Cheddar",
                 desc: "Papas fritas bastón bañadas con abundante queso cheddar fundido.",
                 price: 9500,
-                img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "papas-cheddar-panceta",
-                name: "Papas Clásicas con Cheddar y Panceta",
+                name: "Papas con Cheddar y Panceta",
                 desc: "Papas fritas bastón con queso cheddar fundido y panceta picada crujiente.",
                 price: 10500,
-                img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             }
         ],
         bebidas: [
@@ -181,21 +181,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: "Gaseosa 500ml",
                 desc: "Línea Coca-Cola, Sprite o Fanta bien fría.",
                 price: 3500,
-                img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "bebida-cerveza",
                 name: "Cerveza en Lata",
-                desc: "Lata Heineken o Stella Artois de 473ml helada.",
+                desc: "Lata de cerveza 473ml bien helada.",
                 price: 4500,
-                img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             },
             {
                 id: "bebida-agua",
                 name: "Agua Mineral 500ml",
                 desc: "Agua mineral con o sin gas bien fría.",
                 price: 2500,
-                img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                img: ""
             }
         ]
     };
@@ -230,8 +230,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const category = btn.getAttribute('data-target');
             
-            // Actualizar título
+            // Actualizar título con animación
             sectionTitle.textContent = btn.textContent;
+            sectionTitle.classList.remove('title-animate');
+            void sectionTitle.offsetWidth; // Trigger reflow
+            sectionTitle.classList.add('title-animate');
             
             // Renderizar productos
             renderProducts(category);
@@ -248,9 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        items.forEach(product => {
+        items.forEach((product, index) => {
             const card = document.createElement('article');
             card.classList.add('product-card', 'glassmorphism');
+            card.style.setProperty('--card-delay', `${index * 0.1}s`);
 
             let sizeSelectorHTML = '';
             let initialPrice = product.price;
@@ -266,10 +270,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             }
 
+            const imgHTML = product.img
+                ? `<div class="product-img"><img src="${product.img}" alt="${product.name}"></div>`
+                : '';
+
             card.innerHTML = `
-                <div class="product-img">
-                    <img src="${product.img}" alt="${product.name}">
-                </div>
+                ${imgHTML}
                 <div class="product-info">
                     <h3>${product.name}</h3>
                     <p>${product.desc}</p>
