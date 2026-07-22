@@ -26,6 +26,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const customerName = document.getElementById('customer-name');
     const customerAddress = document.getElementById('customer-address');
     const paymentMethod = document.getElementById('payment-method');
+    const aliasContainer = document.getElementById('alias-container');
+    const copyAliasBtn = document.getElementById('copy-alias-btn');
+
+    // Manejar visibilidad y lógica de copia de Alias
+    paymentMethod.addEventListener('change', () => {
+        if (paymentMethod.value === 'Transferencia') {
+            aliasContainer.style.display = 'flex';
+        } else {
+            aliasContainer.style.display = 'none';
+        }
+    });
+
+    copyAliasBtn.addEventListener('click', () => {
+        const alias = "olivares.95";
+        navigator.clipboard.writeText(alias).then(() => {
+            showToast("¡Alias copiado al portapapeles!");
+        }).catch(err => {
+            console.error('Error al copiar:', err);
+        });
+    });
 
     // --- NAVEGACIÓN Y RENDERIZADO ---
     categoryBtns.forEach(btn => {
@@ -61,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         items.forEach((product, index) => {
             const card = document.createElement('article');
             card.classList.add('product-card', 'glassmorphism');
-            card.style.setProperty('--card-delay', `${index * 0.1}s`);
+            card.style.setProperty('--card-delay', `${index * 0.08}s`);
 
             let sizeSelectorHTML = '';
             let initialPrice = product.price;
@@ -77,9 +97,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             }
 
-            const imgHTML = product.img
-                ? `<div class="product-img"><img src="${product.img}" alt="${product.name}"></div>`
+            const KING_LOGO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="%2313151f" rx="16"/><g transform="translate(60,60)"><path d="M40 160C40 90 240 90 280 160Z" fill="%23e60023"/><path d="M20 120L50 70L80 100L110 50L140 110Z" fill="%23ffb703"/><ellipse cx="140" cy="115" rx="7" ry="4" fill="%23fff"/><ellipse cx="190" cy="105" rx="7" ry="4" fill="%23fff"/><ellipse cx="230" cy="130" rx="7" ry="4" fill="%23fff"/><path d="M35 165L285 165L250 200L220 175L170 210L130 175Z" fill="%23ffb703"/><path d="M45 195C45 260 275 260 275 195Z" fill="%23b70425"/></g></svg>`;
+            
+            const badgeHTML = product.includesFries 
+                ? `<div class="product-badge">🍟 ¡Incluye Papas!</div>` 
                 : '';
+
+            const imgHTML = `<div class="product-img-wrapper">
+                    ${badgeHTML}
+                   </div>`;
 
             card.innerHTML = `
                 ${imgHTML}
@@ -116,7 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         const selectedSize = sizeBtn.getAttribute('data-size');
                         const selectedPrice = parseFloat(sizeBtn.getAttribute('data-price'));
 
-                        // Actualizar precio visualmente
+                        // Actualizar precio visualmente con animación
+                        priceSpan.classList.remove('price-pop');
+                        void priceSpan.offsetWidth; // Reflow
+                        priceSpan.classList.add('price-pop');
                         priceSpan.textContent = `$${selectedPrice.toLocaleString('es-AR')}`;
 
                         // Actualizar atributos del botón de agregar al carrito
@@ -197,11 +226,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<p class="empty-cart-msg">Tu carrito está vacío</p>';
             cartTotal.textContent = '$0';
-            if (checkoutForm) checkoutForm.style.display = 'none';
+            if (checkoutForm) {
+                checkoutForm.style.display = 'none';
+                aliasContainer.style.display = 'none';
+            }
             return;
         }
 
-        if (checkoutForm) checkoutForm.style.display = 'flex';
+        if (checkoutForm) {
+            checkoutForm.style.display = 'flex';
+            // Sincronizar visibilidad del alias al actualizar la UI del carrito
+            if (paymentMethod.value === 'Transferencia') {
+                aliasContainer.style.display = 'flex';
+            } else {
+                aliasContainer.style.display = 'none';
+            }
+        }
 
         let total = 0;
         cart.forEach(item => {
