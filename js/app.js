@@ -29,6 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const aliasContainer = document.getElementById('alias-container');
     const copyAliasBtn = document.getElementById('copy-alias-btn');
 
+    // Nuevos elementos para Delivery vs Retiro y GPS
+    const optionDelivery = document.getElementById('option-delivery');
+    const optionTakeaway = document.getElementById('option-takeaway');
+    const deliveryDetailsContainer = document.getElementById('delivery-details-container');
+    const takeawayDetailsContainer = document.getElementById('takeaway-details-container');
+    const gpsBtn = document.getElementById('gps-btn');
+    const gpsStatus = document.getElementById('gps-status');
+
+    let deliveryType = 'Delivery'; // 'Delivery' o 'Retiro'
+    let gpsCoordsUrl = ''; // Guardará el link de Google Maps si se pulsa el botón de GPS
+
     // Manejar visibilidad y lógica de copia de Alias
     paymentMethod.addEventListener('change', () => {
         if (paymentMethod.value === 'Transferencia') {
@@ -46,7 +57,74 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error al copiar:', err);
         });
     });
+    // Manejar alternancia entre Delivery y Retiro
+    optionDelivery.addEventListener('click', () => {
+        deliveryType = 'Delivery';
+        optionDelivery.style.background = 'var(--accent-color)';
+        optionDelivery.style.color = '#000';
+        optionDelivery.style.border = 'none';
+        
+        optionTakeaway.style.background = 'rgba(255,255,255,0.05)';
+        optionTakeaway.style.color = '#fff';
+        optionTakeaway.style.border = '1px solid var(--glass-border)';
 
+        deliveryDetailsContainer.style.display = 'block';
+        takeawayDetailsContainer.style.display = 'none';
+        customerAddress.setAttribute('required', 'required');
+    });
+
+    optionTakeaway.addEventListener('click', () => {
+        deliveryType = 'Retiro';
+        optionTakeaway.style.background = 'var(--accent-color)';
+        optionTakeaway.style.color = '#000';
+        optionTakeaway.style.border = 'none';
+        
+        optionDelivery.style.background = 'rgba(255,255,255,0.05)';
+        optionDelivery.style.color = '#fff';
+        optionDelivery.style.border = '1px solid var(--glass-border)';
+
+        deliveryDetailsContainer.style.display = 'none';
+        takeawayDetailsContainer.style.display = 'block';
+        customerAddress.removeAttribute('required');
+    });
+
+    // Lógica para geolocalización GPS
+    gpsBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            showToast("Tu navegador no soporta geolocalización");
+            return;
+        }
+
+        gpsBtn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Obteniendo ubicación...';
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                gpsCoordsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+                
+                gpsBtn.style.background = 'rgba(34, 197, 94, 0.15)';
+                gpsBtn.style.borderColor = '#22c55e';
+                gpsBtn.style.color = '#22c55e';
+                gpsBtn.innerHTML = '<i class="ri-checkbox-circle-fill"></i> ¡Ubicación Obtenida!';
+                gpsStatus.style.display = 'block';
+                showToast("📍 Ubicación GPS obtenida correctamente");
+            },
+            (error) => {
+                console.error("Error GPS:", error);
+                gpsBtn.innerHTML = '<i class="ri-map-pin-user-fill"></i> Compartir mi Ubicación GPS';
+                gpsBtn.style.background = 'rgba(239, 68, 68, 0.15)';
+                gpsBtn.style.borderColor = '#ef4444';
+                gpsBtn.style.color = '#ef4444';
+                showToast("No pudimos acceder al GPS. Escribe la dirección.");
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    });
     // --- NAVEGACIÓN Y RENDERIZADO ---
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -296,8 +374,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const address = customerAddress.value.trim();
         const payment = paymentMethod.value;
 
-        if (!name || !address) {
-            showToast("¡Por favor completa tu Nombre y Dirección!");
+        if (!name) {
+            showToast("¡Por favor completa tu Nombre y Apellido!");
+            return;
+        }
+
+        if (deliveryType === 'Delivery' && !address) {
+            showToast("¡Por favor completa tu Dirección de Envío!");
             return;
         }
 
@@ -305,7 +388,17 @@ document.addEventListener('DOMContentLoaded', () => {
         let message = `👑 *NUEVO PEDIDO - THE KING BURGER* 👑%0A%0A`;
         
         message += `👤 *Cliente:* ${name}%0A`;
-        message += `📍 *Dirección:* ${address}%0A`;
+        message += `🛵 *Entrega:* ${deliveryType}%0A`;
+        
+        if (deliveryType === 'Delivery') {
+            message += `📍 *Dirección:* ${address}%0A`;
+            if (gpsCoordsUrl) {
+                message += `🗺️ *Mapa GPS:* ${gpsCoordsUrl}%0A`;
+            }
+        } else {
+            message += `📍 *Retiro:* Local The King Burger%0A`;
+        }
+        
         message += `💵 *Pago:* ${payment}%0A%0A`;
         message += `🍔 *DETALLE DEL PEDIDO:*%0A`;
 

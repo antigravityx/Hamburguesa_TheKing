@@ -79,7 +79,25 @@
         <!-- Formulario de Datos para WhatsApp -->
         <div class="checkout-form" id="checkout-form" style="display: none;">
             <input type="text" id="customer-name" placeholder="Tu Nombre y Apellido" required>
-            <input type="text" id="customer-address" placeholder="Dirección de Envío" required>
+            <!-- Opción de Entrega -->
+            <div class="delivery-option-selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <button type="button" id="option-delivery" class="option-btn active" style="background: var(--accent-color); border: none; color: #000; padding: 0.6rem; border-radius: 8px; font-weight: 700; cursor: pointer;">🛵 Envío</button>
+                <button type="button" id="option-takeaway" class="option-btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; padding: 0.6rem; border-radius: 8px; font-weight: 700; cursor: pointer;">🛍️ Retiro</button>
+            </div>
+
+            <div id="delivery-details-container">
+                <input type="text" id="customer-address" placeholder="Dirección de Envío" required>
+                <button type="button" id="gps-btn" style="width: 100%; margin-top: 0.5rem; background: rgba(255, 183, 3, 0.15); border: 1px solid var(--accent-color); color: var(--accent-color); padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i class="ri-map-pin-user-fill"></i> Compartir mi Ubicación GPS
+                </button>
+                <div id="gps-status" style="font-size: 0.8rem; color: #22c55e; margin-top: 0.3rem; display: none; text-align: center;">✓ Ubicación GPS enlazada correctamente</div>
+            </div>
+
+            <div id="takeaway-details-container" style="display: none; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; text-align: center;">
+                <p style="font-size: 0.85rem; color: #ccc; margin: 0;">📍 Retiras en: <strong style="color: var(--accent-color);">Local The King Burger</strong></p>
+                <p style="font-size: 0.75rem; color: #aaa; margin-top: 0.2rem;">Calle Falsa 123, Corrientes</p>
+                <a href="https://maps.google.com/?q=Local+The+King+Burger" target="_blank" style="display: inline-block; font-size: 0.8rem; color: var(--accent-color); text-decoration: underline; margin-top: 0.4rem;"><i class="ri-map-pin-fill"></i> Ver cómo llegar</a>
+            </div>
             <select id="payment-method">
                 <option value="Efectivo">Pago en Efectivo</option>
                 <option value="Transferencia">Transferencia (Alias/CBU)</option>
