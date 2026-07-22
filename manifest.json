@@ -1,0 +1,22 @@
+{
+  "name": "The King Burger",
+  "short_name": "TheKing",
+  "description": "Carta Menú Web Oficial de Hamburguesas The King",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#13151f",
+  "theme_color": "#ffb703",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

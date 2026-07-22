@@ -7,6 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let cart = JSON.parse(localStorage.getItem('king_cart')) || [];
 
+    // --- REGISTRO DEL SERVICE WORKER (PWA) ---
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker Registrado con éxito', reg))
+            .catch(err => console.warn('Error al registrar Service Worker', err));
+    }
+
+    let deferredPrompt; // Guardará el evento de instalación de la PWA
+
     // --- ELEMENTOS DEL DOM ---
     const categoryBtns = document.querySelectorAll('.category-btn');
     const sectionTitle = document.getElementById('section-title');
@@ -413,6 +422,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const url = `https://wa.me/${phoneWhatsApp}?text=${message}`;
         window.open(url, '_blank');
+
+        // Incrementar contador de compras finalizadas para gatillar PWA en la próxima visita si no se instaló
+        let completedOrders = parseInt(localStorage.getItem('king_completed_orders') || '0');
+        localStorage.setItem('king_completed_orders', (completedOrders + 1).toString());
+    });
+
+    // --- LÓGICA ELEGANTE PWA NO INTRUSIVA ---
+    const pwaBanner = document.getElementById('pwa-install-banner');
+    const pwaAddBtn = document.getElementById('pwa-add-btn');
+    const pwaCloseBtn = document.getElementById('pwa-close-btn');
+
+    // Registrar visitas
+    let visitCount = parseInt(localStorage.getItem('king_visit_count') || '0');
+    visitCount++;
+    localStorage.setItem('king_visit_count', visitCount.toString());
+
+    // Capturar el evento de instalación nativo
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevenir que el navegador muestre su diálogo feo por defecto
+        e.preventDefault();
+        deferredPrompt = e;
+
+        // Mostrar el banner elegante si el usuario ya visitó la web más de una vez (2da visita o más)
+        // o si ha finalizado algún pedido en el pasado y no ha declinado la instalación antes.
+        const isDismissed = localStorage.getItem('king_pwa_dismissed') === 'true';
+        const completedOrders = parseInt(localStorage.getItem('king_completed_orders') || '0');
+
+        if (!isDismissed && (visitCount >= 2 || completedOrders >= 1)) {
+            // Mostrar sutilmente el banner después de 3 segundos para no interrumpir la carga inicial
+            setTimeout(() => {
+                pwaBanner.style.display = 'flex';
+            }, 3000);
+        }
+    });
+
+    pwaAddBtn.addEventListener('click', () => {
+        if (!deferredPrompt) return;
+        
+        pwaBanner.style.display = 'none';
+        deferredPrompt.prompt(); // Mostrar el prompt nativo
+        
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('El usuario aceptó instalar la PWA');
+            } else {
+                console.log('El usuario rechazó instalar la PWA');
+            }
+            deferredPrompt = null;
+        });
+    });
+
+    pwaCloseBtn.addEventListener('click', () => {
+        pwaBanner.style.display = 'none';
+        // Marcar como declinado para no molestar en futuras visitas de esta sesión
+        localStorage.setItem('king_pwa_dismissed', 'true');
     });
 
 });
