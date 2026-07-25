@@ -10,7 +10,7 @@ const PRODUCTS = {
             "name": "3 Hambur Gruesas Especiales",
             "desc": "Pan Brioche, Blend de Carne, Queso, Tomate, Huevo, Jamón, Mayonesa Casera. + Papas Fritas.",
             "price": 19000,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "includesFries": true,
             "available": true
         },
@@ -19,7 +19,7 @@ const PRODUCTS = {
             "name": "2 Bur Gruesas Cheese \"Doble!\"",
             "desc": "Pan Brioche, Blend de Carne, Queso Cheddar, Mayonesa Casera. + Papas Fritas.",
             "price": 18000,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-35467---.jpg",
             "includesFries": true,
             "available": true
         },
@@ -28,7 +28,7 @@ const PRODUCTS = {
             "name": "2 Hambur Provolone Simple",
             "desc": "Pan Brioche, Blend de Carne, Queso Provolone, Mayonesa Casera. + Papas Fritas.",
             "price": 10000,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-354d44tttd67---.jpg",
             "includesFries": true,
             "available": true
         },
@@ -37,7 +37,7 @@ const PRODUCTS = {
             "name": "2 Provolone \"Doble!\"",
             "desc": "Pan Brioche, Blend de Carne, Queso Provolone, Mayonesa Casera. + Papas Fritas.",
             "price": 18000,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-354dd67---.jpg",
             "includesFries": true,
             "available": true
         },
@@ -46,7 +46,7 @@ const PRODUCTS = {
             "name": "2 Cleopatra Simple",
             "desc": "Pan Brioche, Blend de Carne, Queso Cheddar, Panceta, Mayonesa Casera. + Papas Fritas.",
             "price": 12000,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-6td67---.jpg",
             "includesFries": true,
             "available": true
         },
@@ -55,7 +55,7 @@ const PRODUCTS = {
             "name": "2 Arturo Simple",
             "desc": "Pan Brioche, Blend de Carne, Queso Tybo, Mayonesa Casera. + Papas Fritas.",
             "price": 12000,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-6td6ddd7---.jpg",
             "includesFries": true,
             "available": true
         }
@@ -65,7 +65,7 @@ const PRODUCTS = {
             "id": "premium-arturo",
             "name": "Arturo",
             "desc": "Pan Brioche, Blend de Carne, Queso Tybo, Huevo, Mayonesa Casera.",
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-6td6ddd7---.jpg",
             "includesFries": true,
             "sizes": { "doble": 9000, "triple": 12000 },
             "available": true
@@ -74,7 +74,7 @@ const PRODUCTS = {
             "id": "premium-alejandro",
             "name": "Alejandro Magno",
             "desc": "Pan Brioche, Blend de Carne, Queso Cheddar, Cebolla Caramelizada, Mayonesa Casera.",
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-35467---.jpg",
             "includesFries": true,
             "sizes": { "doble": 9500, "triple": 13000 },
             "available": true
@@ -83,7 +83,7 @@ const PRODUCTS = {
             "id": "premium-cleopatra",
             "name": "Cleopatra",
             "desc": "Pan Brioche, Blend de Carne, Queso Cheddar, Panceta, Mayonesa Casera.",
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-6td67---.jpg",
             "includesFries": true,
             "sizes": { "doble": 9500, "triple": 13000 },
             "available": true
@@ -92,7 +92,7 @@ const PRODUCTS = {
             "id": "premium-leonidas",
             "name": "Leónidas",
             "desc": "Pan Brioche, Mayonesa Casera, Blend de Carne, Queso Tybo, Jamón y Morrones Ahumados.",
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-354dd67---.jpg",
             "includesFries": true,
             "sizes": { "doble": 9500, "triple": 13000 },
             "available": true
@@ -101,7 +101,7 @@ const PRODUCTS = {
             "id": "premium-ragnar",
             "name": "Ragnar",
             "desc": "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Cheddar, Queso Tybo, Panceta, Huevo, Mayonesa Casera.",
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-354d44tttd67---.jpg",
             "includesFries": true,
             "sizes": { "doble": 10000, "triple": 14000 },
             "available": true
@@ -110,7 +110,7 @@ const PRODUCTS = {
             "id": "premium-lathgertha",
             "name": "Lathgertha",
             "desc": "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Tybo, Jamón Cocido, Huevo, Lechuga Repollada, Tomate, Mayonesa Casera.",
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "includesFries": true,
             "sizes": { "doble": 10000, "triple": 14000 },
             "available": true
@@ -119,7 +119,7 @@ const PRODUCTS = {
             "id": "premium-marcus",
             "name": "Marcus Aurelius",
             "desc": "Pan Brioche con Queso Parmesano, Blend de Carne, Queso Cheddar x4, Panceta Ahumada, Pepinillos, Mayonesa Casera.",
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-35467---.jpg",
             "includesFries": true,
             "sizes": { "doble": 10000, "triple": 14000 },
             "available": true
@@ -131,7 +131,7 @@ const PRODUCTS = {
             "name": "Común",
             "desc": "Pan de papa, Mayonesa Casera, Blend de Carne, Queso, Tomate.",
             "price": 6500,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         },
         {
@@ -139,7 +139,7 @@ const PRODUCTS = {
             "name": "Especial",
             "desc": "Pan de papa, Mayonesa Casera, Blend de Carne, Queso, Jamón Cocido, Huevo, Tomate.",
             "price": 7000,
-            "img": BURGER_PLACEHOLDER,
+            "img": "img/pan-354dd67---.jpg",
             "available": true
         }
     ],

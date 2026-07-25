@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Los productos se cargan desde products.js de forma global
 
     let cart = JSON.parse(localStorage.getItem('king_cart')) || [];
+    let deliveryCost = 0;       // Costo de envío (calculado por GPS, OSM o zona manual)
+    let deliveryMethod = null;  // 'gps' | 'osm' | 'zone' | null
 
     // --- REGISTRO DEL SERVICE WORKER (PWA) ---
     if ('serviceWorker' in navigator) {
@@ -14,13 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.warn('Error al registrar Service Worker', err));
     }
 
-    let deferredPrompt; // Guardará el evento de instalación de la PWA
+    let deferredPrompt;
 
     // --- ELEMENTOS DEL DOM ---
     const categoryBtns = document.querySelectorAll('.category-btn');
     const sectionTitle = document.getElementById('section-title');
     const productsGrid = document.getElementById('products-grid');
     
+    // Buscador
+    const searchInput = document.getElementById('search-input');
+    const clearSearchBtn = document.getElementById('clear-search-btn');
+    
+    // Menú de App
+    const appMenuBtn = document.getElementById('app-menu-btn');
+    const appMenuDropdown = document.getElementById('app-menu-dropdown');
+    const menuGpsBtn = document.getElementById('menu-gps-btn');
+    const menuInstallBtn = document.getElementById('menu-install-btn');
+
     const cartToggle = document.getElementById('cart-toggle');
     const closeCartBtn = document.getElementById('close-cart');
     const cartModal = document.getElementById('cart-modal');
@@ -38,41 +50,124 @@ document.addEventListener('DOMContentLoaded', () => {
     const aliasContainer = document.getElementById('alias-container');
     const copyAliasBtn = document.getElementById('copy-alias-btn');
 
-    // Nuevos elementos para Delivery vs Retiro y GPS
+    // Delivery vs Retiro y mapa inteligente
     const optionDelivery = document.getElementById('option-delivery');
     const optionTakeaway = document.getElementById('option-takeaway');
     const deliveryDetailsContainer = document.getElementById('delivery-details-container');
     const takeawayDetailsContainer = document.getElementById('takeaway-details-container');
-    const gpsBtn = document.getElementById('gps-btn');
-    const gpsStatus = document.getElementById('gps-status');
+    const mapPreviewContainer = document.getElementById('map-preview-container');
+    const mapPreviewIframe = document.getElementById('map-preview-iframe');
+    const mapPreviewLink = document.getElementById('map-preview-link');
 
-    let deliveryType = 'Delivery'; // 'Delivery' o 'Retiro'
-    let gpsCoordsUrl = ''; // Guardará el link de Google Maps si se pulsa el botón de GPS
+    // Elementos del sistema de envío (Cascada: GPS → OSM → Zona manual)
+    const zoneSelectorContainer = document.getElementById('zone-selector-container');
+    const zoneSelect = document.getElementById('zone-select');
+    const deliveryMethodInfo = document.getElementById('delivery-method-info');
+    const deliveryMethodLabel = document.getElementById('delivery-method-label');
+    const changeZoneBtn = document.getElementById('change-zone-btn');
+    const subtotalRow = document.getElementById('subtotal-row');
+    const cartSubtotal = document.getElementById('cart-subtotal');
+    const deliveryCostRow = document.getElementById('delivery-cost-row');
+    const cartDeliveryCost = document.getElementById('cart-delivery-cost');
 
-    // Manejar visibilidad y lógica de copia de Alias
-    paymentMethod.addEventListener('change', () => {
-        if (paymentMethod.value === 'Transferencia') {
-            aliasContainer.style.display = 'flex';
-        } else {
-            aliasContainer.style.display = 'none';
+    const CIUDAD = 'Corrientes, Argentina';
+    let mapsUrl = '';
+    let mapDebounceTimer = null;
+
+    // --- CONSTANTES DE ENTREGA (Local: Río Chico 5410, Corrientes) ---
+    const LOCAL_LAT = -27.4611;
+    const LOCAL_LON = -58.7817;
+    const DELIVERY_ZONES = [
+        { id: 'zona1', label: '🟢 Zona 1 – Apipé, Molina Punta, Industrial, Víctor Colas',      price: 1500 },
+        { id: 'zona2', label: '🟡 Zona 2 – Laguna Brava Sur, Bañado Norte, San Martín, Portillo', price: 2000 },
+        { id: 'zona3', label: '🟠 Zona 3 – Centro, Camba Cuá, Aldana, San Gerónimo, La Olla',    price: 3000 },
+        { id: 'zona4', label: '🔴 Zona 4 – Libertad, Columna, Ponce, 17 de Agosto',              price: 2500 },
+        { id: 'zona5', label: '🟣 Zona 5 – Mil Viviendas, Laguna Seca, Quitilipi y más',         price: 3500 },
+    ];
+
+    let deliveryType = 'Delivery';
+
+    // --- LÓGICA DEL MENÚ DE LA APP ---
+    appMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        appMenuDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!appMenuDropdown.contains(e.target) && !appMenuBtn.contains(e.target)) {
+            appMenuDropdown.classList.remove('show');
         }
     });
 
-    copyAliasBtn.addEventListener('click', () => {
-        const alias = "olivares.95";
-        navigator.clipboard.writeText(alias).then(() => {
-            showToast("¡Alias copiado al portapapeles!");
-        }).catch(err => {
-            console.error('Error al copiar:', err);
-        });
+    // GPS: Método 1 de cálculo de envío (máxima prioridad)
+    menuGpsBtn.addEventListener('click', () => {
+        appMenuDropdown.classList.remove('show');
+        if (!navigator.geolocation) {
+            showToast("Tu navegador no soporta geolocalización");
+            return;
+        }
+        showToast("📍 Solicitando permiso GPS...");
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                mapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+
+                // Calcular distancia y costo de envío via GPS (Método 1 - Haversine)
+                const km = haversineKm(lat, lon, LOCAL_LAT, LOCAL_LON);
+                setDeliveryCost(priceByKm(km), 'gps', `📡 GPS · ${km.toFixed(1)} km desde el local`);
+
+                if (customerAddress.value.trim() === '' || customerAddress.value === 'Ubicación GPS sincronizada') {
+                    customerAddress.value = 'Ubicación GPS sincronizada';
+                    if (mapPreviewIframe) {
+                        mapPreviewIframe.src = `https://maps.google.com/maps?q=${lat},${lon}&output=embed&hl=es`;
+                        mapPreviewLink.href = mapsUrl;
+                        mapPreviewContainer.style.display = 'block';
+                    }
+                }
+                showToast(`✅ GPS sincronizado · Envío: $${priceByKm(km).toLocaleString('es-AR')}`);
+            },
+            (error) => {
+                console.error('Error GPS:', error);
+                showToast('❌ No pudimos acceder al GPS. Revisa tus permisos.');
+                if (!deliveryMethod) showZoneSelector(true);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
     });
+
+    menuInstallBtn.addEventListener('click', () => {
+        appMenuDropdown.classList.remove('show');
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    showToast('¡Gracias por instalar The King Burger! 👑');
+                }
+                deferredPrompt = null;
+            });
+        } else {
+            showToast('La app ya está instalada o tu navegador no lo soporta.');
+        }
+    });
+
+    // Manejar visibilidad y lógica de copia de Alias
+    paymentMethod.addEventListener('change', () => {
+        aliasContainer.style.display = paymentMethod.value === 'Transferencia' ? 'flex' : 'none';
+    });
+
+    copyAliasBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText('olivares.95').then(() => {
+            showToast('¡Alias copiado al portapapeles!');
+        }).catch(err => console.error('Error al copiar:', err));
+    });
+
     // Manejar alternancia entre Delivery y Retiro
     optionDelivery.addEventListener('click', () => {
         deliveryType = 'Delivery';
         optionDelivery.style.background = 'var(--accent-color)';
         optionDelivery.style.color = '#000';
         optionDelivery.style.border = 'none';
-        
         optionTakeaway.style.background = 'rgba(255,255,255,0.05)';
         optionTakeaway.style.color = '#fff';
         optionTakeaway.style.border = '1px solid var(--glass-border)';
@@ -80,6 +175,14 @@ document.addEventListener('DOMContentLoaded', () => {
         deliveryDetailsContainer.style.display = 'block';
         takeawayDetailsContainer.style.display = 'none';
         customerAddress.setAttribute('required', 'required');
+
+        // Restaurar indicador de método si ya había uno calculado
+        if (deliveryMethod && deliveryMethodInfo) {
+            deliveryMethodInfo.style.display = 'flex';
+        } else if (!deliveryMethod && cart.length > 0) {
+            showZoneSelector(true);
+        }
+        updateCartUI();
     });
 
     optionTakeaway.addEventListener('click', () => {
@@ -87,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
         optionTakeaway.style.background = 'var(--accent-color)';
         optionTakeaway.style.color = '#000';
         optionTakeaway.style.border = 'none';
-        
         optionDelivery.style.background = 'rgba(255,255,255,0.05)';
         optionDelivery.style.color = '#fff';
         optionDelivery.style.border = '1px solid var(--glass-border)';
@@ -95,45 +197,37 @@ document.addEventListener('DOMContentLoaded', () => {
         deliveryDetailsContainer.style.display = 'none';
         takeawayDetailsContainer.style.display = 'block';
         customerAddress.removeAttribute('required');
+
+        // Ocultar UI de envío sin borrar el método calculado (se restaura al volver a Delivery)
+        showZoneSelector(false);
+        if (deliveryMethodInfo) deliveryMethodInfo.style.display = 'none';
+        updateCartUI();
     });
 
-    // Lógica para geolocalización GPS
-    gpsBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) {
-            showToast("Tu navegador no soporta geolocalización");
+    // Dirección ingresada: mapa preview + Método 2 (OpenStreetMap geocoding)
+    customerAddress.addEventListener('input', () => {
+        clearTimeout(mapDebounceTimer);
+        const direccion = customerAddress.value.trim();
+
+        if (direccion.length < 4) {
+            mapPreviewContainer.style.display = 'none';
+            mapsUrl = '';
+            if (deliveryMethod !== 'gps') resetDeliveryCost();
             return;
         }
 
-        gpsBtn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Obteniendo ubicación...';
+        mapDebounceTimer = setTimeout(async () => {
+            const query = encodeURIComponent(`${direccion}, ${CIUDAD}`);
+            mapsUrl = `https://maps.google.com/maps?q=${query}`;
+            mapPreviewLink.href = mapsUrl;
+            mapPreviewIframe.src = `https://maps.google.com/maps?q=${query}&output=embed&hl=es`;
+            mapPreviewContainer.style.display = 'block';
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                gpsCoordsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
-                
-                gpsBtn.style.background = 'rgba(34, 197, 94, 0.15)';
-                gpsBtn.style.borderColor = '#22c55e';
-                gpsBtn.style.color = '#22c55e';
-                gpsBtn.innerHTML = '<i class="ri-checkbox-circle-fill"></i> ¡Ubicación Obtenida!';
-                gpsStatus.style.display = 'block';
-                showToast("📍 Ubicación GPS obtenida correctamente");
-            },
-            (error) => {
-                console.error("Error GPS:", error);
-                gpsBtn.innerHTML = '<i class="ri-map-pin-user-fill"></i> Compartir mi Ubicación GPS';
-                gpsBtn.style.background = 'rgba(239, 68, 68, 0.15)';
-                gpsBtn.style.borderColor = '#ef4444';
-                gpsBtn.style.color = '#ef4444';
-                showToast("No pudimos acceder al GPS. Escribe la dirección.");
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
-        );
+            // Método 2: OpenStreetMap geocoding para calcular envío
+            await tryOsmGeocoding(direccion);
+        }, 800);
     });
+
     // --- NAVEGACIÓN Y RENDERIZADO ---
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -141,41 +235,41 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
 
             const category = btn.getAttribute('data-target');
-            
-            // Actualizar título con animación
+            if (searchInput.value.trim() !== '') {
+                searchInput.value = '';
+                clearSearchBtn.style.display = 'none';
+            }
+
             sectionTitle.textContent = btn.textContent;
             sectionTitle.classList.remove('title-animate');
-            void sectionTitle.offsetWidth; // Trigger reflow
+            void sectionTitle.offsetWidth;
             sectionTitle.classList.add('title-animate');
-            
-            // Renderizar productos
             renderProducts(category);
         });
     });
 
-    // Función para renderizar productos de la categoría seleccionada
     function renderProducts(category) {
-        productsGrid.innerHTML = '';
         const rawItems = PRODUCTS[category] || [];
-        // Filtrar productos que no estén disponibles (sin stock)
         const items = rawItems.filter(p => p.available !== false);
-
         if (items.length === 0) {
             productsGrid.innerHTML = '<p class="empty-cart-msg">No hay productos disponibles en esta categoría.</p>';
             return;
         }
+        renderProductCards(items);
+    }
 
+    function renderProductCards(items) {
+        productsGrid.innerHTML = '';
         items.forEach((product, index) => {
             const card = document.createElement('article');
             card.classList.add('product-card', 'glassmorphism');
-            card.style.setProperty('--card-delay', `${index * 0.08}s`);
+            card.style.setProperty('--card-delay', `${index * 0.06}s`);
 
             let sizeSelectorHTML = '';
             let initialPrice = product.price;
 
-            // Si tiene tamaños (Premium)
             if (product.sizes) {
-                initialPrice = product.sizes.doble; // precio por defecto es Doble
+                initialPrice = product.sizes.doble;
                 sizeSelectorHTML = `
                     <div class="size-selector">
                         <button class="size-btn active" data-size="doble" data-price="${product.sizes.doble}">Doble</button>
@@ -184,14 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             }
 
-            const KING_LOGO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="%2313151f" rx="16"/><g transform="translate(60,60)"><path d="M40 160C40 90 240 90 280 160Z" fill="%23e60023"/><path d="M20 120L50 70L80 100L110 50L140 110Z" fill="%23ffb703"/><ellipse cx="140" cy="115" rx="7" ry="4" fill="%23fff"/><ellipse cx="190" cy="105" rx="7" ry="4" fill="%23fff"/><ellipse cx="230" cy="130" rx="7" ry="4" fill="%23fff"/><path d="M35 165L285 165L250 200L220 175L170 210L130 175Z" fill="%23ffb703"/><path d="M45 195C45 260 275 260 275 195Z" fill="%23b70425"/></g></svg>`;
-            
-            const badgeHTML = product.includesFries 
-                ? `<div class="product-badge">🍟 ¡Incluye Papas!</div>` 
-                : '';
-
-            const imgHTML = `<div class="product-img-wrapper">
+            const isRealImg = product.img && !product.img.startsWith('data:');
+            const imgWrapperClass = isRealImg ? 'product-img-wrapper has-image' : 'product-img-wrapper';
+            const badgeHTML = product.includesFries ? `<div class="product-badge">🍟 ¡Incluye Papas!</div>` : '';
+            const imgHTML = `<div class="${imgWrapperClass}">
                     ${badgeHTML}
+                    ${isRealImg ? `<img src="${product.img}" alt="${product.name}" loading="lazy">` : ''}
                    </div>`;
 
             card.innerHTML = `
@@ -214,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             productsGrid.appendChild(card);
 
-            // Agregar listeners para el selector de tamaño si existe
             if (product.sizes) {
                 const sizeBtns = card.querySelectorAll('.size-btn');
                 const priceSpan = card.querySelector('.price');
@@ -222,39 +313,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 sizeBtns.forEach(sizeBtn => {
                     sizeBtn.addEventListener('click', () => {
-                        // Cambiar botón activo
                         sizeBtns.forEach(sb => sb.classList.remove('active'));
                         sizeBtn.classList.add('active');
-
                         const selectedSize = sizeBtn.getAttribute('data-size');
                         const selectedPrice = parseFloat(sizeBtn.getAttribute('data-price'));
-
-                        // Actualizar precio visualmente con animación
                         priceSpan.classList.remove('price-pop');
-                        void priceSpan.offsetWidth; // Reflow
+                        void priceSpan.offsetWidth;
                         priceSpan.classList.add('price-pop');
                         priceSpan.textContent = `$${selectedPrice.toLocaleString('es-AR')}`;
-
-                        // Actualizar atributos del botón de agregar al carrito
                         addToCartBtn.setAttribute('data-price', selectedPrice);
                         addToCartBtn.setAttribute('data-size-selected', selectedSize);
                     });
                 });
             }
         });
-
-        // Configurar los listeners para añadir al carrito
         setupAddToCartListeners();
     }
 
+    function renderSearchResults(query) {
+        sectionTitle.textContent = `Resultados para: "${searchInput.value}"`;
+        let allMatches = [];
+        for (const category in PRODUCTS) {
+            const rawItems = PRODUCTS[category] || [];
+            const matches = rawItems.filter(p =>
+                p.available !== false &&
+                (p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query))
+            );
+            allMatches = allMatches.concat(matches);
+        }
+        const uniqueMatches = [];
+        const seenIds = new Set();
+        allMatches.forEach(item => {
+            if (!seenIds.has(item.id)) { seenIds.add(item.id); uniqueMatches.push(item); }
+        });
+        if (uniqueMatches.length === 0) {
+            productsGrid.innerHTML = '<p class="empty-cart-msg">No encontramos productos que coincidan con tu búsqueda. 🔍</p>';
+            return;
+        }
+        renderProductCards(uniqueMatches);
+    }
+
     function setupAddToCartListeners() {
-        const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
-        addToCartBtns.forEach(btn => {
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.getAttribute('data-id');
                 let name = btn.getAttribute('data-name');
                 const price = parseFloat(btn.getAttribute('data-price'));
-                const sizeSelected = btn.getAttribute('data-size-selected') || 'doble'; // por defecto doble si aplica
+                const sizeSelected = btn.getAttribute('data-size-selected') || 'doble';
 
                 let finalId = id;
                 const hasSizes = PRODUCTS.premium.some(p => p.id === id);
@@ -263,10 +368,73 @@ document.addEventListener('DOMContentLoaded', () => {
                     const sizeLabel = sizeSelected.charAt(0).toUpperCase() + sizeSelected.slice(1);
                     name = `${name} (${sizeLabel})`;
                 }
-
                 addToCart({ id: finalId, name, price, quantity: 1 });
                 showToast(`¡${name} agregado!`);
+                animateCartIcon();
             });
+        });
+    }
+
+    function animateCartIcon() {
+        cartToggle.classList.remove('wobble-cart');
+        void cartToggle.offsetWidth;
+        cartToggle.classList.add('wobble-cart');
+    }
+
+    // --- LOGICA DEL BUSCADOR ---
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (query.length > 0) {
+            clearSearchBtn.style.display = 'flex';
+            renderSearchResults(query);
+        } else {
+            clearSearchBtn.style.display = 'none';
+            const activeBtn = document.querySelector('.category-btn.active');
+            const category = activeBtn ? activeBtn.getAttribute('data-target') : 'promos';
+            sectionTitle.textContent = activeBtn ? activeBtn.textContent : 'Promociones';
+            renderProducts(category);
+        }
+    });
+
+    clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.style.display = 'none';
+        const activeBtn = document.querySelector('.category-btn.active');
+        const category = activeBtn ? activeBtn.getAttribute('data-target') : 'promos';
+        sectionTitle.textContent = activeBtn ? activeBtn.textContent : 'Promociones';
+        renderProducts(category);
+    });
+
+    // --- INICIALIZAR SELECTOR DE ZONAS (Método 3) ---
+    if (zoneSelect) {
+        DELIVERY_ZONES.forEach(zone => {
+            const opt = document.createElement('option');
+            opt.value = zone.id;
+            opt.textContent = `${zone.label} — $${zone.price.toLocaleString('es-AR')}`;
+            zoneSelect.appendChild(opt);
+        });
+
+        zoneSelect.addEventListener('change', () => {
+            const zone = DELIVERY_ZONES.find(z => z.id === zoneSelect.value);
+            if (zone) {
+                setDeliveryCost(zone.price, 'zone', `🏙️ ${zone.label.split('–')[0].trim()}`);
+            } else {
+                deliveryCost = 0;
+                deliveryMethod = null;
+                if (deliveryMethodInfo) deliveryMethodInfo.style.display = 'none';
+                updateCartUI();
+            }
+        });
+    }
+
+    if (changeZoneBtn) {
+        changeZoneBtn.addEventListener('click', () => {
+            if (deliveryMethodInfo) deliveryMethodInfo.style.display = 'none';
+            deliveryCost = 0;
+            deliveryMethod = null;
+            if (zoneSelect) zoneSelect.value = '';
+            showZoneSelector(true);
+            updateCartUI();
         });
     }
 
@@ -275,8 +443,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
 
     // --- LÓGICA DEL CARRITO ---
-
-    // Abrir/Cerrar Carrito
     cartToggle.addEventListener('click', () => cartModal.classList.add('open'));
     closeCartBtn.addEventListener('click', () => cartModal.classList.remove('open'));
 
@@ -295,24 +461,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = cart.find(i => i.id === id);
         if (item) {
             item.quantity += delta;
-            if (item.quantity <= 0) {
-                cart = cart.filter(i => i.id !== id);
-            }
+            if (item.quantity <= 0) cart = cart.filter(i => i.id !== id);
             localStorage.setItem('king_cart', JSON.stringify(cart));
             updateCartUI();
         }
     }
 
     function updateCartUI() {
-        // Actualizar contador
         const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
         cartCount.textContent = totalItems;
 
-        // Renderizar items
         cartItemsContainer.innerHTML = '';
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<p class="empty-cart-msg">Tu carrito está vacío</p>';
             cartTotal.textContent = '$0';
+            if (subtotalRow) subtotalRow.style.display = 'none';
+            if (deliveryCostRow) deliveryCostRow.style.display = 'none';
             if (checkoutForm) {
                 checkoutForm.style.display = 'none';
                 aliasContainer.style.display = 'none';
@@ -322,18 +486,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (checkoutForm) {
             checkoutForm.style.display = 'flex';
-            // Sincronizar visibilidad del alias al actualizar la UI del carrito
-            if (paymentMethod.value === 'Transferencia') {
-                aliasContainer.style.display = 'flex';
-            } else {
-                aliasContainer.style.display = 'none';
+            aliasContainer.style.display = paymentMethod.value === 'Transferencia' ? 'flex' : 'none';
+            // Si es delivery y no hay método calculado, mostrar selector de zona
+            if (deliveryType === 'Delivery' && !deliveryMethod && zoneSelectorContainer) {
+                zoneSelectorContainer.style.display = 'block';
             }
         }
 
-        let total = 0;
+        let subtotal = 0;
         cart.forEach(item => {
-            total += item.price * item.quantity;
-            
+            subtotal += item.price * item.quantity;
             const itemEl = document.createElement('div');
             itemEl.classList.add('cart-item');
             itemEl.innerHTML = `
@@ -350,19 +512,27 @@ document.addEventListener('DOMContentLoaded', () => {
             cartItemsContainer.appendChild(itemEl);
         });
 
-        cartTotal.textContent = `$${total.toLocaleString('es-AR')}`;
+        // Calcular total con envío según tipo de entrega
+        const envio = (deliveryType === 'Delivery') ? deliveryCost : 0;
+        const grandTotal = subtotal + envio;
 
-        // Añadir listeners a los nuevos botones
+        if (envio > 0) {
+            if (subtotalRow)     { subtotalRow.style.display = 'flex'; }
+            if (cartSubtotal)      cartSubtotal.textContent = `$${subtotal.toLocaleString('es-AR')}`;
+            if (deliveryCostRow)  { deliveryCostRow.style.display = 'flex'; }
+            if (cartDeliveryCost)  cartDeliveryCost.textContent = `$${envio.toLocaleString('es-AR')}`;
+        } else {
+            if (subtotalRow)    subtotalRow.style.display = 'none';
+            if (deliveryCostRow) deliveryCostRow.style.display = 'none';
+        }
+
+        cartTotal.textContent = `$${grandTotal.toLocaleString('es-AR')}`;
+
         document.querySelectorAll('.minus-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                changeQuantity(e.target.getAttribute('data-id'), -1);
-            });
+            btn.addEventListener('click', (e) => changeQuantity(e.target.getAttribute('data-id'), -1));
         });
-
         document.querySelectorAll('.plus-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                changeQuantity(e.target.getAttribute('data-id'), 1);
-            });
+            btn.addEventListener('click', (e) => changeQuantity(e.target.getAttribute('data-id'), 1));
         });
     }
 
@@ -372,110 +542,183 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
+    // ============================================================
+    // --- SISTEMA DE ENVÍO: CASCADA GPS → OSM → ZONA MANUAL ---
+    // ============================================================
+
+    /** Calcula distancia en km entre dos puntos GPS (Fórmula de Haversine) */
+    function haversineKm(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) ** 2 +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) ** 2;
+        return R * 2 * Math.asin(Math.sqrt(a));
+    }
+
+    /** Convierte distancia en km al precio de envío correspondiente */
+    function priceByKm(km) {
+        if (km <= 1.2) return 1500;
+        if (km <= 2.5) return 2000;
+        if (km <= 4.5) return 3000;
+        return 3500;
+    }
+
+    /** Registra un costo de envío calculado y actualiza toda la UI */
+    function setDeliveryCost(price, method, label) {
+        deliveryCost = price;
+        deliveryMethod = method;
+        if (deliveryMethodInfo) {
+            deliveryMethodInfo.style.display = 'flex';
+            if (deliveryMethodLabel) deliveryMethodLabel.textContent = label;
+        }
+        // Si fue calculado automáticamente, colapsar el selector de zona
+        if (method !== 'zone' && zoneSelectorContainer) {
+            zoneSelectorContainer.style.display = 'none';
+        }
+        updateCartUI();
+    }
+
+    /** Muestra u oculta el selector de zona manual */
+    function showZoneSelector(visible) {
+        if (!zoneSelectorContainer) return;
+        zoneSelectorContainer.style.display = visible ? 'block' : 'none';
+    }
+
+    /** Resetea el costo de envío (vuelve a estado inicial sin método) */
+    function resetDeliveryCost() {
+        deliveryCost = 0;
+        deliveryMethod = null;
+        if (deliveryMethodInfo) deliveryMethodInfo.style.display = 'none';
+        showZoneSelector(false);
+        if (zoneSelect) zoneSelect.value = '';
+        updateCartUI();
+    }
+
+    /** Método 2: Intenta geocodificar la dirección con OpenStreetMap para calcular la distancia */
+    async function tryOsmGeocoding(direccion) {
+        if (deliveryMethod === 'gps') return; // GPS tiene prioridad absoluta
+        try {
+            const query = encodeURIComponent(`${direccion}, Corrientes, Argentina`);
+            const res = await fetch(
+                `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`,
+                { headers: { 'Accept-Language': 'es' } }
+            );
+            if (!res.ok) throw new Error('OSM falló');
+            const data = await res.json();
+            if (data && data.length > 0) {
+                const km = haversineKm(
+                    parseFloat(data[0].lat), parseFloat(data[0].lon),
+                    LOCAL_LAT, LOCAL_LON
+                );
+                setDeliveryCost(priceByKm(km), 'osm', `📍 Automático · ${km.toFixed(1)} km`);
+            } else {
+                // Dirección no encontrada → activar selector manual (Método 3)
+                if (!deliveryMethod) showZoneSelector(true);
+            }
+        } catch (e) {
+            // Sin señal o error de red → activar selector manual (Método 3)
+            if (!deliveryMethod) showZoneSelector(true);
+        }
+    }
+
     // --- CHECKOUT WHATSAPP ---
     checkoutBtn.addEventListener('click', () => {
-        if (cart.length === 0) {
-            showToast("El carrito está vacío");
-            return;
-        }
-        
-        const name = customerName.value.trim();
+        if (cart.length === 0) { showToast('El carrito está vacío'); return; }
+
+        const name    = customerName.value.trim();
         const address = customerAddress.value.trim();
         const payment = paymentMethod.value;
 
-        if (!name) {
-            showToast("¡Por favor completa tu Nombre y Apellido!");
-            return;
-        }
-
+        if (!name) { showToast('¡Por favor completa tu Nombre y Apellido!'); return; }
         if (deliveryType === 'Delivery' && !address) {
-            showToast("¡Por favor completa tu Dirección de Envío!");
+            showToast('¡Por favor completa tu Dirección de Envío!'); return;
+        }
+        if (deliveryType === 'Delivery' && deliveryCost === 0) {
+            showToast('⚠️ Seleccioná tu zona de envío para calcular el costo total');
+            showZoneSelector(true);
             return;
         }
 
-        let total = 0;
-        let message = `👑 *NUEVO PEDIDO - THE KING BURGER* 👑%0A%0A`;
-        
-        message += `👤 *Cliente:* ${name}%0A`;
-        message += `🛵 *Entrega:* ${deliveryType}%0A`;
-        
+        let subtotal = 0;
+        let message = `👑 *NUEVO PEDIDO - THE KING BURGER* 👑\n\n`;
+
+        message += `👤 *Cliente:* ${name}\n`;
+        message += `🛵 *Entrega:* ${deliveryType}\n`;
+
         if (deliveryType === 'Delivery') {
-            message += `📍 *Dirección:* ${address}%0A`;
-            if (gpsCoordsUrl) {
-                message += `🗺️ *Mapa GPS:* ${gpsCoordsUrl}%0A`;
+            message += `📍 *Dirección:* ${address}\n`;
+            if (mapsUrl) message += `🗺️ *Ver en mapa:* ${mapsUrl}\n`;
+            message += `🛵 *Costo de envío:* $${deliveryCost.toLocaleString('es-AR')}\n`;
+            if (payment === 'Efectivo') {
+                const totalConEnvio = cart.reduce((a, i) => a + i.price * i.quantity, 0) + deliveryCost;
+                message += `💰 *Estado de pago:* ⚠️ COBRAR AL ENTREGAR ($${totalConEnvio.toLocaleString('es-AR')})\n`;
+            } else {
+                message += `💰 *Estado de pago:* ⚠️ SOLICITAR COMPROBANTE DE PAGO\n`;
             }
         } else {
-            message += `📍 *Retiro:* Local The King Burger%0A`;
+            message += `📍 *Retiro:* Local The King Burger\n`;
         }
-        
-        message += `💵 *Pago:* ${payment}%0A%0A`;
-        message += `🍔 *DETALLE DEL PEDIDO:*%0A`;
+
+        message += `💵 *Pago:* ${payment}\n\n`;
+        message += `🍔 *DETALLE DEL PEDIDO:*\n`;
 
         cart.forEach(item => {
-            const subtotal = item.price * item.quantity;
-            total += subtotal;
-            message += `▪ ${item.quantity}x ${item.name} ($${item.price.toLocaleString('es-AR')}) = $${subtotal.toLocaleString('es-AR')}%0A`;
+            const sub = item.price * item.quantity;
+            subtotal += sub;
+            message += `▪ ${item.quantity}x ${item.name} ($${item.price.toLocaleString('es-AR')}) = $${sub.toLocaleString('es-AR')}\n`;
         });
 
-        message += `%0A*TOTAL A PAGAR: $${total.toLocaleString('es-AR')}*%0A%0A`;
+        const envio = deliveryType === 'Delivery' ? deliveryCost : 0;
+        const grandTotal = subtotal + envio;
+
+        if (envio > 0) {
+            message += `\nSubtotal productos: $${subtotal.toLocaleString('es-AR')}\n`;
+            message += `🛵 Envío: $${envio.toLocaleString('es-AR')}\n`;
+        }
+        message += `\n*TOTAL A PAGAR: $${grandTotal.toLocaleString('es-AR')}*\n\n`;
+
+        if (payment === 'Transferencia') {
+            message += `⚠️ *RECUERDE ENVIARNOS EL COMPROBANTE DE LA TRANSFERENCIA PARA PROCESAR SU PEDIDO.*\n\n`;
+        }
         message += `_¡Muchas gracias por elegirnos!_`;
 
-        const url = `https://wa.me/${phoneWhatsApp}?text=${message}`;
+        const url = `https://wa.me/${phoneWhatsApp}?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
 
-        // Incrementar contador de compras finalizadas para gatillar PWA en la próxima visita si no se instaló
         let completedOrders = parseInt(localStorage.getItem('king_completed_orders') || '0');
         localStorage.setItem('king_completed_orders', (completedOrders + 1).toString());
     });
 
     // --- LÓGICA ELEGANTE PWA NO INTRUSIVA ---
-    const pwaBanner = document.getElementById('pwa-install-banner');
-    const pwaAddBtn = document.getElementById('pwa-add-btn');
+    const pwaBanner  = document.getElementById('pwa-install-banner');
+    const pwaAddBtn  = document.getElementById('pwa-add-btn');
     const pwaCloseBtn = document.getElementById('pwa-close-btn');
 
-    // Registrar visitas
     let visitCount = parseInt(localStorage.getItem('king_visit_count') || '0');
     visitCount++;
     localStorage.setItem('king_visit_count', visitCount.toString());
 
-    // Capturar el evento de instalación nativo
     window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevenir que el navegador muestre su diálogo feo por defecto
         e.preventDefault();
         deferredPrompt = e;
-
-        // Mostrar el banner elegante si el usuario ya visitó la web más de una vez (2da visita o más)
-        // o si ha finalizado algún pedido en el pasado y no ha declinado la instalación antes.
         const isDismissed = localStorage.getItem('king_pwa_dismissed') === 'true';
         const completedOrders = parseInt(localStorage.getItem('king_completed_orders') || '0');
-
         if (!isDismissed && (visitCount >= 2 || completedOrders >= 1)) {
-            // Mostrar sutilmente el banner después de 3 segundos para no interrumpir la carga inicial
-            setTimeout(() => {
-                pwaBanner.style.display = 'flex';
-            }, 3000);
+            setTimeout(() => { pwaBanner.style.display = 'flex'; }, 3000);
         }
     });
 
     pwaAddBtn.addEventListener('click', () => {
         if (!deferredPrompt) return;
-        
         pwaBanner.style.display = 'none';
-        deferredPrompt.prompt(); // Mostrar el prompt nativo
-        
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('El usuario aceptó instalar la PWA');
-            } else {
-                console.log('El usuario rechazó instalar la PWA');
-            }
-            deferredPrompt = null;
-        });
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
     });
 
     pwaCloseBtn.addEventListener('click', () => {
         pwaBanner.style.display = 'none';
-        // Marcar como declinado para no molestar en futuras visitas de esta sesión
         localStorage.setItem('king_pwa_dismissed', 'true');
     });
 

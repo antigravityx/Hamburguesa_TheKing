@@ -16,6 +16,22 @@
     <div class="background-overlay"></div>
     
     <header class="header glassmorphism">
+        <!-- Menú de la App (Opciones Extras) -->
+        <div class="app-menu-container">
+            <div class="app-menu-btn" id="app-menu-btn">
+                <i class="ri-menu-4-line"></i>
+            </div>
+            <!-- Dropdown del menú -->
+            <div class="app-menu-dropdown glassmorphism" id="app-menu-dropdown">
+                <div class="app-menu-item" id="menu-gps-btn">
+                    <i class="ri-map-pin-user-fill"></i> Activar y Sincronizar GPS
+                </div>
+                <div class="app-menu-item" id="menu-install-btn">
+                    <i class="ri-install-fill"></i> Agregar a Inicio (App)
+                </div>
+            </div>
+        </div>
+        
         <div class="logo-container">
             <h1 class="brand-title">THE KING <span class="accent">BURGER</span></h1>
             <p class="brand-subtitle">El Sabor de la Corona</p>
@@ -60,6 +76,15 @@
             <button class="category-btn" data-target="bebidas">Bebidas</button>
         </nav>
 
+        <!-- Buscador de productos -->
+        <div class="search-container glassmorphism" style="margin-bottom: 2rem; display: flex; align-items: center; padding: 0.6rem 1.2rem; border-radius: 12px; gap: 0.8rem; position: relative;">
+            <i class="ri-search-2-line" style="color: var(--accent-color); font-size: 1.2rem;"></i>
+            <input type="text" id="search-input" placeholder="¿Qué antojo tenés hoy? Buscá acá..." style="background: transparent; border: none; color: #fff; width: 100%; font-family: inherit; font-size: 0.95rem; outline: none;">
+            <button id="clear-search-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: none; align-items: center; justify-content: center; padding: 0.2rem;">
+                <i class="ri-close-circle-fill" style="font-size: 1.2rem;"></i>
+            </button>
+        </div>
+
         <!-- Contenedor único dinámico para productos -->
         <section id="menu-section" class="menu-section active">
             <h2 class="section-title" id="section-title">Promociones</h2>
@@ -90,11 +115,44 @@
             </div>
 
             <div id="delivery-details-container">
-                <input type="text" id="customer-address" placeholder="Dirección de Envío" required>
-                <button type="button" id="gps-btn" style="width: 100%; margin-top: 0.5rem; background: rgba(255, 183, 3, 0.15); border: 1px solid var(--accent-color); color: var(--accent-color); padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                    <i class="ri-map-pin-user-fill"></i> Compartir mi Ubicación GPS
-                </button>
-                <div id="gps-status" style="font-size: 0.8rem; color: #22c55e; margin-top: 0.3rem; display: none; text-align: center;">✓ Ubicación GPS enlazada correctamente</div>
+                <input type="text" id="customer-address" placeholder="Ej: Av. Costanera 1234" required autocomplete="street-address">
+                <!-- Vista previa del mapa: aparece al escribir la dirección -->
+                <div id="map-preview-container" style="display:none; margin-top: 0.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent-color);">
+                    <div style="background: rgba(255,183,3,0.08); padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                        <span style="font-size: 0.78rem; color: #ccc;"><i class="ri-map-pin-2-fill" style="color: var(--accent-color);"></i> Vista previa del destino:</span>
+                        <a id="map-preview-link" href="#" target="_blank" rel="noopener noreferrer"
+                           style="font-size: 0.78rem; font-weight: 700; color: var(--accent-color); text-decoration: none; background: rgba(255,183,3,0.15); padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--accent-color);">
+                            <i class="ri-external-link-fill"></i> Ver en Google Maps
+                        </a>
+                    </div>
+                    <iframe id="map-preview-iframe"
+                        src=""
+                        width="100%"
+                        height="160"
+                        style="border:none; display:block;"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- SISTEMA DE ENVÍO: Selector de Zona (Método 3 - Fallback siempre disponible) -->
+            <div id="zone-selector-container" class="zone-selector-block" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <i class="ri-map-2-line" style="color: var(--accent-color);"></i>
+                    <span style="font-size: 0.82rem; color: #bbb;">Seleccioná tu barrio para calcular el envío:</span>
+                </div>
+                <select id="zone-select" class="zone-select-input">
+                    <option value="">— Elegí tu zona / barrio —</option>
+                </select>
+            </div>
+
+            <!-- Badge: método de cálculo activo (GPS / OSM / Manual) -->
+            <div id="delivery-method-info" class="delivery-method-badge" style="display: none;">
+                <i class="ri-checkbox-circle-fill" style="color: #4ade80; flex-shrink:0;"></i>
+                <span id="delivery-method-label">Calculado automáticamente</span>
+                <button id="change-zone-btn" type="button" class="change-zone-btn" title="Cambiar zona">✏️ Cambiar</button>
             </div>
 
             <div id="takeaway-details-container" style="display: none; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; text-align: center;">
@@ -115,8 +173,16 @@
         </div>
 
         <div class="cart-footer">
-            <div class="total">
-                <span>Total:</span>
+            <div class="total subtotal-line" id="subtotal-row" style="display: none;">
+                <span style="font-size: 0.82rem; color: #aaa;">Subtotal productos:</span>
+                <span id="cart-subtotal" style="font-size: 0.82rem; color: #aaa;">$0</span>
+            </div>
+            <div class="total delivery-line" id="delivery-cost-row" style="display: none;">
+                <span>🛵 Costo de envío:</span>
+                <span id="cart-delivery-cost" style="color: var(--accent-color); font-weight: 700;">$0</span>
+            </div>
+            <div class="total grand-total-line">
+                <span>Total a pagar:</span>
                 <span id="cart-total">$0</span>
             </div>
             <button id="checkout-btn" class="checkout-btn">
