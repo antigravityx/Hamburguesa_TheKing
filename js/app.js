@@ -78,11 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOCAL_LAT = -27.4611;
     const LOCAL_LON = -58.7817;
     const DELIVERY_ZONES = [
-        { id: 'zona1', label: '🟢 Zona 1 – Apipé, Molina Punta, Industrial, Víctor Colas',      price: 1500 },
-        { id: 'zona2', label: '🟡 Zona 2 – Laguna Brava Sur, Bañado Norte, San Martín, Portillo', price: 2000 },
-        { id: 'zona3', label: '🟠 Zona 3 – Centro, Camba Cuá, Aldana, San Gerónimo, La Olla',    price: 3000 },
-        { id: 'zona4', label: '🔴 Zona 4 – Libertad, Columna, Ponce, 17 de Agosto',              price: 2500 },
-        { id: 'zona5', label: '🟣 Zona 5 – Mil Viviendas, Laguna Seca, Quitilipi y más',         price: 3500 },
+        { id: 'zona1', label: '🟢 Zona 1 ($1.500) – Lomas del Mirador, Frondizi, Seis Hectáreas', price: 1500, keywords: ['lomas del mirador', 'frondizi', 'seis hectareas', 'libertad proxima'] },
+        { id: 'zona2', label: '🔴 Zona 2 ($2.500) – Molina Punta, Punta Taitalo, Sol de Mayo, Shopping, UNNE Eragia', price: 2500, keywords: ['molina punta', 'punta taitalo', 'sol de mayo', 'centenario shopping', 'eragia', 'unne', 'aguapey', 'canal 13'] },
+        { id: 'zona3', label: '🔴 Zona 3 ($3.000) – Centro, Bañado Norte, Parque Mitre, Camba Cuá, 17 de Agosto, Rotonda Itatí', price: 3000, keywords: ['centro', 'bañado norte', 'parque mitre', 'camba cua', '17 de agosto', 'rotonda itati', 'cichero', 'seminario', 'aldana'] },
+        { id: 'zona4', label: '🔴 Zona 4 ($3.500) – Maipú, La Reina, Santa Lucía, Ponce, Boca Unidos', price: 3500, keywords: ['maipu', 'la reina', 'santa lucia', 'ponce', 'boca unidos', 'estadio boca unidos', 'tacuari', 'guemes'] },
+        { id: 'zona5', label: '🔴 Zona 5 ($4.000) – Costanera Sur, Arazaty, Galván, Hosp. Vidal, Virgen de los Dolores', price: 4000, keywords: ['arazaty', 'costanera', 'galvan', 'vidal', 'hospital vidal', 'virgen de los dolores', 'juan de garay', 'tte ibañez'] },
     ];
 
     let deliveryType = 'Delivery';
@@ -559,10 +559,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /** Convierte distancia en km al precio de envío correspondiente */
     function priceByKm(km) {
-        if (km <= 1.2) return 1500;
-        if (km <= 2.5) return 2000;
-        if (km <= 4.5) return 3000;
-        return 3500;
+        if (km <= 1.8) return 1500;
+        if (km <= 3.5) return 2500;
+        if (km <= 5.2) return 3000;
+        if (km <= 6.8) return 3500;
+        return 4000;
     }
 
     /** Registra un costo de envío calculado y actualiza toda la UI */
@@ -596,9 +597,21 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCartUI();
     }
 
-    /** Método 2: Intenta geocodificar la dirección con OpenStreetMap para calcular la distancia */
+    /** Método 2: Intenta matchear por barrio o geocodificar la dirección */
     async function tryOsmGeocoding(direccion) {
         if (deliveryMethod === 'gps') return; // GPS tiene prioridad absoluta
+
+        const dirLower = direccion.toLowerCase();
+        
+        // 1. Detección Híbrida Inteligente por Palabras Clave de Barrio
+        for (const zone of DELIVERY_ZONES) {
+            if (zone.keywords && zone.keywords.some(kw => dirLower.includes(kw))) {
+                setDeliveryCost(zone.price, 'zone_auto', `📍 Barrio Detectado: ${zone.label.split('–')[1] || zone.label}`);
+                return;
+            }
+        }
+
+        // 2. Si no coincide por texto, consultar OpenStreetMap por GPS aproximado
         try {
             const query = encodeURIComponent(`${direccion}, Corrientes, Argentina`);
             const res = await fetch(

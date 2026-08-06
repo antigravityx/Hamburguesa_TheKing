@@ -460,10 +460,15 @@ body {
     color: var(--danger);
 }
 
-.cart-items {
-    padding: 1.5rem;
+.cart-body {
     flex-grow: 1;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-items {
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
