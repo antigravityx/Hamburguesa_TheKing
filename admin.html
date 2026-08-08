@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo 👑 The King Burger</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <style>
+        /* Estilos específicos para la consola de la secretaria */
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 5%;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .admin-status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .admin-status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2ecc71;
+        }
+
+        /* Pantalla de Login */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 1.5rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+        }
+
+        .login-icon {
+            font-size: 3.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(255, 183, 3, 0.2);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 183, 3, 0.35);
+        }
+
+        /* Panel Principal Admin */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: none; /* Se activa tras login */
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .admin-nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .admin-nav-btn.active {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Grilla de Administración de Productos */
+        .admin-table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .admin-product-card {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            margin-bottom: 1rem;
+            transition: background 0.3s;
+        }
+
+        .admin-product-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-prod-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #1a1d28;
+            border: 1px solid var(--glass-border);
+        }
+
+        .admin-prod-info {
+            flex: 1;
+        }
+
+        .admin-prod-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .admin-prod-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .admin-prod-price {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .stock-toggle-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .stock-toggle-btn.available {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+
+        .stock-toggle-btn.out-of-stock {
+            background: rgba(239, 35, 60, 0.2);
+            color: #ef233c;
+            border: 1px solid rgba(239, 35, 60, 0.4);
+        }
+
+        .btn-action-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-action-icon:hover {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        /* Modal de Edición de Producto */
+        .admin-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .admin-modal {
+            width: 100%;
+            max-width: 550px;
+            padding: 2rem;
+            border-radius: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Toast */
+        .toast-notify {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #2ecc71;
+            color: #000;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 2000;
+            animation: slideIn 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+
+    <!-- Header Principal del Admin -->
+    <header class="admin-header glassmorphism">
+        <div style="display: flex; align-items: center; gap: 0.8rem;">
+            <span style="font-size: 1.8rem;">👑</span>
+            <div>
+                <h1 style="font-size: 1.2rem; font-weight: 800; line-height: 1;">THE KING <span style="color: var(--accent-color);">ADMIN</span></h1>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Panel de Gestión Autónoma — secretaria@theking.sbs</p>
+            </div>
+        </div>
+        
+        <div id="header-user-actions" style="display: none; align-items: center; gap: 1rem;">
+            <div class="admin-status-badge">
+                <span class="admin-status-dot"></span>
+                <span>En Línea · Sync theking.sbs</span>
+            </div>
+            <button id="logout-btn" style="background: rgba(239, 35, 60, 0.2); border: 1px solid rgba(239, 35, 60, 0.4); color: #ef233c; padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit;">
+                <i class="ri-logout-box-r-line"></i> Salir
+            </button>
+        </div>
+    </header>
+
+    <!-- Vista 1: Login de la Secretaria -->
+    <div id="login-section" class="login-wrapper">
+        <div class="login-card glassmorphism">
+            <div class="login-icon">👑</div>
+            <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.3rem;">Acceso Administrativo</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.8rem;">Ingresá tus credenciales para administrar la carta web de The King Burger.</p>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-user"><i class="ri-user-3-line"></i> Usuario / Email</label>
+                    <input type="text" id="login-user" class="form-control" placeholder="secretaria@theking.sbs" required value="secretaria@theking.sbs">
+                </div>
+                <div class="form-group">
+                    <label for="login-password"><i class="ri-lock-2-line"></i> Contraseña</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="ri-key-2-line"></i> Iniciar Sesión
+                </button>
+            </form>
+            <div id="login-error" style="color: #ef233c; margin-top: 1rem; font-size: 0.9rem; display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Vista 2: Dashboard Administrativo -->
+    <div id="dashboard-section" class="dashboard-container">
+        <!-- Navegación por pestañas -->
+        <nav class="admin-nav">
+            <button class="admin-nav-btn active" data-tab="products-tab">
+                <i class="ri-restaurant-2-line"></i> Gestión de Productos y Carta
+            </button>
+            <button class="admin-nav-btn" data-tab="banners-tab">
+                <i class="ri-image-edit-line"></i> Banners y Anuncios Hero
+            </button>
+            <button class="admin-nav-btn" data-tab="settings-tab">
+                <i class="ri-shield-keyhole-line"></i> Seguridad y Respaldos
+            </button>
+        </nav>
+
+        <!-- Pestaña 1: Productos -->
+        <div id="products-tab" class="tab-content active">
+            <div class="admin-table-controls">
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="category-filters">
+                    <button class="category-btn active" data-cat="all">Todos</button>
+                    <button class="category-btn" data-cat="promos">Promociones</button>
+                    <button class="category-btn" data-cat="premium">Premium</button>
+                    <button class="category-btn" data-cat="clasicas">Clásicas</button>
+                    <button class="category-btn" data-cat="pizzas">Pizzas</button>
+                    <button class="category-btn" data-cat="papas">Papas</button>
+                    <button class="category-btn" data-cat="bebidas">Bebidas</button>
+                </div>
+                <button id="add-product-btn" class="btn-primary" style="width: auto; padding: 0.6rem 1.2rem;">
+                    <i class="ri-add-circle-fill"></i> + Nuevo Producto
+                </button>
+            </div>
+
+            <!-- Lista Dinámica de Productos -->
+            <div id="admin-products-list">
+                <!-- Se inyecta dinámicamente con JS -->
+            </div>
+        </div>
+
+        <!-- Pestaña 2: Banners y Anuncios -->
+        <div id="banners-tab" class="tab-content">
+            <div class="glassmorphism" style="padding: 2rem; border-radius: 16px; max-width: 700px; margin: 0 auto;">
+                <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem; color: var(--accent-color);"><i class="ri-layout-top-line"></i> Configuración de Portada</h3>
+                
+                <form id="banners-form">
+                    <div class="form-group">
+                        <label>Título Principal del Hero</label>
+                        <input type="text" id="banner-hero-title" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subtítulo Destacado</label>
+                        <input type="text" id="banner-hero-subtitle" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción Secundaria</label>
+                        <input type="text" id="banner-hero-sub" class="form-control" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Teléfono Visible</label>
+                            <input type="text" id="banner-phone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp (Sin + ni espacios)</label>
+                            <input type="text" id="banner-phone-wa" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Instagram</label>
+                        <input type="text" id="banner-instagram" class="form-control" required>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #fff;">
+                            <input type="checkbox" id="banner-promo-active" style="width: 18px; height: 18px; accent-color: var(--accent-color);">
+                            Mostrar Barra de Anuncio Especial en la Web
+                        </label>
+                        <input type="text" id="banner-promo-text" class="form-control" style="margin-top: 0.5rem;" placeholder="Ej: 🔥 ¡Hoy 2x1 en Provolone con Papas! Hacé tu pedido ahora.">
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 1.5rem;">
+                        <i class="ri-save-3-line"></i> Guardar Cambios en Portada
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Pestaña 3: Seguridad y Respaldos -->
+        <div id="settings-tab" class="tab-content">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <!-- Cambiar Contraseña -->
+                <div class="glassmorphism" style="padding: 1.8rem; border-radius: 16px;">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color);"><i class="ri-lock-password-line"></i> Cambiar Contraseña de Secretaría</h3>
+                    <form id="change-pass-form">
+                        <div class="form-group">
+                            <label>Contraseña Actual</label>
+                            <input type="password" id="pass-old" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nueva Contraseña</label>
+                            <input type="password" id="pass-new" class="form-control" required minlength="6">
+                        </div>
+                        <button type="submit" class="btn-primary">Actualizar Clave</button>
+                    </form>
+                </div>
+
+                <!-- Exportar/Importar Backup -->
+                <div class="glassmorphism" style="padding: 1.8rem; border-radius: 16px;">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color);"><i class="ri-download-cloud-2-line"></i> Respaldos de la Carta</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Podés descargar un archivo `.json` de respaldo con toda la carta para guardarlo en la computadora de la oficina.</p>
+                    
+                    <button id="export-json-btn" class="btn-primary" style="margin-bottom: 1rem; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--glass-border);">
+                        <i class="ri-file-download-line"></i> Descargar Copia de Seguridad (.json)
+                    </button>
+
+                    <button id="reset-default-btn" style="width: 100%; padding: 0.8rem; background: rgba(239, 35, 60, 0.15); border: 1px solid rgba(239, 35, 60, 0.3); color: #ef233c; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit;">
+                        <i class="ri-refresh-line"></i> Restaurar Menú de Fábrica
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Creación/Edición de Producto -->
+    <div id="product-modal" class="admin-modal-overlay">
+        <div class="admin-modal glassmorphism">
+            <h3 id="modal-title" style="font-size: 1.4rem; margin-bottom: 1.2rem; color: var(--accent-color);">Editar Producto</h3>
+            
+            <form id="product-form">
+                <input type="hidden" id="prod-edit-id">
+                <input type="hidden" id="prod-edit-category">
+
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="prod-category-select" class="form-control" style="background: #1a1d28;">
+                        <option value="promos">Promociones</option>
+                        <option value="premium">Hamburguesas Premium</option>
+                        <option value="clasicas">Hamburguesas Clásicas</option>
+                        <option value="pizzas">Pizzas</option>
+                        <option value="papas">Papas Fritas</option>
+                        <option value="bebidas">Bebidas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre del Producto / Promo</label>
+                    <input type="text" id="prod-name" class="form-control" required placeholder="Ej: 2 Provolone Doble + Papas">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción / Ingredientes</label>
+                    <textarea id="prod-desc" class="form-control" rows="3" required placeholder="Pan Brioche, Blend de Carne, Queso Provolone..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Precio ($ ARS)</label>
+                    <input type="number" id="prod-price" class="form-control" required min="0" step="500" placeholder="18000">
+                </div>
+
+                <div class="form-group">
+                    <label>Ruta de la Imagen o URL</label>
+                    <input type="text" id="prod-img" class="form-control" required placeholder="img/pan-354dd67---.jpg o https://...">
+                </div>
+
+                <div style="display: flex; gap: 1.5rem; margin-top: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                        <input type="checkbox" id="prod-available" checked style="width: 16px; height: 16px; accent-color: var(--accent-color);">
+                        Disponible para Venta
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                        <input type="checkbox" id="prod-includes-fries" style="width: 16px; height: 16px; accent-color: var(--accent-color);">
+                        Incluye Papas Fritas
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" id="close-modal-btn" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: #fff; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit;">Cancelar</button>
+                    <button type="submit" class="btn-primary" style="flex: 1;">Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notify" class="toast-notify">✅ Operación realizada con éxito</div>
+
+    <!-- Scripts de la Consola Admin -->
+    <script src="js/products.js"></script>
+    <script src="js/admin-db-config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

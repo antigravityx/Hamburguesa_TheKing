@@ -238,3 +238,30 @@ const PRODUCTS = {
         }
     ]
 };
+
+// --- HOOK DE SINCRONIZACIÓN EN TIEMPO REAL CON LA CONSOLA DE SECRETARÍA ---
+(function syncLiveProducts() {
+    try {
+        const liveProducts = localStorage.getItem('king_live_products_v1');
+        if (liveProducts) {
+            const parsed = JSON.parse(liveProducts);
+            Object.assign(PRODUCTS, parsed);
+        }
+    } catch (e) {
+        console.warn('[TheKing Client] Usando productos estáticos por defecto', e);
+    }
+
+    // Escuchar actualizaciones en tiempo real sin recargar página
+    if ('BroadcastChannel' in window) {
+        try {
+            const channel = new BroadcastChannel('theking_menu_channel');
+            channel.onmessage = (event) => {
+                if (event.data && event.data.type === 'PRODUCTS_UPDATED') {
+                    Object.assign(PRODUCTS, event.data.data);
+                    window.dispatchEvent(new CustomEvent('king_products_changed', { detail: event.data.data }));
+                }
+            };
+        } catch (e) {}
+    }
+})();
+

@@ -735,4 +735,44 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('king_pwa_dismissed', 'true');
     });
 
+    // --- INTEGRACIÓN CON CONSOLA DE SECRETARÍA & BANNERS EN TIEMPO REAL ---
+    function applyLiveBanners() {
+        if (!window.kingDB) return;
+        const banners = window.kingDB.getBanners();
+        
+        const heroTitle = document.querySelector('.hero-title');
+        const heroTagline = document.querySelector('.hero-tagline');
+        const heroSub = document.querySelector('.hero-sub');
+        const phoneSpan = document.querySelector('.hero-info span:first-child');
+        const instaSpan = document.querySelector('.hero-info span:last-child');
+
+        if (heroTitle && banners.heroTitle) {
+            heroTitle.innerHTML = banners.heroTitle.replace('BURGER', '<span class="hero-accent">BURGER</span>');
+        }
+        if (heroTagline && banners.heroSubtitle) heroTagline.textContent = banners.heroSubtitle;
+        if (heroSub && banners.heroSub) heroSub.textContent = banners.heroSub;
+        if (phoneSpan && banners.phone) phoneSpan.innerHTML = `<i class="ri-phone-line"></i> ${banners.phone}`;
+        if (instaSpan && banners.instagram) instaSpan.innerHTML = `<i class="ri-instagram-line"></i> ${banners.instagram}`;
+    }
+
+    applyLiveBanners();
+
+    window.addEventListener('king_products_changed', () => {
+        const activeBtn = document.querySelector('.category-btn.active');
+        const activeCat = activeBtn ? activeBtn.getAttribute('data-target') : 'promos';
+        renderProducts(activeCat);
+    });
+
+    if ('BroadcastChannel' in window) {
+        try {
+            const channel = new BroadcastChannel('theking_menu_channel');
+            channel.onmessage = (event) => {
+                if (event.data && event.data.type === 'BANNERS_UPDATED') {
+                    applyLiveBanners();
+                }
+            };
+        } catch (e) {}
+    }
+
 });
+
