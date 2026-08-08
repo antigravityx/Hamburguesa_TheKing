@@ -1,0 +1,3 @@
+# Reglas de Redirección Netlify para The King Burger Admin
+/admin    /admin.html    200
+/admin/   /admin.html    200
