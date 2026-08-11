@@ -984,4 +984,46 @@ html {
     border-top: 1px dashed var(--glass-border);
 }
 
+/* =============== REVIEWS SECTION =============== */
+.stars-container .star-rating {
+    font-size: 2.5rem;
+    color: rgba(255, 255, 255, 0.2);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
 
+.stars-container .star-rating.hovered,
+.stars-container .star-rating:hover,
+.stars-container:hover .star-rating:hover ~ .star-rating {
+    /* El truco de CSS para que las estrellas anteriores se pinten se maneja mejor con JS o invirtiendo el orden visual, pero lo haremos con JS para que sea perfecto */
+}
+
+.stars-container .star-rating.active {
+    color: var(--accent-color);
+    filter: drop-shadow(0 0 12px rgba(255, 183, 3, 0.8));
+    transform: scale(1.15);
+}
+
+.btn-review {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+}
+
+.btn-review:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+}

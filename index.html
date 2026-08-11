@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The King Burger - Carta Menú Web</title>
+    <!-- Firebase Compat SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -66,6 +70,42 @@
     </section>
 
     <main class="container" id="menu">
+        <!-- SECCIÓN DE SORTEO (Inyectada dinámicamente si está activa) -->
+        <section id="sorteo-section" class="glassmorphism" style="display: none; text-align: center; margin-bottom: 2.5rem; padding: 2rem; border-radius: 20px; background: linear-gradient(145deg, rgba(239, 35, 60, 0.1) 0%, rgba(15, 17, 26, 0.9) 100%); border-color: rgba(239, 35, 60, 0.3); position: relative; overflow: hidden;">
+            <div id="confetti-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></div>
+            
+            <div style="position: relative; z-index: 1;">
+                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #ef233c; text-shadow: 0 0 15px rgba(239,35,60,0.5);">
+                    <i class="ri-vip-crown-fill" style="color: var(--accent-color);"></i> ¡SORTEO THE KING! <i class="ri-vip-crown-fill" style="color: var(--accent-color);"></i>
+                </h2>
+                
+                <div id="sorteo-content-active">
+                    <p style="color: #fff; font-size: 1.1rem; margin-bottom: 0.2rem;">Premio de hoy:</p>
+                    <h3 id="sorteo-premio-display" style="color: var(--accent-color); font-size: 1.4rem; margin-bottom: 1.5rem;">Cargando premio...</h3>
+                    
+                    <form id="sorteo-form" style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto 1.5rem auto;">
+                        <input type="text" id="sorteo-nombre" placeholder="Tu Nombre o Apodo" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
+                        <input type="tel" id="sorteo-tel" placeholder="Tu WhatsApp (para avisarte si ganás)" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
+                        <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #ef233c, #d90429); font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(239,35,60,0.4);">
+                            🎟️ QUIERO PARTICIPAR
+                        </button>
+                    </form>
+                    
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        <i class="ri-group-fill"></i> <span id="sorteo-public-count" style="color: #fff; font-weight: bold;">0</span> Reinas y Reyes participando
+                    </p>
+                </div>
+
+                <div id="sorteo-content-winner" style="display: none; padding: 1rem;">
+                    <h3 style="font-size: 1.5rem; color: #fff; margin-bottom: 1rem;">🎉 ¡TENEMOS GANADOR/A! 🎉</h3>
+                    <div style="background: rgba(255,183,3,0.15); border: 2px solid var(--accent-color); padding: 1.5rem; border-radius: 15px; display: inline-block;">
+                        <h2 id="sorteo-ganador-nombre" style="font-size: 2rem; color: var(--accent-color); margin: 0;">-</h2>
+                    </div>
+                    <p style="color: var(--text-muted); margin-top: 1rem;">Se lleva: <span id="sorteo-ganador-premio" style="color: #fff;"></span></p>
+                </div>
+            </div>
+        </section>
+
         <!-- Categorías / Tabs de navegación -->
         <nav class="categories">
             <button class="category-btn active" data-target="promos">Promociones</button>
@@ -90,6 +130,58 @@
             <h2 class="section-title" id="section-title">Promociones</h2>
             <div class="products-grid" id="products-grid">
                 <!-- Se inyecta dinámicamente con JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN: NUESTRA HISTORIA Y MISIÓN -->
+        <section class="about-section glassmorphism" style="margin-top: 3rem; padding: 2.5rem; border-radius: 20px; background: linear-gradient(145deg, rgba(15, 17, 26, 0.9) 0%, rgba(255, 183, 3, 0.03) 100%); border-left: 4px solid var(--accent-color);">
+            <div class="about-content">
+                <h2 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-ancient-gate-fill" style="color: var(--accent-color);"></i> Nuestra Historia Real
+                </h2>
+                <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                    Somos un emprendimiento familiar, chico y con el corazón bien correntino. Nacimos con una idea simple pero ambiciosa: crear una hamburguesa tan exquisita y con tanto romance que, si un mismísimo Rey tuviera la oportunidad de probarla, quedaría fascinado. El gran secreto de esta magia reside en nuestro pan: una receta única, creada en casa y guardada bajo llave por nuestra familia y los colegas más fieles que nos acompañan desde el primer día.
+                </p>
+
+                <h3 style="font-size: 1.3rem; margin-bottom: 0.8rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-scales-3-fill" style="color: var(--accent-color);"></i> Nuestra Promesa y Realidad
+                </h3>
+                <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;">
+                    Te hablamos con la verdad: no somos perfectos. Al ser una producción 100% artesanal, a veces nos cuesta cubrir la altísima demanda. ¿Por qué pasa esto? Porque cada nueva Reina o Rey que prueba nuestro sabor, elige repetir al día siguiente. Esto hace que nuestro crecimiento sea constante y genuino. Cuando hay demoras, te pedimos paciencia; elegimos cuidar la calidad extrema antes que la rapidez industrial, porque el sabor de nuestra casa no se puede apurar.
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,183,3,0.1);">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; font-size: 1.1rem;"><i class="ri-focus-2-line"></i> Nuestra Misión</h4>
+                        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">Llevar el sabor más auténtico y placentero de Corrientes a tu mesa, con la dedicación que solo una familia apasionada te puede dar.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,183,3,0.1);">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; font-size: 1.1rem;"><i class="ri-eye-line"></i> Nuestra Visión</h4>
+                        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">Crecer a paso firme, manteniendo un estándar de calidad digno de la realeza, sin perder jamás nuestra esencia de barrio ni la receta que nos hizo Reyes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE RESEÑAS GOOGLE MAPS -->
+        <section class="reviews-section glassmorphism" style="margin-top: 3rem; text-align: center; padding: 2.5rem 1.5rem; border-radius: 20px; background: linear-gradient(145deg, rgba(255, 183, 3, 0.05) 0%, rgba(15, 17, 26, 0.8) 100%); position: relative; overflow: hidden; border-color: rgba(255, 183, 3, 0.2);">
+            <div style="position: absolute; top: -20px; left: -20px; width: 100px; height: 100px; background: var(--accent-color); filter: blur(60px); opacity: 0.2; z-index: 0;"></div>
+            <div style="position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: #ea4335; filter: blur(50px); opacity: 0.15; z-index: 0;"></div>
+            <div style="position: relative; z-index: 1;">
+                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #fff;">¿Qué te pareció <span style="color: var(--accent-color);">The King Burger</span>? 👑</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    Tu opinión nos hace Reyes. Dejanos tus estrellitas y un comentario en Google para ayudarnos a crecer. ¡Tardás 10 segundos!
+                </p>
+                <div class="stars-container" id="stars-container" style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="1"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="2"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="3"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="4"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="5"><i class="ri-star-line"></i></a>
+                </div>
+                <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="btn-review">
+                    <i class="ri-google-fill" style="font-size: 1.2rem; color: #4285F4;"></i> Calificanos en Google
+                </a>
             </div>
         </section>
     </main>
@@ -210,6 +302,29 @@
 
     <!-- Toast Notification -->
     <div id="toast" class="toast glassmorphism">Producto añadido al carrito</div>
+
+    <!-- FOOTER DE LA APLICACIÓN -->
+    <footer class="app-footer" style="margin-top: 4rem; padding: 2rem 1rem; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0,0,0,0.3);">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <a href="https://www.instagram.com/theking.ctes/" target="_blank" rel="noopener noreferrer" style="color: #fff; background: rgba(255,255,255,0.05); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 1.5rem; transition: all 0.3s; text-decoration: none; border: 1px solid rgba(255,255,255,0.1);" onmouseover="this.style.background='var(--accent-color)'; this.style.color='#000'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff'; this.style.transform='translateY(0)';">
+                <i class="ri-instagram-line"></i>
+            </a>
+            <!-- Agrega más redes aquí si es necesario -->
+        </div>
+        
+        <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <i class="ri-map-pin-2-fill" style="color: var(--accent-color);"></i> Río Chico 5410, Corrientes, Argentina
+        </p>
+        <p style="color: #777; font-size: 0.8rem; margin-bottom: 1rem;">
+            Forjado con pasión en Corrientes, Argentina.
+        </p>
+        
+        <div style="display: inline-block; background: rgba(255, 183, 3, 0.1); border: 1px solid rgba(255, 183, 3, 0.2); padding: 0.4rem 1rem; border-radius: 20px;">
+            <span style="color: var(--accent-color); font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;">
+                THE KING WEBMENU v8.8 — VERIX OS
+            </span>
+        </div>
+    </footer>
 
     <script src="js/admin-db-config.js"></script>
     <script src="js/products.js"></script>

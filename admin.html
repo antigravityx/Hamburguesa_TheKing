@@ -379,6 +379,9 @@
             <button class="admin-nav-btn" data-tab="settings-tab">
                 <i class="ri-shield-keyhole-line"></i> Seguridad y Respaldos
             </button>
+            <button class="admin-nav-btn" data-tab="sorteo-tab">
+                <i class="ri-vip-crown-line"></i> 🎰 Sorteo en Vivo
+            </button>
         </nav>
 
         <!-- Pestaña 1: Productos -->
@@ -490,6 +493,59 @@
                 </div>
             </div>
         </div>
+
+        <!-- Pestaña 4: Sorteo -->
+        <div id="sorteo-tab" class="tab-content">
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem;">
+                <!-- Control del Sorteo -->
+                <div class="glassmorphism" style="padding: 1.8rem; border-radius: 16px;">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color);"><i class="ri-settings-4-line"></i> Configuración</h3>
+                    
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #fff;">
+                            <input type="checkbox" id="sorteo-active" style="width: 18px; height: 18px; accent-color: var(--accent-color);">
+                            Activar Sección de Sorteo en la Web
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Premio del Sorteo</label>
+                        <input type="text" id="sorteo-premio" class="form-control" placeholder="Ej: 2 Provolone Doble + Bebida">
+                    </div>
+                    
+                    <button id="save-sorteo-config-btn" class="btn-primary" style="margin-top: 1rem; margin-bottom: 2rem;">
+                        <i class="ri-save-3-line"></i> Guardar Configuración
+                    </button>
+
+                    <hr style="border-color: var(--glass-border); margin-bottom: 2rem;">
+
+                    <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #ef233c;"><i class="ri-vip-crown-line"></i> Realizar Sorteo</h3>
+                    
+                    <button id="realizar-sorteo-btn" class="btn-primary" style="background: linear-gradient(135deg, #ef233c, #d90429); margin-bottom: 1rem;">
+                        <i class="ri-trophy-line"></i> ¡SORTEAR GANADOR AHORA!
+                    </button>
+
+                    <button id="reset-sorteo-btn" style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: #fff; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit;">
+                        <i class="ri-refresh-line"></i> Limpiar Participantes (Nuevo Sorteo)
+                    </button>
+                </div>
+
+                <!-- Lista de Participantes -->
+                <div class="glassmorphism" style="padding: 1.8rem; border-radius: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.2rem; color: var(--accent-color);"><i class="ri-group-line"></i> Participantes (<span id="sorteo-count">0</span>)</h3>
+                        <div id="sorteo-winner-badge" style="display: none; background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">
+                            ¡Ganador anunciado!
+                        </div>
+                    </div>
+
+                    <div style="max-height: 400px; overflow-y: auto; padding-right: 0.5rem;" id="sorteo-participantes-list">
+                        <!-- Participantes inyectados por JS -->
+                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">Cargando participantes...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal de Creación/Edición de Producto -->
@@ -554,6 +610,10 @@
 
     <!-- Toast Notification -->
     <div id="toast-notify" class="toast-notify">✅ Operación realizada con éxito</div>
+
+    <!-- Scripts de Firebase Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <!-- Scripts de la Consola Admin -->
     <script src="js/products.js"></script>

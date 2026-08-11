@@ -735,11 +735,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('king_pwa_dismissed', 'true');
     });
 
-    // --- INTEGRACIÓN CON CONSOLA DE SECRETARÍA & BANNERS EN TIEMPO REAL ---
-    function applyLiveBanners() {
-        if (!window.kingDB) return;
-        const banners = window.kingDB.getBanners();
-        
+    // --- INTEGRACIÓN CON FIREBASE EN TIEMPO REAL ---
+    function applyBannersData(banners) {
         const heroTitle = document.querySelector('.hero-title');
         const heroTagline = document.querySelector('.hero-tagline');
         const heroSub = document.querySelector('.hero-sub');
@@ -755,24 +752,124 @@ document.addEventListener('DOMContentLoaded', () => {
         if (instaSpan && banners.instagram) instaSpan.innerHTML = `<i class="ri-instagram-line"></i> ${banners.instagram}`;
     }
 
-    applyLiveBanners();
+    if (window.kingDB) {
+        // Escuchar cambios de menú en vivo
+        window.kingDB.listenProducts((newProducts) => {
+            const activeBtn = document.querySelector('.category-btn.active');
+            const activeCat = activeBtn ? activeBtn.getAttribute('data-target') : 'promos';
+            renderProducts(activeCat);
+        });
 
-    window.addEventListener('king_products_changed', () => {
-        const activeBtn = document.querySelector('.category-btn.active');
-        const activeCat = activeBtn ? activeBtn.getAttribute('data-target') : 'promos';
-        renderProducts(activeCat);
-    });
+        // Escuchar cambios de banners en vivo
+        window.kingDB.listenBanners((banners) => {
+            applyBannersData(banners);
+        });
+        
+        // --- LÓGICA DE SORTEO PÚBLICO ---
+        const sorteoSection = document.getElementById('sorteo-section');
+        const sorteoPremioDisplay = document.getElementById('sorteo-premio-display');
+        const sorteoPublicCount = document.getElementById('sorteo-public-count');
+        const sorteoForm = document.getElementById('sorteo-form');
+        const sorteoContentActive = document.getElementById('sorteo-content-active');
+        const sorteoContentWinner = document.getElementById('sorteo-content-winner');
+        const sorteoGanadorNombre = document.getElementById('sorteo-ganador-nombre');
+        const sorteoGanadorPremio = document.getElementById('sorteo-ganador-premio');
+        
+        let sorteoData = {};
 
-    if ('BroadcastChannel' in window) {
-        try {
-            const channel = new BroadcastChannel('theking_menu_channel');
-            channel.onmessage = (event) => {
-                if (event.data && event.data.type === 'BANNERS_UPDATED') {
-                    applyLiveBanners();
+        if (sorteoSection) {
+            window.kingDB.listenSorteo((config) => {
+                sorteoData = config;
+                if (config.active) {
+                    sorteoSection.style.display = 'block';
+                    sorteoPremioDisplay.textContent = config.premio;
+                    
+                    if (config.ganador) {
+                        sorteoContentActive.style.display = 'none';
+                        sorteoContentWinner.style.display = 'block';
+                        sorteoGanadorNombre.textContent = config.ganador.nombre;
+                        sorteoGanadorPremio.textContent = config.premio;
+                    } else {
+                        sorteoContentActive.style.display = 'block';
+                        sorteoContentWinner.style.display = 'none';
+                    }
+                } else {
+                    sorteoSection.style.display = 'none';
                 }
-            };
-        } catch (e) {}
+            });
+
+            window.kingDB.listenSorteoParticipantes((participantes) => {
+                if (sorteoPublicCount) {
+                    sorteoPublicCount.textContent = participantes.length;
+                }
+            });
+
+            if (sorteoForm) {
+                sorteoForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    // Solo permitir una inscripción por sesión local
+                    if (localStorage.getItem('king_sorteo_participado_v1')) {
+                        showToast('¡Ya estás participando en el sorteo actual!');
+                        return;
+                    }
+
+                    const name = document.getElementById('sorteo-nombre').value.trim();
+                    const tel = document.getElementById('sorteo-tel').value.trim();
+                    
+                    const btn = sorteoForm.querySelector('button');
+                    btn.innerHTML = 'Enviando...';
+                    btn.disabled = true;
+
+                    try {
+                        await window.kingDB.db.collection('sorteo_participantes').add({
+                            nombre: name,
+                            telefono: tel,
+                            fecha: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                        showToast('🎉 ¡Genial! Ya estás participando del sorteo.');
+                        localStorage.setItem('king_sorteo_participado_v1', 'true');
+                        sorteoForm.innerHTML = '<h3 style="color: #2ecc71;">¡Ya estás inscripto! ¡Mucha Suerte! 🍀</h3>';
+                    } catch (err) {
+                        showToast('Hubo un error al inscribirte. Intenta de nuevo.');
+                        btn.innerHTML = '🎟️ QUIERO PARTICIPAR';
+                        btn.disabled = false;
+                    }
+                });
+            }
+        }
+    }
+
+    // --- LÓGICA ESTRELLAS DE RESEÑAS ---
+    const starRatings = document.querySelectorAll('.star-rating');
+    const starsContainer = document.getElementById('stars-container');
+
+    if (starRatings.length > 0 && starsContainer) {
+        starRatings.forEach(star => {
+            star.addEventListener('mouseenter', function() {
+                const index = parseInt(this.getAttribute('data-index'));
+                // Iluminar todas las estrellas hasta la actual
+                starRatings.forEach(s => {
+                    const sIndex = parseInt(s.getAttribute('data-index'));
+                    if (sIndex <= index) {
+                        s.classList.add('hovered');
+                        s.querySelector('i').className = 'ri-star-fill';
+                    } else {
+                        s.classList.remove('hovered');
+                        s.querySelector('i').className = 'ri-star-line';
+                    }
+                });
+            });
+        });
+
+        starsContainer.addEventListener('mouseleave', function() {
+            // Limpiar al salir del contenedor
+            starRatings.forEach(s => {
+                s.classList.remove('hovered');
+                s.querySelector('i').className = 'ri-star-line';
+            });
+        });
     }
 
 });
-

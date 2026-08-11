@@ -1,78 +1,68 @@
 /**
  * 👑 THE KING BURGER - MOTOR DE BASE DE DATOS Y SINCRONIZACIÓN EN TIEMPO REAL
  * Forjado por Verix & r1ch0n para la administración autónoma de theking.sbs
+ * v9.0 - Firebase Firestore Edition
  */
 
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyB2S21A2BfQbpJSG3KaT3t8IiH5ViMZZmc",
+    authDomain: "theking-burger.firebaseapp.com",
+    projectId: "theking-burger",
+    storageBucket: "theking-burger.firebasestorage.app",
+    messagingSenderId: "647398051589",
+    appId: "1:647398051589:web:17655a8455a8f9539df16c"
+};
+
+// Initialize Firebase (compat mode)
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+
 const KING_ADMIN_CONFIG = {
-    // Claves de almacenamiento local y en la nube
-    STORAGE_KEY_PRODUCTS: 'king_live_products_v1',
-    STORAGE_KEY_BANNERS: 'king_live_banners_v1',
     STORAGE_KEY_AUTH: 'king_admin_session',
     STORAGE_KEY_PASS: 'king_admin_password_hash',
     
     // Credenciales predeterminadas iniciales (Secretaría)
     DEFAULT_USER: 'secretaria@theking.sbs',
-    DEFAULT_PASS_HASH: '4b37064d50284d6349c8153b627763f9', // Hash simple o clave 'King2026!'
-    DEFAULT_PASS_PLAIN: 'King2026!',
-    
-    // Configuración de Servidor de Nube / API Relay (Sincronización Multi-dispositivo)
-    // Permite que la secretaria desde su oficina edite y la web del cliente lo lea al instante
-    CLOUD_SYNC_ENABLED: true,
-    SYNC_BROADCAST_CHANNEL: 'theking_menu_channel'
+    DEFAULT_PASS_PLAIN: 'King2026!'
 };
 
 class KingDatabaseEngine {
     constructor() {
-        this.broadcast = null;
-        this.initBroadcast();
-    }
-
-    initBroadcast() {
-        if ('BroadcastChannel' in window) {
-            try {
-                this.broadcast = new BroadcastChannel(KING_ADMIN_CONFIG.SYNC_BROADCAST_CHANNEL);
-            } catch (e) {
-                console.warn('[Verix Engine] BroadcastChannel no disponible', e);
-            }
-        }
+        this.db = db;
+        // Caché local para evitar lecturas innecesarias
+        this.localProducts = null;
+        this.localBanners = null;
     }
 
     /**
-     * Obtiene los productos actuales (prioridad: Almacenamiento Vivo -> Fallback a PRODUCTS original)
+     * Obtiene los productos desde Firestore
      */
-    getProducts() {
+    async getProductsAsync() {
         try {
-            const stored = localStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_PRODUCTS);
-            if (stored) {
-                return JSON.parse(stored);
+            const doc = await this.db.collection('menu').doc('current').get();
+            if (doc.exists) {
+                this.localProducts = doc.data();
+                return this.localProducts;
             }
         } catch (e) {
-            console.error('[Verix Engine] Error al leer productos de localStorage', e);
+            console.error('[Verix Engine] Error al leer productos de Firebase', e);
         }
         
-        // Retornar objeto global de PRODUCTS si existe
+        // Retornar objeto global de PRODUCTS si existe como fallback
         return (typeof PRODUCTS !== 'undefined') ? PRODUCTS : null;
     }
 
     /**
-     * Guarda la carta de productos actualizada por la secretaria
+     * Guarda la carta de productos en Firestore
      */
-    saveProducts(productsObject) {
+    async saveProductsAsync(productsObject) {
         try {
-            const dataStr = JSON.stringify(productsObject);
-            localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_PRODUCTS, dataStr);
-            
-            // Actualizar la variable global en tiempo real en la pestaña activa
-            if (typeof PRODUCTS !== 'undefined') {
-                Object.assign(PRODUCTS, productsObject);
-            }
-
-            // Notificar a otras pestañas (web pública theking.sbs)
-            if (this.broadcast) {
-                this.broadcast.postMessage({ type: 'PRODUCTS_UPDATED', data: productsObject, timestamp: Date.now() });
-            }
-
-            return { success: true, message: 'Menú guardado y sincronizado con éxito' };
+            await this.db.collection('menu').doc('current').set(productsObject);
+            this.localProducts = productsObject;
+            return { success: true, message: 'Menú guardado y sincronizado en la nube' };
         } catch (e) {
             console.error('[Verix Engine] Error al guardar productos', e);
             return { success: false, error: e.message };
@@ -80,9 +70,9 @@ class KingDatabaseEngine {
     }
 
     /**
-     * Obtiene los datos del Banner y Textos Destacados
+     * Obtiene los datos del Banner y Textos Destacados desde Firestore
      */
-    getBanners() {
+    async getBannersAsync() {
         const defaultBanners = {
             heroTitle: "THE KING BURGER",
             heroSubtitle: "El Sabor de la Corona",
@@ -95,29 +85,59 @@ class KingDatabaseEngine {
         };
 
         try {
-            const stored = localStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_BANNERS);
-            if (stored) {
-                return { ...defaultBanners, ...JSON.parse(stored) };
+            const doc = await this.db.collection('config').doc('banners').get();
+            if (doc.exists) {
+                this.localBanners = { ...defaultBanners, ...doc.data() };
+                return this.localBanners;
             }
         } catch (e) {
-            console.error('[Verix Engine] Error al leer banners', e);
+            console.error('[Verix Engine] Error al leer banners de Firebase', e);
         }
-
         return defaultBanners;
     }
 
     /**
-     * Guarda los banners y textos principales
+     * Escuchadores en tiempo real para clientes
      */
-    saveBanners(bannersObject) {
-        try {
-            localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_BANNERS, JSON.stringify(bannersObject));
-            
-            if (this.broadcast) {
-                this.broadcast.postMessage({ type: 'BANNERS_UPDATED', data: bannersObject, timestamp: Date.now() });
+    listenProducts(callback) {
+        return this.db.collection('menu').doc('current').onSnapshot(doc => {
+            if (doc.exists) {
+                this.localProducts = doc.data();
+                if (typeof PRODUCTS !== 'undefined') {
+                    Object.assign(PRODUCTS, this.localProducts); // Actualiza la var global temporalmente
+                }
+                callback(this.localProducts);
             }
+        });
+    }
 
-            return { success: true, message: 'Banners actualizados correctamente' };
+    listenBanners(callback) {
+        return this.db.collection('config').doc('banners').onSnapshot(doc => {
+            if (doc.exists) {
+                this.localBanners = doc.data();
+                callback(this.localBanners);
+            }
+        });
+    }
+
+    listenSorteo(callback) {
+        return this.db.collection('config').doc('sorteo').onSnapshot(doc => {
+            if (doc.exists) {
+                callback(doc.data());
+            } else {
+                callback({ active: false });
+            }
+        });
+    }
+
+    /**
+     * Guarda los banners en Firestore
+     */
+    async saveBannersAsync(bannersObject) {
+        try {
+            await this.db.collection('config').doc('banners').set(bannersObject);
+            this.localBanners = bannersObject;
+            return { success: true, message: 'Banners actualizados en la nube' };
         } catch (e) {
             console.error('[Verix Engine] Error al guardar banners', e);
             return { success: false, error: e.message };
@@ -125,7 +145,61 @@ class KingDatabaseEngine {
     }
 
     /**
-     * Autenticación de la secretaria
+     * Configuración del Sorteo
+     */
+    async getSorteoConfig() {
+        try {
+            const doc = await this.db.collection('config').doc('sorteo').get();
+            if (doc.exists) {
+                return doc.data();
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        return { active: false, premio: 'Premio Sorpresa', ganador: null };
+    }
+
+    async saveSorteoConfig(config) {
+        try {
+            await this.db.collection('config').doc('sorteo').set(config, { merge: true });
+            return { success: true };
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * Participantes del Sorteo (Observador en tiempo real)
+     */
+    listenSorteoParticipantes(callback) {
+        return this.db.collection('sorteo_participantes').onSnapshot((snapshot) => {
+            const participantes = [];
+            snapshot.forEach(doc => {
+                participantes.push({ id: doc.id, ...doc.data() });
+            });
+            callback(participantes);
+        });
+    }
+
+    async clearSorteoParticipantes() {
+        try {
+            const snapshot = await this.db.collection('sorteo_participantes').get();
+            const batch = this.db.batch();
+            snapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+            
+            // Limpiar ganador también
+            await this.db.collection('config').doc('sorteo').set({ ganador: null }, { merge: true });
+            return { success: true };
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * Autenticación básica local de la secretaria
      */
     login(user, password) {
         const cleanUser = user.trim().toLowerCase();
@@ -143,9 +217,6 @@ class KingDatabaseEngine {
         return { success: false, error: 'Usuario o contraseña incorrectos.' };
     }
 
-    /**
-     * Comprueba si la sesión está activa
-     */
     isAuthenticated() {
         try {
             const session = JSON.parse(sessionStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_AUTH));
@@ -155,16 +226,10 @@ class KingDatabaseEngine {
         }
     }
 
-    /**
-     * Cierra la sesión
-     */
     logout() {
         sessionStorage.removeItem(KING_ADMIN_CONFIG.STORAGE_KEY_AUTH);
     }
 
-    /**
-     * Permite a la secretaria cambiar su contraseña
-     */
     changePassword(oldPass, newPass) {
         const currentPass = localStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_PASS) || KING_ADMIN_CONFIG.DEFAULT_PASS_PLAIN;
         if (oldPass !== currentPass) {
@@ -178,5 +243,5 @@ class KingDatabaseEngine {
     }
 }
 
-// Instancia global disponible para la app y el panel admin
+// Instancia global
 window.kingDB = new KingDatabaseEngine();

@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toastNotify = document.getElementById('toast-notify');
 
     let currentCategory = 'all';
-    let localProductsState = window.kingDB.getProducts() || PRODUCTS;
+    let localProductsState = typeof PRODUCTS !== 'undefined' ? PRODUCTS : {};
 
     // --- 1. VERIFICACIÓN DE SESIÓN INICIAL ---
     checkAuth();
@@ -111,10 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 4. CARGA DE DATOS AL DASHBOARD ---
-    function loadDashboardData() {
-        localProductsState = window.kingDB.getProducts() || PRODUCTS;
+    async function loadDashboardData() {
+        const products = await window.kingDB.getProductsAsync();
+        localProductsState = products || PRODUCTS;
         renderProductsList();
-        loadBannersData();
+        await loadBannersData();
+        setupSorteoTab();
     }
 
     // --- 5. RENDERIZADO DE LA LISTA DE PRODUCTOS ---
@@ -288,8 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 7. MANEJO DE BANNERS Y TEXTOS ---
-    function loadBannersData() {
-        const banners = window.kingDB.getBanners();
+    async function loadBannersData() {
+        const banners = await window.kingDB.getBannersAsync();
         bannerHeroTitle.value = banners.heroTitle;
         bannerHeroSubtitle.value = banners.heroSubtitle;
         bannerHeroSub.value = banners.heroSub;
@@ -300,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bannerPromoText.value = banners.promoBarText;
     }
 
-    bannersForm.addEventListener('submit', (e) => {
+    bannersForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const bannerData = {
@@ -314,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
             promoBarText: bannerPromoText.value.trim()
         };
 
-        const res = window.kingDB.saveBanners(bannerData);
+        const res = await window.kingDB.saveBannersAsync(bannerData);
         if (res.success) {
             showToast('✅ Banners actualizados en theking.sbs');
         } else {
@@ -360,8 +362,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- AUXILIARES ---
-    function saveAndUpdateState(message) {
-        window.kingDB.saveProducts(localProductsState);
+    async function saveAndUpdateState(message) {
+        await window.kingDB.saveProductsAsync(localProductsState);
         renderProductsList();
         showToast('✅ ' + message);
     }
@@ -372,5 +374,93 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             toastNotify.style.display = 'none';
         }, 3000);
+    }
+
+    // --- LOGICA DE SORTEO ---
+    function setupSorteoTab() {
+        const activeSorteo = document.getElementById('sorteo-active');
+        const premioSorteo = document.getElementById('sorteo-premio');
+        const btnSaveConfig = document.getElementById('save-sorteo-config-btn');
+        const btnSorteo = document.getElementById('realizar-sorteo-btn');
+        const btnReset = document.getElementById('reset-sorteo-btn');
+        const listParticipantes = document.getElementById('sorteo-participantes-list');
+        const badgeWinner = document.getElementById('sorteo-winner-badge');
+        const countSorteo = document.getElementById('sorteo-count');
+
+        let currentParticipants = [];
+        let sorteoConfig = {};
+
+        // Cargar config inicial
+        window.kingDB.getSorteoConfig().then(config => {
+            sorteoConfig = config;
+            activeSorteo.checked = config.active || false;
+            premioSorteo.value = config.premio || '';
+            if (config.ganador) {
+                badgeWinner.style.display = 'block';
+                badgeWinner.textContent = `🏆 Ganador: ${config.ganador.nombre}`;
+            } else {
+                badgeWinner.style.display = 'none';
+            }
+        });
+
+        // Escuchar participantes en tiempo real
+        window.kingDB.listenSorteoParticipantes((participantes) => {
+            currentParticipants = participantes;
+            countSorteo.textContent = participantes.length;
+            listParticipantes.innerHTML = '';
+            
+            if (participantes.length === 0) {
+                listParticipantes.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay participantes aún.</div>';
+            } else {
+                participantes.forEach(p => {
+                    const el = document.createElement('div');
+                    el.style = "padding: 1rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;";
+                    el.innerHTML = `
+                        <strong style="color: #fff;">${p.nombre}</strong>
+                        <span style="color: var(--text-muted); font-size: 0.9rem;"><i class="ri-whatsapp-line"></i> ${p.telefono}</span>
+                    `;
+                    listParticipantes.appendChild(el);
+                });
+            }
+        });
+
+        btnSaveConfig.addEventListener('click', async () => {
+            await window.kingDB.saveSorteoConfig({
+                active: activeSorteo.checked,
+                premio: premioSorteo.value
+            });
+            showToast('Configuración del sorteo guardada');
+        });
+
+        btnSorteo.addEventListener('click', async () => {
+            if (currentParticipants.length === 0) {
+                alert('No hay participantes para sortear.');
+                return;
+            }
+            if (confirm('¿Estás seguro de elegir un ganador al azar ahora mismo?')) {
+                const winnerIndex = Math.floor(Math.random() * currentParticipants.length);
+                const winner = currentParticipants[winnerIndex];
+                
+                await window.kingDB.saveSorteoConfig({
+                    ganador: winner,
+                    active: true,
+                    premio: premioSorteo.value
+                });
+
+                badgeWinner.style.display = 'block';
+                badgeWinner.textContent = `🏆 Ganador: ${winner.nombre}`;
+                
+                // Mostrar animación local (efecto de sorteo)
+                showToast(`🎉 ¡Ganador elegido: ${winner.nombre}!`);
+            }
+        });
+
+        btnReset.addEventListener('click', async () => {
+            if (confirm('⚠️ Esto ELIMINARÁ todos los participantes actuales para iniciar un nuevo sorteo. ¿Proceder?')) {
+                await window.kingDB.clearSorteoParticipantes();
+                badgeWinner.style.display = 'none';
+                showToast('Participantes eliminados. Nuevo sorteo listo.');
+            }
+        });
     }
 });
