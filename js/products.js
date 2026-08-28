@@ -185,32 +185,6 @@ const PRODUCTS = {
             "available": true
         }
     ],
-    "papas": [
-        {
-            "id": "papas-clasicas",
-            "name": "Papas Clásicas",
-            "desc": "Papas fritas clásicas bastón crujientes.",
-            "price": 9000,
-            "img": BURGER_PLACEHOLDER,
-            "available": true
-        },
-        {
-            "id": "papas-cheddar",
-            "name": "Papas con Cheddar",
-            "desc": "Papas fritas bastón bañadas con abundante queso cheddar fundido.",
-            "price": 9500,
-            "img": BURGER_PLACEHOLDER,
-            "available": true
-        },
-        {
-            "id": "papas-cheddar-panceta",
-            "name": "Papas con Cheddar y Panceta",
-            "desc": "Papas fritas bastón con queso cheddar fundido y panceta picada crujiente.",
-            "price": 10500,
-            "img": BURGER_PLACEHOLDER,
-            "available": true
-        }
-    ],
     "bebidas": [
         {
             "id": "bebida-gaseosa",
