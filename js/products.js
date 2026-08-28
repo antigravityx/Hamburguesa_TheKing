@@ -149,7 +149,7 @@ const PRODUCTS = {
             "name": "Pizza Mozzarella",
             "desc": "Masa casera, salsa, queso mozzarella, orégano, aceitunas.",
             "price": 8500,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         },
         {
@@ -157,7 +157,7 @@ const PRODUCTS = {
             "name": "Pizza Morrones Ahumados",
             "desc": "Masa casera, salsa, queso mozzarella, jamón cocido, morrones ahumados, orégano, aceitunas.",
             "price": 9500,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         },
         {
@@ -165,7 +165,7 @@ const PRODUCTS = {
             "name": "Pizza Fugazzeta",
             "desc": "Masa casera, salsa, queso mozzarella, orégano, aceitunas, cebollas salteadas.",
             "price": 9000,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         },
         {
@@ -173,7 +173,7 @@ const PRODUCTS = {
             "name": "Pizza Calabresa",
             "desc": "Masa casera, salsa, queso mozzarella, orégano, calabresa.",
             "price": 9500,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         },
         {
@@ -181,7 +181,7 @@ const PRODUCTS = {
             "name": "Pizza The King",
             "desc": "Masa casera, salsa, queso mozzarella, tomates, orégano, huevos fritos.",
             "price": 10500,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         }
     ],
@@ -191,7 +191,7 @@ const PRODUCTS = {
             "name": "Gaseosa 500ml",
             "desc": "Línea Coca-Cola, Sprite o Fanta bien fría.",
             "price": 3500,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         },
         {
@@ -199,7 +199,7 @@ const PRODUCTS = {
             "name": "Cerveza en Lata",
             "desc": "Lata de cerveza 473ml bien helada.",
             "price": 4500,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         },
         {
@@ -207,7 +207,7 @@ const PRODUCTS = {
             "name": "Agua Mineral 500ml",
             "desc": "Agua mineral con o sin gas bien fría.",
             "price": 2500,
-            "img": LOGO_PLACEHOLDER,
+            "img": "img/pan-353---.jpg",
             "available": true
         }
     ]

@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Menú: lectura pública, escritura solo desde el admin (no requiere auth Firebase)
+    match /menu/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+    // Configuración (banners, sorteo): lectura y escritura pública
+    match /config/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+    // Participantes del sorteo: lectura y escritura pública
+    match /sorteo_participantes/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

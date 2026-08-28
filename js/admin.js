@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isAvailable = product.available !== false;
 
                 card.innerHTML = `
-                    <img src="${product.img || 'img/pan-353---.jpg'}" alt="${product.name}" class="admin-prod-img" onerror="this.src='img/pan-353---.jpg'">
+                    <img src="${sanitizeImgSrc(product.img)}" alt="${product.name}" class="admin-prod-img" onerror="this.src='img/pan-353---.jpg'">
                     <div class="admin-prod-info">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
                             <span class="admin-prod-title">${product.name}</span>
@@ -362,10 +362,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- AUXILIARES ---
+    
+    // Sanitiza el src de imagen: si es SVG/base64 o contiene comillas devuelve el fallback seguro
+    function sanitizeImgSrc(imgValue) {
+        if (!imgValue) return 'img/pan-353---.jpg';
+        const s = String(imgValue);
+        // Si es un data URI (SVG/PNG base64) o contiene comillas (rompería HTML) usar fallback
+        if (s.startsWith('data:') || s.includes('"') || s.includes("'") || s.length > 300) {
+            return 'img/pan-353---.jpg';
+        }
+        return s;
+    }
+
     async function saveAndUpdateState(message) {
-        await window.kingDB.saveProductsAsync(localProductsState);
+        const result = await window.kingDB.saveProductsAsync(localProductsState);
         renderProductsList();
-        showToast('✅ ' + message);
+        if (result && result.success === false) {
+            showToast('\u274c Firebase: ' + (result.error || 'Error al guardar. Verificá la conexión.'));
+            console.error('[Admin] Firebase write failed:', result.error);
+        } else {
+            showToast('\u2705 ' + message);
+        }
     }
 
     function showToast(msg) {
