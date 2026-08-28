@@ -1,9 +1,28 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     
     // --- DATOS DEL MENÚ ---
-    const phoneWhatsApp = "5493794299964";
+    // phoneWhatsApp es mutable: se actualiza desde Firebase si la secretaria lo cambia en el admin
+    let phoneWhatsApp = "5493794299964";
     
-    // Los productos se cargan desde products.js de forma global
+    // Carga inicial desde Firebase antes de renderizar (si kingDB está disponible)
+    if (window.kingDB) {
+        try {
+            const [firebaseProducts, firebaseBanners] = await Promise.all([
+                window.kingDB.initialLoadProducts(),
+                window.kingDB.initialLoadBanners()
+            ]);
+            // Si Firebase tiene banners con WhatsApp, usarlo
+            if (firebaseBanners && firebaseBanners.phoneWhatsApp) {
+                phoneWhatsApp = firebaseBanners.phoneWhatsApp;
+            } else if (window.kingDB._phoneWhatsApp) {
+                phoneWhatsApp = window.kingDB._phoneWhatsApp;
+            }
+        } catch(e) {
+            console.warn('[TheKing] Carga inicial Firebase fallida, usando datos estáticos', e);
+        }
+    }
+    
+    // Los productos se cargan desde products.js de forma global (con Firebase merge ya aplicado)
 
     let cart = JSON.parse(localStorage.getItem('king_cart')) || [];
     let deliveryCost = 0;       // Costo de envío (calculado por GPS, OSM o zona manual)
@@ -438,9 +457,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Cargar estado inicial
+    // Cargar estado inicial desde los datos ya fusionados (Firebase + estáticos)
     renderProducts('promos');
     updateCartUI();
+    
+    // Si Firebase cargó banners con éxito, aplicarlos ahora
+    if (window.kingDB && window.kingDB.localBanners) {
+        applyBannersData(window.kingDB.localBanners);
+    }
 
     // --- LÓGICA DEL CARRITO ---
     cartToggle.addEventListener('click', () => cartModal.classList.add('open'));
@@ -750,6 +774,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (heroSub && banners.heroSub) heroSub.textContent = banners.heroSub;
         if (phoneSpan && banners.phone) phoneSpan.innerHTML = `<i class="ri-phone-line"></i> ${banners.phone}`;
         if (instaSpan && banners.instagram) instaSpan.innerHTML = `<i class="ri-instagram-line"></i> ${banners.instagram}`;
+        // Actualizar phoneWhatsApp dinámicamente para que los pedidos usen el número correcto
+        if (banners.phoneWhatsApp) {
+            phoneWhatsApp = banners.phoneWhatsApp;
+            if (window.kingDB) window.kingDB._phoneWhatsApp = banners.phoneWhatsApp;
+        }
     }
 
     if (window.kingDB) {
