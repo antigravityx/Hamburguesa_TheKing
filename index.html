@@ -3,7 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The King Burger - Carta Menú Web</title>
+    <title>The King | Hamburguesas en Corrientes Capital</title>
+    <meta name="description" content="The King Corrientes. Las mejores hamburguesas artesanales, pizzas y lomos de Corrientes Capital. Envío rápido y delivery propio. ¡Hacé tu pedido ahora!">
+    <meta name="keywords" content="hamburguesas corrientes, the king corrientes, the king burger corrientes, delivery de comida corrientes, pizzas corrientes, comida rápida corrientes, hamburguesas the king, don jose corrientes, rio chico corrientes">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="restaurant">
+    <meta property="og:url" content="https://theking.sbs/">
+    <meta property="og:title" content="The King | Hamburguesas en Corrientes Capital">
+    <meta property="og:description" content="Las mejores hamburguesas artesanales y pizzas de Corrientes. Pedí online con nuestro delivery propio.">
+    <meta property="og:image" content="https://theking.sbs/icon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://theking.sbs/">
+    <meta property="twitter:title" content="The King | Hamburguesas en Corrientes">
+    <meta property="twitter:description" content="Las mejores hamburguesas artesanales y pizzas de Corrientes. Pedí online con nuestro delivery propio.">
+    <meta property="twitter:image" content="https://theking.sbs/icon.png">
+
+    <!-- JSON-LD Structured Data for Local Business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "The King Burger",
+      "image": "https://theking.sbs/icon.png",
+      "url": "https://theking.sbs/",
+      "telephone": "+543794299964",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Río Chico 5410",
+        "addressLocality": "Corrientes",
+        "addressRegion": "Corrientes",
+        "postalCode": "W3400",
+        "addressCountry": "AR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -27.46056,
+        "longitude": -58.83417
+      },
+      "servesCuisine": ["Hamburguesas", "Pizzas", "Lomitos", "Comida Rápida"],
+      "priceRange": "$$",
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "20:00",
+        "closes": "00:30"
+      },
+      "sameAs": [
+        "https://www.instagram.com/theking.ctes/"
+      ]
+    }
+    </script>
+
     <!-- Firebase Compat SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
