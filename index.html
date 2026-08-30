@@ -362,6 +362,42 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast glassmorphism">Producto añadido al carrito</div>
 
+    <!-- SISTEMA DE CORONAS (VALORACIÓN PÚBLICA) -->
+    <div class="container" style="margin-top: 3rem; margin-bottom: 2rem;">
+        <div class="glassmorphism" style="padding: 2.5rem 2rem; border-radius: 20px; text-align: center; position: relative; overflow: hidden; border-color: var(--accent-color);">
+            <div style="position: absolute; top: -20px; right: -20px; font-size: 8rem; opacity: 0.05; transform: rotate(15deg);">👑</div>
+            
+            <h3 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 0.5rem;">¿Cuál se merece la Corona? 👑</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem;">Contanos cuál de nuestras hamburguesas es tu favorita suprema.</p>
+            
+            <div style="max-width: 400px; margin: 0 auto;">
+                <select id="crown-product-select" style="width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: #fff; font-family: inherit; font-size: 1rem; margin-bottom: 1.5rem; outline: none;">
+                    <option value="" disabled selected>Elegí tu hamburguesa preferida...</option>
+                    <option value="Provolone Doble">Provolone Doble</option>
+                    <option value="King Bacon Doble">King Bacon Doble</option>
+                    <option value="Crispy Chicken">Crispy Chicken</option>
+                    <option value="Royal Cheese">Royal Cheese</option>
+                    <option value="Veggie King">Veggie King</option>
+                </select>
+
+                <div id="crown-stars-container" style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                    <button class="crown-btn" data-val="1"><i class="ri-vip-crown-line"></i></button>
+                    <button class="crown-btn" data-val="2"><i class="ri-vip-crown-line"></i></button>
+                    <button class="crown-btn" data-val="3"><i class="ri-vip-crown-line"></i></button>
+                    <button class="crown-btn" data-val="4"><i class="ri-vip-crown-line"></i></button>
+                    <button class="crown-btn" data-val="5"><i class="ri-vip-crown-line"></i></button>
+                </div>
+
+                <button id="crown-submit-btn" style="width: 100%; background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); color: #000; border: none; padding: 1rem; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s;">
+                    CORONAR AHORA
+                </button>
+                <div id="crown-thanks-msg" style="display: none; color: #2ecc71; font-weight: 700; margin-top: 1rem; font-size: 1.1rem;">
+                    ¡Gracias por tu voto real! 👑
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER DE LA APLICACIÓN -->
     <footer class="app-footer" style="margin-top: 4rem; padding: 2rem 1rem; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0,0,0,0.3);">
         <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">

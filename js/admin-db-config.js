@@ -341,6 +341,93 @@ class KingDatabaseEngine {
         localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_PASS, newPass);
         return { success: true, message: 'Contraseña cambiada exitosamente.' };
     }
+
+    /**
+     * ==========================================
+     * MODULOS DE ESTADÍSTICAS Y SEMILLA IA
+     * ==========================================
+     */
+
+    // Guardar Intento de Pedido (Web -> Firebase)
+    async saveOrderIntent(cartItems) {
+        try {
+            const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            const docRef = this.db.collection('stats_orders').doc(dateStr);
+            
+            await this.db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(docRef);
+                
+                let data = doc.exists ? doc.data() : { totalOrders: 0, products: {} };
+                data.totalOrders += 1;
+                
+                cartItems.forEach(item => {
+                    const cleanName = item.name.replace(/[^a-zA-Z0-9]/g, '_');
+                    if (!data.products[cleanName]) data.products[cleanName] = 0;
+                    data.products[cleanName] += item.quantity;
+                });
+                
+                transaction.set(docRef, data);
+            });
+            return true;
+        } catch(e) {
+            console.warn('[Verix Engine] No se pudo guardar stat:', e);
+            return false;
+        }
+    }
+
+    // Guardar Valoración de Corona (Web -> Firebase)
+    async saveCrownRating(productName, stars) {
+        try {
+            const cleanName = productName.replace(/[^a-zA-Z0-9]/g, '_');
+            const docRef = this.db.collection('stats_ratings').doc(cleanName);
+            
+            await this.db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(docRef);
+                let data = doc.exists ? doc.data() : { productName, totalVotes: 0, totalStars: 0, average: 0 };
+                
+                data.totalVotes += 1;
+                data.totalStars += stars;
+                data.average = data.totalStars / data.totalVotes;
+                
+                transaction.set(docRef, data);
+            });
+            return true;
+        } catch(e) {
+            console.warn('[Verix Engine] No se pudo guardar rating:', e);
+            return false;
+        }
+    }
+
+    // Escuchar Stats de los últimos 7 días (Para Admin Dashboard)
+    listenStats7Days(callback) {
+        const past7Days = [...Array(7)].map((_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            return d.toISOString().split('T')[0];
+        });
+        
+        return this.db.collection('stats_orders').onSnapshot(snapshot => {
+            const stats = [];
+            snapshot.forEach(doc => {
+                if (past7Days.includes(doc.id)) {
+                    stats.push({ date: doc.id, ...doc.data() });
+                }
+            });
+            stats.sort((a,b) => a.date.localeCompare(b.date)); // Cronológico
+            callback(stats);
+        });
+    }
+
+    // Escuchar Ratings (Para Admin Dashboard)
+    listenRatings(callback) {
+        return this.db.collection('stats_ratings').onSnapshot(snapshot => {
+            const ratings = [];
+            snapshot.forEach(doc => {
+                ratings.push(doc.data());
+            });
+            callback(ratings);
+        });
+    }
 }
 
 // Instancia global

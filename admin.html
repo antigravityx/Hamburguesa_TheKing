@@ -321,27 +321,6 @@
 <body>
     <div class="background-overlay"></div>
 
-    <!-- Header Principal del Admin -->
-    <header class="admin-header glassmorphism">
-        <div style="display: flex; align-items: center; gap: 0.8rem;">
-            <span style="font-size: 1.8rem;">👑</span>
-            <div>
-                <h1 style="font-size: 1.2rem; font-weight: 800; line-height: 1;">THE KING <span style="color: var(--accent-color);">ADMIN</span></h1>
-                <p style="font-size: 0.75rem; color: var(--text-muted);">Panel de Gestión Autónoma — secretaria@theking.sbs</p>
-            </div>
-        </div>
-        
-        <div id="header-user-actions" style="display: none; align-items: center; gap: 1rem;">
-            <div class="admin-status-badge">
-                <span class="admin-status-dot"></span>
-                <span>En Línea · Sync theking.sbs</span>
-            </div>
-            <button id="logout-btn" style="background: rgba(239, 35, 60, 0.2); border: 1px solid rgba(239, 35, 60, 0.4); color: #ef233c; padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit;">
-                <i class="ri-logout-box-r-line"></i> Salir
-            </button>
-        </div>
-    </header>
-
     <!-- Vista 1: Login de la Secretaria -->
     <div id="login-section" class="login-wrapper">
         <div class="login-card glassmorphism">
@@ -367,25 +346,119 @@
     </div>
 
     <!-- Vista 2: Dashboard Administrativo -->
-    <div id="dashboard-section" class="dashboard-container">
-        <!-- Navegación por pestañas -->
-        <nav class="admin-nav">
-            <button class="admin-nav-btn active" data-tab="products-tab">
-                <i class="ri-restaurant-2-line"></i> Gestión de Productos y Carta
-            </button>
-            <button class="admin-nav-btn" data-tab="banners-tab">
-                <i class="ri-image-edit-line"></i> Banners y Anuncios Hero
-            </button>
-            <button class="admin-nav-btn" data-tab="settings-tab">
-                <i class="ri-shield-keyhole-line"></i> Seguridad y Respaldos
-            </button>
-            <button class="admin-nav-btn" data-tab="sorteo-tab">
-                <i class="ri-vip-crown-line"></i> 🎰 Sorteo en Vivo
-            </button>
-        </nav>
+    <div id="dashboard-section" class="dashboard-wrapper" style="display: none;">
+        
+        <!-- Sidebar -->
+        <aside class="admin-sidebar glassmorphism">
+            <div class="sidebar-logo">
+                <span style="font-size: 2.2rem;">👑</span>
+                <div>
+                    <h2 style="font-size: 1.2rem; font-weight: 800; line-height: 1;">THE KING</h2>
+                    <span style="font-size: 0.8rem; color: var(--accent-color);">ADMIN</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="admin-nav-btn sidebar-btn active" data-tab="home-tab">
+                    <i class="ri-dashboard-line"></i> Dashboard Inicial
+                </button>
+                <button class="admin-nav-btn sidebar-btn" data-tab="products-tab">
+                    <i class="ri-restaurant-2-line"></i> Carta y Menú
+                </button>
+                <button class="admin-nav-btn sidebar-btn" data-tab="banners-tab">
+                    <i class="ri-image-edit-line"></i> Portada Web
+                </button>
+                <button class="admin-nav-btn sidebar-btn" data-tab="sorteo-tab">
+                    <i class="ri-vip-crown-line"></i> 🎰 Sorteo Vivo
+                </button>
+                <button class="admin-nav-btn sidebar-btn" data-tab="settings-tab">
+                    <i class="ri-shield-keyhole-line"></i> Seguridad
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="admin-status-badge" style="margin-bottom: 1rem; justify-content: center;">
+                    <span class="admin-status-dot"></span>
+                    <span style="font-size:0.75rem;">Sync theking.sbs</span>
+                </div>
+                <button id="logout-btn" class="sidebar-logout">
+                    <i class="ri-logout-box-r-line"></i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="admin-main-content">
+            
+            <!-- Pestaña 0: Inicio / Dashboard IA -->
+            <div id="home-tab" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.8rem;">Centro de Comando</h2>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Bienvenida, Secretaría</div>
+                </div>
+
+                <!-- Tarjetas IA -->
+                <div class="dashboard-cards-grid">
+                    <div class="dash-card glassmorphism">
+                        <div class="dash-card-icon" style="color: #2ecc71; background: rgba(46,204,113,0.1);"><i class="ri-shopping-bag-3-line"></i></div>
+                        <div>
+                            <div class="dash-card-title">Intenciones de Pedido (Hoy)</div>
+                            <div class="dash-card-value" id="stats-orders-today">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dash-card glassmorphism">
+                        <div class="dash-card-icon" style="color: var(--accent-color); background: rgba(255,183,3,0.1);"><i class="ri-vip-crown-fill"></i></div>
+                        <div>
+                            <div class="dash-card-title">Corona del Pueblo</div>
+                            <div class="dash-card-value" id="stats-top-product" style="font-size: 1.1rem; margin-top: 0.2rem;">-</div>
+                        </div>
+                    </div>
+
+                    <div class="dash-card glassmorphism" style="border-color: var(--accent-color);">
+                        <div class="dash-card-icon" style="color: #9b59b6; background: rgba(155,89,182,0.1);"><i class="ri-brain-line"></i></div>
+                        <div>
+                            <div class="dash-card-title">Semilla IA sugiere:</div>
+                            <div class="dash-card-value" id="ai-suggestion" style="font-size: 0.95rem; line-height: 1.3; margin-top:0.3rem;">Recolectando datos...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico -->
+                <div class="glassmorphism" style="padding: 1.5rem; border-radius: 16px; margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-muted);"><i class="ri-bar-chart-grouped-line"></i> Tendencia de Pedidos (Últimos 7 días)</h3>
+                    <canvas id="ordersChart" height="80"></canvas>
+                </div>
+
+                <!-- CENTINELA DE INTEGRIDAD -->
+                <div class="glassmorphism" style="padding: 1.5rem; border-radius: 16px; margin-top: 2rem; border-color: rgba(155,89,182,0.4);">
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                        <span style="font-size: 1.5rem;">🛡️</span>
+                        <div>
+                            <h3 style="font-size: 1rem; font-weight: 800; margin: 0;">CENTINELA DE INTEGRIDAD</h3>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">Soldado IA - Vigilancia continua de theking.sbs</span>
+                        </div>
+                        <div id="centinela-status" style="margin-left: auto; display: flex; align-items: center; gap: 0.4rem; background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; color: #2ecc71;">
+                            <span style="width:7px;height:7px;border-radius:50%;background:#2ecc71;display:inline-block;box-shadow:0 0 6px #2ecc71;"></span>
+                            Vigilando
+                        </div>
+                    </div>
+                    <div id="centinela-log" style="background: rgba(0,0,0,0.4); border-radius: 10px; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.78rem; max-height: 200px; overflow-y: auto; color: #a0aabf; line-height: 1.8;">
+                        <span style="color:#2ecc71;">[BOOT]</span> Centinela activado. Iniciando reconocimiento...
+                    </div>
+                    <div style="display: flex; gap: 0.8rem; margin-top: 1rem;">
+                        <button id="centinela-scan-btn" style="flex:1; background: rgba(155,89,182,0.2); border: 1px solid rgba(155,89,182,0.4); color: #9b59b6; padding: 0.6rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-family: inherit; transition: all 0.3s;">
+                            <i class="ri-radar-line"></i> Escaneo Manual
+                        </button>
+                        <button id="centinela-repair-btn" style="flex:1; background: rgba(255,183,3,0.1); border: 1px solid rgba(255,183,3,0.3); color: var(--accent-color); padding: 0.6rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-family: inherit; transition: all 0.3s;">
+                            <i class="ri-tools-line"></i> Auto-Reparar
+                        </button>
+                    </div>
+                </div>
+            </div>
 
         <!-- Pestaña 1: Productos -->
-        <div id="products-tab" class="tab-content active">
+        <div id="products-tab" class="tab-content">
             <div class="admin-table-controls">
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="category-filters">
                     <button class="category-btn active" data-cat="all">Todos</button>
@@ -545,6 +618,8 @@
                 </div>
             </div>
         </div>
+        </div>
+        </main>
     </div>
 
     <!-- Modal de Creación/Edición de Producto -->
@@ -609,7 +684,8 @@
     <!-- Toast Notification -->
     <div id="toast-notify" class="toast-notify">✅ Operación realizada con éxito</div>
 
-    <!-- Scripts de Firebase Compat -->
+    <!-- Scripts ChartJS y Firebase Compat -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 

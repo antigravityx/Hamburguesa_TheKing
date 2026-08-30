@@ -112,11 +112,233 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. CARGA DE DATOS AL DASHBOARD ---
     async function loadDashboardData() {
-        const products = await window.kingDB.getProductsAsync();
-        localProductsState = products || PRODUCTS;
+        // VELOCIDAD: Mostrar productos locales INMEDIATAMENTE (sin esperar Firebase)
+        localProductsState = typeof PRODUCTS !== 'undefined' ? JSON.parse(JSON.stringify(PRODUCTS)) : {};
         renderProductsList();
+
+        // Luego, en segundo plano, sobreescribir con los datos de Firebase
+        try {
+            const products = await window.kingDB.getProductsAsync();
+            if (products && Object.keys(products).length > 0) {
+                localProductsState = products;
+                renderProductsList(); // Actualizar silenciosamente
+            }
+        } catch(e) {
+            console.warn('[Centinela] Firebase no respondió, usando datos locales.');
+        }
+
         await loadBannersData();
         setupSorteoTab();
+        initDashboardAI();
+    }
+
+    function initDashboardAI() {
+        if (!window.kingDB) return;
+
+        let ordersChartInstance = null;
+
+        // 1. Escuchar Intentos de Pedido (Últimos 7 días)
+        window.kingDB.listenStats7Days((stats) => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStat = stats.find(s => s.date === todayStr);
+            
+            const ordersToday = todayStat ? todayStat.totalOrders : 0;
+            document.getElementById('stats-orders-today').textContent = ordersToday;
+
+            // Semilla IA: Lógica simple de sugerencias
+            const aiSugg = document.getElementById('ai-suggestion');
+            if (ordersToday === 0) {
+                aiSugg.innerHTML = 'El tráfico está bajo. Sugiero activar una promoción en Instagram para atraer clientes.';
+            } else if (ordersToday > 5) {
+                aiSugg.innerHTML = '¡Excelente ritmo! Muchos clientes armando pedidos hoy. Asegúrate de que haya stock de papas.';
+            } else {
+                aiSugg.innerHTML = 'Ritmo estable. Ideal para preparar cajas y organizar la cocina.';
+            }
+
+            // Renderizar Gráfico
+            const ctx = document.getElementById('ordersChart').getContext('2d');
+            const labels = stats.map(s => s.date.slice(5)); // MM-DD
+            const data = stats.map(s => s.totalOrders);
+
+            if (ordersChartInstance) ordersChartInstance.destroy();
+            ordersChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pedidos',
+                        data: data,
+                        borderColor: '#ffb703',
+                        backgroundColor: 'rgba(255, 183, 3, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0aabf' } }
+                    }
+                }
+            });
+        });
+
+        // 2. Escuchar Valoraciones (Coronas)
+        window.kingDB.listenRatings((ratings) => {
+            const topProductEl = document.getElementById('stats-top-product');
+            if (ratings.length === 0) {
+                topProductEl.textContent = 'Aún sin votos';
+                return;
+            }
+
+            // Ordenar por promedio más alto (mínimo 1 voto)
+            const sorted = ratings.sort((a, b) => b.average - a.average);
+            const best = sorted[0];
+            
+            if (best) {
+                topProductEl.innerHTML = `${best.productName} <br><span style="font-size:0.8rem; color:var(--text-muted);"><i class="ri-star-fill" style="color:var(--accent-color);"></i> ${best.average.toFixed(1)}/5 (${best.totalVotes} votos)</span>`;
+            }
+        });
+
+        // Iniciar Centinela
+        initCentinela();
+    }
+
+    // --- CENTINELA DE INTEGRIDAD WEB ---
+    function initCentinela() {
+        const logEl = document.getElementById('centinela-log');
+        const statusEl = document.getElementById('centinela-status');
+        const scanBtn = document.getElementById('centinela-scan-btn');
+        const repairBtn = document.getElementById('centinela-repair-btn');
+        if (!logEl) return;
+
+        const SITE_URL = 'https://theking.sbs';
+        let centinelaInterval = null;
+        let lastStatus = 'ok';
+        let issueLog = [];
+
+        function centLog(msg, type = 'info') {
+            const colors = { ok: '#2ecc71', warn: '#ffb703', error: '#ef233c', info: '#a0aabf', action: '#9b59b6' };
+            const tags = { ok: 'OK', warn: 'AVISO', error: 'ERROR', info: 'INFO', action: 'ACCIÓN' };
+            const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const line = document.createElement('div');
+            line.innerHTML = `<span style="color:${colors[type]};">[${tags[type]} ${time}]</span> ${msg}`;
+            logEl.appendChild(line);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        async function runScan() {
+            centLog('Iniciando escaneo de integridad...', 'info');
+            issueLog = [];
+
+            // 1. Verificar conectividad con la web pública
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 5000);
+                const resp = await fetch(SITE_URL, { signal: controller.signal, mode: 'no-cors' });
+                clearTimeout(timeout);
+                centLog('Web pública theking.sbs: ACCESIBLE ✓', 'ok');
+            } catch (e) {
+                issueLog.push('Web pública no responde');
+                centLog('⚠️ Web pública theking.sbs no responde. Verificar CDN o hosting.', 'error');
+            }
+
+            // 2. Verificar Firebase
+            try {
+                const snap = await window.kingDB.db.collection('config').doc('banners').get();
+                if (snap.exists) {
+                    centLog('Firebase Firestore: CONECTADO ✓', 'ok');
+                } else {
+                    issueLog.push('Documento banners no existe');
+                    centLog('⚠️ Documento de configuración vacío en Firebase.', 'warn');
+                }
+            } catch (e) {
+                issueLog.push('Firebase error');
+                centLog('⚠️ Error de conexión con Firebase: ' + e.message, 'error');
+            }
+
+            // 3. Verificar integridad de productos locales
+            const localProds = typeof PRODUCTS !== 'undefined' ? PRODUCTS : {};
+            const totalLocal = Object.values(localProds).flat().length;
+            if (totalLocal === 0) {
+                issueLog.push('Productos locales vacíos');
+                centLog('⚠️ No se encontraron productos locales en products.js', 'error');
+            } else {
+                centLog(`Productos locales: ${totalLocal} ítems detectados ✓`, 'ok');
+            }
+
+            // 4. Verificar productos en Firebase
+            try {
+                const prods = await window.kingDB.getProductsAsync();
+                const total = Object.values(prods || {}).flat().length;
+                if (total > 0) {
+                    centLog(`Productos en Firebase: ${total} ítems sincronizados ✓`, 'ok');
+                } else {
+                    issueLog.push('Firebase products vacíos');
+                    centLog('⚠️ Firebase sin productos. Se usarán los datos locales como respaldo.', 'warn');
+                }
+            } catch(e) {
+                centLog('Firebase productos: Error al leer. Usando locales como respaldo.', 'warn');
+            }
+
+            // Resultado final
+            if (issueLog.length === 0) {
+                centLog('✅ ESCANEO COMPLETO: Todo en orden. Sin anomalías detectadas.', 'ok');
+                setStatus('ok');
+            } else {
+                centLog(`⚡ Se detectaron ${issueLog.length} anomalía(s). Usa "Auto-Reparar" para intentar corrección.`, 'warn');
+                setStatus('warn');
+            }
+        }
+
+        async function runRepair() {
+            centLog('Iniciando secuencia de auto-reparación...', 'action');
+
+            // Reparación 1: Si Firebase de productos está vacío, subir los locales
+            try {
+                const prods = await window.kingDB.getProductsAsync();
+                const total = Object.values(prods || {}).flat().length;
+                if (total === 0 && typeof PRODUCTS !== 'undefined') {
+                    await window.kingDB.saveProducts(PRODUCTS);
+                    centLog('🔧 Auto-reparación: Productos locales subidos a Firebase ✓', 'action');
+                } else {
+                    centLog('Auto-reparación: Productos Firebase OK, sin acción necesaria.', 'ok');
+                }
+            } catch(e) {
+                centLog('Auto-reparación: No se pudo reparar productos — ' + e.message, 'error');
+            }
+
+            // Reparación 2: Forzar re-carga de datos del admin
+            await loadDashboardData();
+            centLog('🔧 Auto-reparación: Dashboard recargado forzosamente ✓', 'action');
+
+            centLog('✅ Secuencia de reparación finalizada.', 'ok');
+            setStatus('ok');
+        }
+
+        function setStatus(type) {
+            lastStatus = type;
+            const config = {
+                ok: { color: '#2ecc71', text: 'Vigilando' },
+                warn: { color: '#ffb703', text: 'Anomalía' },
+                error: { color: '#ef233c', text: 'Alerta' }
+            };
+            const c = config[type] || config.ok;
+            statusEl.style.color = c.color;
+            statusEl.style.borderColor = c.color.replace(')', ',0.3)').replace('rgb', 'rgba');
+            statusEl.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:${c.color};display:inline-block;box-shadow:0 0 6px ${c.color};"></span> ${c.text}`;
+        }
+
+        // Escaneo automático cada 10 minutos
+        setTimeout(() => runScan(), 3000); // Primera vez a los 3s de iniciar
+        centinelaInterval = setInterval(() => runScan(), 10 * 60 * 1000);
+
+        if (scanBtn) scanBtn.addEventListener('click', () => runScan());
+        if (repairBtn) repairBtn.addEventListener('click', () => runRepair());
     }
 
     // --- 5. RENDERIZADO DE LA LISTA DE PRODUCTOS ---
@@ -136,6 +358,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const isAvailable = product.available !== false;
 
+                // Soporte para productos con precio fijo (price) O por tamaño (sizes.doble/triple)
+                let priceDisplay = '';
+                if (product.price) {
+                    priceDisplay = `$${product.price.toLocaleString('es-AR')}`;
+                } else if (product.sizes) {
+                    const parts = Object.entries(product.sizes).map(([k, v]) => `${k.charAt(0).toUpperCase()+k.slice(1)}: $${v.toLocaleString('es-AR')}`);
+                    priceDisplay = parts.join(' / ');
+                } else {
+                    priceDisplay = 'Sin precio';
+                }
+
                 card.innerHTML = `
                     <img src="${sanitizeImgSrc(product.img)}" alt="${product.name}" class="admin-prod-img" onerror="this.src='img/pan-353---.jpg'">
                     <div class="admin-prod-info">
@@ -144,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 6px; text-transform: uppercase;">${catKey}</span>
                         </div>
                         <p class="admin-prod-desc">${product.desc}</p>
-                        <div class="admin-prod-price">$${product.price.toLocaleString('es-AR')}</div>
+                        <div class="admin-prod-price">${priceDisplay}</div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.8rem;">
                         <button class="stock-toggle-btn ${isAvailable ? 'available' : 'out-of-stock'}" data-cat="${catKey}" data-index="${index}">

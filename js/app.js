@@ -4,22 +4,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     // phoneWhatsApp es mutable: se actualiza desde Firebase si la secretaria lo cambia en el admin
     let phoneWhatsApp = "5493794299964";
     
-    // Carga inicial desde Firebase antes de renderizar (si kingDB está disponible)
+    // VELOCIDAD MÁXIMA: Renderizar inmediatamente con datos locales (products.js).
+    // Firebase actualiza en segundo plano sin bloquear la interfaz.
     if (window.kingDB) {
-        try {
-            const [firebaseProducts, firebaseBanners] = await Promise.all([
-                window.kingDB.initialLoadProducts(),
-                window.kingDB.initialLoadBanners()
-            ]);
-            // Si Firebase tiene banners con WhatsApp, usarlo
+        // Cargar banners en background (sin await, no bloquea)
+        window.kingDB.initialLoadBanners().then(firebaseBanners => {
             if (firebaseBanners && firebaseBanners.phoneWhatsApp) {
                 phoneWhatsApp = firebaseBanners.phoneWhatsApp;
             } else if (window.kingDB._phoneWhatsApp) {
                 phoneWhatsApp = window.kingDB._phoneWhatsApp;
             }
-        } catch(e) {
-            console.warn('[TheKing] Carga inicial Firebase fallida, usando datos estáticos', e);
-        }
+        }).catch(e => console.warn('[TheKing] Banners Firebase fallido, usando locales', e));
+
+        // Cargar productos en background (actualiza la UI cuando llegan)
+        window.kingDB.initialLoadProducts().catch(
+            e => console.warn('[TheKing] Productos Firebase fallidos, usando locales', e)
+        );
     }
     
     // Los productos se cargan desde products.js de forma global (con Firebase merge ya aplicado)
@@ -726,6 +726,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let completedOrders = parseInt(localStorage.getItem('king_completed_orders') || '0');
         localStorage.setItem('king_completed_orders', (completedOrders + 1).toString());
+
+        // --- SEMILLA IA: Guardar Intento de Pedido ---
+        if (window.kingDB) {
+            window.kingDB.saveOrderIntent(cart);
+        }
     });
 
     // --- LÓGICA ELEGANTE PWA NO INTRUSIVA ---
@@ -898,6 +903,67 @@ document.addEventListener('DOMContentLoaded', async () => {
                 s.classList.remove('hovered');
                 s.querySelector('i').className = 'ri-star-line';
             });
+        });
+    }
+
+    // --- LÓGICA SISTEMA DE CORONAS (VALORACIÓN) ---
+    const crownBtns = document.querySelectorAll('.crown-btn');
+    const crownSubmitBtn = document.getElementById('crown-submit-btn');
+    const crownSelect = document.getElementById('crown-product-select');
+    const crownThanks = document.getElementById('crown-thanks-msg');
+    let currentCrownRating = 0;
+
+    if (crownBtns.length > 0) {
+        crownBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const val = parseInt(btn.getAttribute('data-val'));
+                currentCrownRating = val;
+                
+                crownBtns.forEach(b => {
+                    const bVal = parseInt(b.getAttribute('data-val'));
+                    if (bVal <= val) {
+                        b.classList.add('rated');
+                        b.querySelector('i').className = 'ri-vip-crown-fill';
+                    } else {
+                        b.classList.remove('rated');
+                        b.querySelector('i').className = 'ri-vip-crown-line';
+                    }
+                });
+            });
+        });
+
+        crownSubmitBtn.addEventListener('click', async () => {
+            const product = crownSelect.value;
+            if (!product) {
+                showToast('👑 Por favor elegí una hamburguesa primero.');
+                return;
+            }
+            if (currentCrownRating === 0) {
+                showToast('👑 Dale al menos 1 corona a tu elegida.');
+                return;
+            }
+
+            // Evitar spam local
+            if (localStorage.getItem('king_crown_voted')) {
+                showToast('👑 Ya dejaste tu voto real. ¡Gracias!');
+                return;
+            }
+
+            crownSubmitBtn.textContent = 'Enviando...';
+            crownSubmitBtn.disabled = true;
+
+            if (window.kingDB) {
+                const res = await window.kingDB.saveCrownRating(product, currentCrownRating);
+                if (res) {
+                    localStorage.setItem('king_crown_voted', 'true');
+                    crownSubmitBtn.style.display = 'none';
+                    crownThanks.style.display = 'block';
+                } else {
+                    showToast('Hubo un error al enviar tu corona. Intenta de nuevo.');
+                    crownSubmitBtn.textContent = 'CORONAR AHORA';
+                    crownSubmitBtn.disabled = false;
+                }
+            }
         });
     }
 
