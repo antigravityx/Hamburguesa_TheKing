@@ -1050,3 +1050,10 @@ html {
 .crown-btn { background: transparent; border: none; font-size: 1.5rem; color: var(--glass-border); cursor: pointer; transition: all 0.2s; }
 .crown-btn:hover, .crown-btn.active { color: var(--accent-color); transform: scale(1.2); }
 .crown-btn.rated { color: var(--accent-color); }
+
+/* ===== SKELETON LOADERS ===== */
+@keyframes skeletonPulse {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.4; }
+    100% { opacity: 1; }
+}
