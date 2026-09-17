@@ -1057,3 +1057,15 @@ html {
     50%  { opacity: 0.4; }
     100% { opacity: 1; }
 }
+
+/* =========================================================
+   SANEAMIENTO DEL ORBE: THE KING WEB
+   ========================================================= */
+
+/* 1. Ocultar Badge Flotante de Netlify (Z-Index intrusivo) */
+div[id^="netlify"], iframe[src*="netlify"] {
+  display: none !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  z-index: -9999 !important;
+}
