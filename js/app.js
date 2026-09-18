@@ -97,11 +97,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const LOCAL_LAT = -27.4611;
     const LOCAL_LON = -58.7817;
     const DELIVERY_ZONES = [
-        { id: 'zona1', label: '🟢 Zona 1 ($1.500) – Lomas del Mirador, Frondizi, Seis Hectáreas', price: 1500, keywords: ['lomas del mirador', 'frondizi', 'seis hectareas', 'libertad proxima'] },
-        { id: 'zona2', label: '🔴 Zona 2 ($2.500) – Molina Punta, Punta Taitalo, Sol de Mayo, Shopping, UNNE Eragia', price: 2500, keywords: ['molina punta', 'punta taitalo', 'sol de mayo', 'centenario shopping', 'eragia', 'unne', 'aguapey', 'canal 13'] },
-        { id: 'zona3', label: '🔴 Zona 3 ($3.000) – Centro, Bañado Norte, Parque Mitre, Camba Cuá, 17 de Agosto, Rotonda Itatí', price: 3000, keywords: ['centro', 'bañado norte', 'parque mitre', 'camba cua', '17 de agosto', 'rotonda itati', 'cichero', 'seminario', 'aldana'] },
-        { id: 'zona4', label: '🔴 Zona 4 ($3.500) – Maipú, La Reina, Santa Lucía, Ponce, Boca Unidos', price: 3500, keywords: ['maipu', 'la reina', 'santa lucia', 'ponce', 'boca unidos', 'estadio boca unidos', 'tacuari', 'guemes'] },
-        { id: 'zona5', label: '🔴 Zona 5 ($4.000) – Costanera Sur, Arazaty, Galván, Hosp. Vidal, Virgen de los Dolores', price: 4000, keywords: ['arazaty', 'costanera', 'galvan', 'vidal', 'hospital vidal', 'virgen de los dolores', 'juan de garay', 'tte ibañez'] },
+        { id: 'zona1', label: '🟢 Zona 1 ($1.800) – Lomas del Mirador, Frondizi, Seis Hectáreas', price: 1800, keywords: ['lomas del mirador', 'frondizi', 'seis hectareas', 'libertad proxima'] },
+        { id: 'zona2', label: '🟡 Zona 2 ($2.200) – Molina Punta, Punta Taitalo, Sol de Mayo, Shopping, UNNE Eragia', price: 2200, keywords: ['molina punta', 'punta taitalo', 'sol de mayo', 'centenario shopping', 'eragia', 'unne', 'aguapey', 'canal 13'] },
+        { id: 'zona3', label: '🟠 Zona 3 ($3.000) – Centro, Bañado Norte, Parque Mitre, Camba Cuá, 17 de Agosto, Rotonda Itatí', price: 3000, keywords: ['centro', 'bañado norte', 'parque mitre', 'camba cua', '17 de agosto', 'rotonda itati', 'cichero', 'seminario', 'aldana'] },
+        { id: 'zona4', label: '🔴 Zona 4 ($4.000) – Maipú, La Reina, Santa Lucía, Barrio Ponce, Boca Unidos', price: 4000, keywords: ['maipu', 'la reina', 'santa lucia', 'ponce', 'boca unidos', 'estadio boca unidos', 'tacuari', 'guemes'] },
+        { id: 'zona5', label: '🔴 Zona 5 ($4.000) – Costanera, Arazaty, Galván, Hosp. Vidal, Virgen de los Dolores', price: 4000, keywords: ['arazaty', 'costanera', 'galvan', 'vidal', 'hospital vidal', 'virgen de los dolores', 'juan de garay', 'tte ibañez'] },
     ];
 
     let deliveryType = 'Delivery';

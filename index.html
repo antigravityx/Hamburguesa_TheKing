@@ -126,6 +126,16 @@
             <a href="#menu" class="hero-cta">
                 <i class="ri-restaurant-2-line"></i> Ver Menú
             </a>
+
+            <!-- BOTÓN DELIVERY RADAR — Rey en la Moto -->
+            <button class="delivery-radar-btn" id="open-delivery-radar" aria-label="Consultar precios de delivery">
+                <span class="moto-scene">
+                    <span class="moto-king">👑🏍️</span>
+                    <span class="moto-dust">💨</span>
+                </span>
+                <span class="moto-btn-text">¿A cuánto sale el delivery?</span>
+                <span class="moto-btn-sub">Consultá zonas y precios aquí</span>
+            </button>
         </div>
     </section>
 
@@ -427,5 +437,94 @@
     <script defer src="js/admin-db-config.js"></script>
     <script defer src="js/products.js"></script>
     <script defer src="js/app.js"></script>
+
+    <!-- ===== MODAL RADAR DE DELIVERY ===== -->
+    <div id="delivery-radar-modal" class="delivery-radar-modal" role="dialog" aria-modal="true" aria-label="Precios de Delivery">
+        <div class="delivery-radar-overlay" id="close-radar-overlay"></div>
+        <div class="delivery-radar-panel glassmorphism">
+
+            <!-- Header -->
+            <div class="radar-header">
+                <div class="radar-header-icon">🏍️👑</div>
+                <div>
+                    <h2 class="radar-title">Delivery del Rey</h2>
+                    <p class="radar-subtitle">Zona y precio de envío a tu barrio</p>
+                </div>
+                <button class="radar-close-btn" id="close-delivery-radar" aria-label="Cerrar">✕</button>
+            </div>
+
+            <!-- Radar visual animado -->
+            <div class="radar-visual-wrap">
+                <div class="radar-circle radar-c1"></div>
+                <div class="radar-circle radar-c2"></div>
+                <div class="radar-circle radar-c3"></div>
+                <div class="radar-circle radar-c4"></div>
+                <div class="radar-sweep"></div>
+                <div class="radar-dot radar-dot-local" title="The King Burger">🏠</div>
+                <div class="radar-dot radar-dot-z1" title="Zona 1">🟢</div>
+                <div class="radar-dot radar-dot-z2" title="Zona 2">🟡</div>
+                <div class="radar-dot radar-dot-z3" title="Zona 3">🟠</div>
+                <div class="radar-dot radar-dot-z4" title="Zona 4-5">🔴</div>
+            </div>
+
+            <!-- Zonas y precios -->
+            <div class="radar-zones-list">
+                <div class="radar-zone-item">
+                    <span class="radar-zone-badge" style="background:rgba(74,222,128,0.18);border-color:rgba(74,222,128,0.5);color:#4ade80;">🟢 Zona 1</span>
+                    <span class="radar-zone-desc">Lomas del Mirador, Frondizi, Seis Hectáreas</span>
+                    <span class="radar-zone-price">$1.800</span>
+                </div>
+                <div class="radar-zone-item">
+                    <span class="radar-zone-badge" style="background:rgba(250,204,21,0.15);border-color:rgba(250,204,21,0.5);color:#facc15;">🟡 Zona 2</span>
+                    <span class="radar-zone-desc">Shopping, UNNE, Sol de Mayo, Molina Punta</span>
+                    <span class="radar-zone-price">$2.200</span>
+                </div>
+                <div class="radar-zone-item">
+                    <span class="radar-zone-badge" style="background:rgba(251,146,60,0.15);border-color:rgba(251,146,60,0.5);color:#fb923c;">🟠 Zona 3</span>
+                    <span class="radar-zone-desc">Centro, Parque Mitre, Bañado Norte, Camba Cuá</span>
+                    <span class="radar-zone-price">$3.000</span>
+                </div>
+                <div class="radar-zone-item">
+                    <span class="radar-zone-badge" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:#ef4444;">🔴 Zona 4</span>
+                    <span class="radar-zone-desc">Barrio Ponce, Maipú, Santa Lucía, Boca Unidos</span>
+                    <span class="radar-zone-price">$4.000</span>
+                </div>
+                <div class="radar-zone-item">
+                    <span class="radar-zone-badge" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:#ef4444;">🔴 Zona 5</span>
+                    <span class="radar-zone-desc">Costanera, Arazaty, Galván, Hosp. Vidal</span>
+                    <span class="radar-zone-price">$4.000</span>
+                </div>
+            </div>
+
+            <p class="radar-footer-note">
+                🏍️ ¡El Rey llega hasta tu puerta! El costo se calcula automáticamente al pedir.
+            </p>
+        </div>
+    </div>
+
+    <script>
+    // ── Delivery Radar Modal ──────────────────────────────────
+    (function() {
+        const modal   = document.getElementById('delivery-radar-modal');
+        const openBtn = document.getElementById('open-delivery-radar');
+        const closeBtn = document.getElementById('close-delivery-radar');
+        const overlay  = document.getElementById('close-radar-overlay');
+        if (!modal || !openBtn) return;
+
+        function openRadar() {
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeRadar() {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        openBtn.addEventListener('click', openRadar);
+        closeBtn.addEventListener('click', closeRadar);
+        overlay.addEventListener('click', closeRadar);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRadar(); });
+    })();
+    </script>
 </body>
 </html>

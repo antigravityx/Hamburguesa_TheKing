@@ -27,7 +27,7 @@ const KING_ADMIN_CONFIG = {
     STORAGE_KEY_BANNERS: 'king_live_banners_v1',      // constante faltante — CORREGIDA
 
     // Credenciales predeterminadas iniciales (Secretaría)
-    DEFAULT_USER: 'secretaria@theking.sbs',
+    DEFAULT_USER: 'secretaria@orbe.local',
     DEFAULT_PASS_PLAIN: 'King2026!'
 };
 
@@ -305,7 +305,7 @@ class KingDatabaseEngine {
         const cleanUser = user.trim().toLowerCase();
         const customPass = localStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_PASS) || KING_ADMIN_CONFIG.DEFAULT_PASS_PLAIN;
 
-        if ((cleanUser === 'secretaria@theking.sbs' || cleanUser === 'admin@theking.sbs' || cleanUser === 'secretaria' || cleanUser === 'admin') && password === customPass) {
+        if ((cleanUser === 'secretaria@orbe.local' || cleanUser === 'admin@orbe.local' || cleanUser === 'secretaria' || cleanUser === 'admin') && password === customPass) {
             const session = {
                 user: cleanUser,
                 token: 'king_sec_token_' + Math.random().toString(36).substring(2),

@@ -263,9 +263,14 @@ body {
 }
 
 .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px rgba(255, 183, 3, 0.15), 0 10px 25px rgba(0, 0, 0, 0.6);
-    border-color: rgba(255, 183, 3, 0.4);
+    transform: translateY(-8px);
+    box-shadow:
+        0 0 0 1.5px rgba(255, 183, 3, 0.55),
+        0 8px 20px rgba(255, 183, 3, 0.18),
+        0 20px 50px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 183, 3, 0.55);
+    background: rgba(255, 255, 255, 0.065);
 }
 
 .product-img-wrapper {
@@ -399,20 +404,46 @@ body {
     background: transparent;
     border: 1px solid var(--accent-color);
     color: var(--accent-color);
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.1rem;
     border-radius: 8px;
     cursor: pointer;
     font-family: inherit;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.3px;
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer interno al hover */
+.add-to-cart::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.45s ease;
+}
+
+.add-to-cart:hover::before {
+    transform: translateX(100%);
 }
 
 .add-to-cart:hover {
-    background: var(--accent-color);
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+    border-color: transparent;
     color: #000;
+    box-shadow: 0 4px 18px rgba(255, 183, 3, 0.4);
+    transform: translateY(-1px);
+}
+
+.add-to-cart:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 183, 3, 0.3);
 }
 
 /* Cart Modal */
@@ -779,6 +810,28 @@ html {
     background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
     border-radius: 2px;
     animation: dividerPulse 2.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Destello deslizante (shimmer) sobre el divider */
+.hero-divider span::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60px;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+    animation: dividerShimmer 2.8s ease-in-out infinite;
+    border-radius: 2px;
+}
+
+@keyframes dividerShimmer {
+    0%   { left: -60px; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { left: 160px; opacity: 0; }
 }
 
 @keyframes dividerPulse {
@@ -1069,3 +1122,310 @@ div[id^="netlify"], iframe[src*="netlify"] {
   opacity: 0 !important;
   z-index: -9999 !important;
 }
+
+/* =========================================================
+   BOTÓN REY EN LA MOTO — DELIVERY RADAR
+   ========================================================= */
+
+.delivery-radar-btn {
+    margin-top: 1.4rem;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    background: rgba(255, 183, 3, 0.08);
+    border: 1.5px dashed rgba(255, 183, 3, 0.55);
+    border-radius: 18px;
+    padding: 0.85rem 2rem;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.delivery-radar-btn:hover {
+    background: rgba(255, 183, 3, 0.15);
+    border-color: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(255, 183, 3, 0.25);
+}
+
+.moto-scene {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    font-size: 1.9rem;
+    line-height: 1;
+}
+
+.moto-king {
+    display: inline-block;
+    animation: motoRide 0.55s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 8px rgba(255, 183, 3, 0.6));
+}
+
+.moto-dust {
+    display: inline-block;
+    animation: motoDust 0.7s ease-in-out infinite alternate;
+    font-size: 1.2rem;
+    opacity: 0.75;
+}
+
+@keyframes motoRide {
+    0%   { transform: translateY(0px) rotate(-2deg); }
+    100% { transform: translateY(-5px) rotate(2deg); }
+}
+
+@keyframes motoDust {
+    0%   { opacity: 0.3; transform: translateX(0) scale(0.9); }
+    100% { opacity: 0.85; transform: translateX(-6px) scale(1.1); }
+}
+
+.moto-btn-text {
+    color: var(--accent-color);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.moto-btn-sub {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* =========================================================
+   MODAL RADAR DE ZONAS
+   ========================================================= */
+
+.delivery-radar-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.delivery-radar-modal.open {
+    pointer-events: all;
+    opacity: 1;
+}
+
+.delivery-radar-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+}
+
+.delivery-radar-panel {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 24px;
+    padding: 1.8rem;
+    background: rgba(15, 17, 26, 0.97);
+    border-color: rgba(255, 183, 3, 0.3);
+    transform: translateY(30px) scale(0.96);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.delivery-radar-modal.open .delivery-radar-panel {
+    transform: translateY(0) scale(1);
+}
+
+/* Header del modal */
+.radar-header {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1.4rem;
+}
+
+.radar-header-icon {
+    font-size: 2.2rem;
+    animation: motoRide 0.7s ease-in-out infinite alternate;
+}
+
+.radar-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    line-height: 1.1;
+}
+
+.radar-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+.radar-close-btn {
+    margin-left: auto;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text-muted);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.radar-close-btn:hover {
+    background: rgba(239,35,60,0.2);
+    border-color: rgba(239,35,60,0.4);
+    color: #ef233c;
+}
+
+/* Radar visual (círculos + sweep) */
+.radar-visual-wrap {
+    position: relative;
+    width: 190px;
+    height: 190px;
+    margin: 0 auto 1.5rem auto;
+}
+
+.radar-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 183, 3, 0.25);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.radar-c1 { width: 48px; height: 48px; border-color: rgba(74,222,128,0.5); }
+.radar-c2 { width: 96px; height: 96px; border-color: rgba(250,204,21,0.4); }
+.radar-c3 { width: 142px; height: 142px; border-color: rgba(251,146,60,0.35); }
+.radar-c4 { width: 190px; height: 190px; border-color: rgba(239,68,68,0.3); }
+
+/* Líneas cruzadas del radar */
+.radar-visual-wrap::before,
+.radar-visual-wrap::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,183,3,0.1);
+    top: 50%; left: 50%;
+}
+.radar-visual-wrap::before {
+    width: 190px; height: 1px;
+    transform: translate(-50%, -50%);
+}
+.radar-visual-wrap::after {
+    width: 1px; height: 190px;
+    transform: translate(-50%, -50%);
+}
+
+/* Barrido rotatorio del radar */
+.radar-sweep {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%; left: 50%;
+    transform-origin: 0% 100%;
+    background: conic-gradient(from 0deg, transparent 70%, rgba(255, 183, 3, 0.35) 100%);
+    border-radius: 0 100% 0 0;
+    animation: radarSpin 3s linear infinite;
+}
+
+@keyframes radarSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* Puntos de ubicación en el radar */
+.radar-dot {
+    position: absolute;
+    font-size: 1rem;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 0 4px rgba(255,183,3,0.5));
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50%       { transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* Posiciones de los puntos en el radar */
+.radar-dot-local { top: 50%;  left: 50%; font-size: 0.9rem; z-index: 2; }
+.radar-dot-z1    { top: 65%;  left: 35%; }
+.radar-dot-z2    { top: 30%;  left: 60%; }
+.radar-dot-z3    { top: 25%;  left: 30%; }
+.radar-dot-z4    { top: 75%;  left: 72%; }
+
+/* Lista de zonas */
+.radar-zones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.radar-zone-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.2s;
+}
+
+.radar-zone-item:hover {
+    background: rgba(255, 183, 3, 0.06);
+    border-color: rgba(255, 183, 3, 0.2);
+}
+
+.radar-zone-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    border: 1px solid;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+}
+
+.radar-zone-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    flex: 1;
+    line-height: 1.3;
+}
+
+.radar-zone-price {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.radar-footer-note {
+    margin-top: 1.2rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    padding: 0.7rem 1rem;
+    background: rgba(255, 183, 3, 0.05);
+    border-radius: 10px;
+    border: 1px dashed rgba(255, 183, 3, 0.2);
+    line-height: 1.5;
+}
+
