@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Misión del Rey: Juego & Radar RPG | The King Burger Corrientes</title>
+    <meta name="description" content="Juego interactivo del Mapa del Rey de The King Burger en Corrientes Capital. Repartí hamburguesas, calculá envíos en vivo y ganá Coronas y descuentos reales.">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="game">
+    <meta property="og:title" content="Misión del Rey: Juego & Radar RPG | The King Burger">
+    <meta property="og:description" content="Explorá el mapa interactivo de Corrientes con Su Majestad el Rey. Entregá pedidos y ganá coronas.">
+    <meta property="og:image" content="https://theking.sbs/icon.png">
+
+    <!-- Google Fonts: Outfit, Cinzel, Press Start 2P -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <!-- Estilos del Juego -->
+    <link rel="stylesheet" href="css/juego.css">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+
+    <!-- ==========================================================================
+         HEADER DE COMANDO REAL
+         ========================================================================== -->
+    <header class="game-header">
+        <a href="index.html" class="game-brand" title="Volver a la tienda The King">
+            <span class="brand-icon-crown">👑</span>
+            <div>
+                <div class="brand-title">THE KING RPG</div>
+            </div>
+            <span class="brand-tag">CORRIENTES</span>
+        </a>
+
+        <!-- Selector de Modos -->
+        <div class="mode-toggle-container">
+            <button class="mode-btn active" id="mode-quest-btn" title="Modo Aventura de Reparto">
+                <i class="ri-sword-fill"></i> Misión RPG
+            </button>
+            <button class="mode-btn" id="mode-radar-btn" title="Calcular Envío arrastrando el pin">
+                <i class="ri-radar-fill"></i> Radar Delivery
+            </button>
+        </div>
+
+        <!-- Stats del Jugador -->
+        <div class="player-stats">
+            <div class="coronas-badge" title="Tus Coronas acumuladas">
+                <span class="coronas-icon">👑</span>
+                <span class="coronas-amount" id="player-coronas-count">150</span>
+            </div>
+
+            <button class="btn-header-action" id="btn-open-castillo" title="Ver Menú del Castillo">
+                <i class="ri-ancient-gate-line"></i> <span>Castillo</span>
+            </button>
+
+            <a href="index.html" class="btn-header-action btn-back-menu" title="Volver al Menú Principal">
+                <i class="ri-store-2-line"></i> <span>Tienda</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+         LIENZO DEL MAPA
+         ========================================================================== -->
+    <main id="map" aria-label="Mapa interactivo de Corrientes Capital"></main>
+
+    <!-- Guía rápida de Zonas de Corrientes -->
+    <aside class="zones-quick-legend">
+        <div class="legend-title">
+            <i class="ri-compass-3-line"></i> Zonas de Corrientes
+        </div>
+        <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Zona 1: $1.800 (Lomas / Frondizi)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Zona 2: $2.200 (Molina Punta / Shopping)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#f97316;"></span> Zona 3: $3.000 (Centro / Cambá Cuá)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Zona 4: $4.000 (Maipú / Ponce)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#ec4899;"></span> Zona 5: $4.000 (Costanera / Vidal)</div>
+    </aside>
+
+    <!-- ==========================================================================
+         HUD FLOTANTE: MODO MISIÓN RPG
+         ========================================================================== -->
+    <section class="hud-quest-panel" id="hud-quest" aria-live="polite">
+        <div class="quest-header">
+            <div class="quest-badge">
+                <i class="ri-goblet-fill"></i> MISIÓN REAL ACTIVA
+            </div>
+            <div class="quest-timer">
+                <i class="ri-timer-flash-line"></i> <span id="quest-time-display">60s</span>
+            </div>
+        </div>
+
+        <div class="quest-body">
+            <img src="img/pan-353---.jpg" alt="Hamburguesa de la misión" class="quest-burger-avatar" id="quest-burger-img">
+            <div class="quest-details">
+                <h2 class="quest-title" id="quest-title">Cargando Pedido Real...</h2>
+                <div class="quest-location" id="quest-location">
+                    <i class="ri-map-pin-2-fill"></i> Destino: Calculando...
+                </div>
+                <div class="quest-reward" id="quest-reward">
+                    Recompensa: +50 Coronas | +100 XP
+                </div>
+            </div>
+        </div>
+
+        <div class="quest-actions">
+            <button class="btn-game btn-drive" id="btn-drive-quest">
+                <i class="ri-speed-mini-fill"></i> Conducir Moto al Destino
+            </button>
+            <button class="btn-game btn-deliver" id="btn-deliver-quest">
+                <i class="ri-checkbox-circle-fill"></i> ¡Completar Entrega!
+            </button>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         HUD FLOTANTE: MODO RADAR DE DELIVERY
+         ========================================================================== -->
+    <section class="hud-radar-panel" id="hud-radar" aria-live="polite">
+        <div class="radar-header">
+            <div class="radar-title">
+                <i class="ri-radar-fill"></i> Radar de Envíos en Tiempo Real
+            </div>
+            <div class="radar-instructions">
+                Arrastrá a Su Majestad 👑🏍️ en el mapa
+            </div>
+        </div>
+
+        <div class="radar-stats-grid">
+            <div class="radar-stat-box">
+                <div class="radar-stat-label">Zona Detectada</div>
+                <div class="radar-stat-val" id="radar-zone-name">Zona 1</div>
+            </div>
+            <div class="radar-stat-box">
+                <div class="radar-stat-label">Distancia Río Chico</div>
+                <div class="radar-stat-val" id="radar-distance-km">0.0 km</div>
+            </div>
+            <div class="radar-stat-box">
+                <div class="radar-stat-label">Costo Delivery</div>
+                <div class="radar-stat-val price" id="radar-price-val">$1.800</div>
+            </div>
+        </div>
+
+        <button class="radar-action-btn" id="btn-radar-order">
+            <i class="ri-whatsapp-line"></i> Pedir Delivery a esta Ubicación
+        </button>
+    </section>
+
+    <!-- ==========================================================================
+         MODAL: EL CASTILLO (MENÚ RPG DE ÍTEMS LEGENDARIOS)
+         ========================================================================== -->
+    <div class="modal-overlay" id="modal-castillo" role="dialog" aria-modal="true" aria-labelledby="castillo-title">
+        <div class="castillo-modal-window">
+            <div class="castillo-modal-header">
+                <div class="castillo-title-wrap">
+                    <span style="font-size: 1.8rem;">🏰</span>
+                    <div>
+                        <h2 class="castillo-modal-title" id="castillo-title">Inventario Real: El Castillo</h2>
+                        <div id="player-level-title" style="font-size: 0.8rem; color: #ffd166; font-weight: 600;">
+                            Nv. 1 · Cadete de Cocina
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-close-modal" id="btn-close-castillo" aria-label="Cerrar modal">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <div class="castillo-modal-body">
+                <div class="rpg-items-grid" id="rpg-items-grid">
+                    <!-- Inyectado dinámicamente desde juego.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL: VICTORIA DE ENTREGA Y PREMIOS
+         ========================================================================== -->
+    <div class="modal-overlay" id="modal-victory" role="dialog" aria-modal="true">
+        <div class="castillo-modal-window victory-modal-content">
+            <div class="victory-crown-anim">👑✨</div>
+            <h2 class="victory-title">¡MISIÓN CUMPLIDA!</h2>
+            <p id="victory-reward-text" style="color: #ccc; font-size: 0.95rem; line-height: 1.5;">
+                ¡El pedido llegó a tiempo y en perfecto estado!
+            </p>
+
+            <div class="victory-code-box">
+                <div style="font-size: 0.75rem; color: #ffd166; text-transform: uppercase; margin-bottom: 4px;">
+                    Cupón de Honor para tu próximo pedido:
+                </div>
+                <div class="coupon-code" id="victory-coupon-code">REYHOT2026</div>
+                <div style="font-size: 0.75rem; color: #888;">
+                    Mencioná este código en WhatsApp para recibir tu sorpresa real.
+                </div>
+            </div>
+
+            <button class="btn-game btn-deliver" id="btn-next-quest" style="width: 100%; margin-top: 1rem;">
+                <i class="ri-arrow-right-line"></i> Siguiente Misión
+            </button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Base de Productos de The King -->
+    <script src="js/products.js"></script>
+    <!-- Script Principal del Juego -->
+    <script src="js/juego.js"></script>
+</body>
+</html>

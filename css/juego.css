@@ -1,0 +1,960 @@
+/* ==========================================================================
+   THE KING BURGER — MAPA & MISIÓN DEL REY RPG (juego.css)
+   Estética Cyber-Medieval, Glassmorphism, Neón Oro & Dark Mode
+   ========================================================================== */
+
+:root {
+    --bg-dark: #090a10;
+    --bg-panel: rgba(15, 17, 26, 0.88);
+    --bg-card: rgba(26, 29, 44, 0.75);
+    --gold-primary: #ffb703;
+    --gold-bright: #ffd166;
+    --gold-glow: rgba(255, 183, 3, 0.45);
+    --red-king: #ef233c;
+    --red-deep: #d90429;
+    --text-light: #f8f9fa;
+    --text-muted: #a0a5b8;
+    --border-gold: rgba(255, 183, 3, 0.35);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-royal: 'Cinzel', serif;
+    --font-pixel: 'Press Start 2P', monospace, cursive;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+}
+
+/* ==========================================================================
+   HEADER SUPERIOR DE COMANDO REAL
+   ========================================================================== */
+.game-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    z-index: 1000;
+    background: linear-gradient(180deg, rgba(9, 10, 16, 0.95) 0%, rgba(9, 10, 16, 0.75) 80%, transparent 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+    border-bottom: 1px solid var(--border-gold);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+}
+
+.game-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.brand-icon-crown {
+    font-size: 1.6rem;
+    filter: drop-shadow(0 0 8px var(--gold-primary));
+    animation: crownGlow 2.5s infinite alternate;
+}
+
+.brand-title {
+    font-family: var(--font-royal);
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff 20%, var(--gold-bright) 70%, var(--gold-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+}
+
+.brand-tag {
+    font-size: 0.65rem;
+    background: linear-gradient(135deg, var(--red-king), var(--red-deep));
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Selector de Modos */
+.mode-toggle-container {
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px;
+    border-radius: 12px;
+    border: 1px solid var(--border-gold);
+}
+
+.mode-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-main);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mode-btn.active {
+    background: linear-gradient(135deg, var(--gold-primary), #e5a100);
+    color: #000;
+    font-weight: 800;
+    box-shadow: 0 0 15px var(--gold-glow);
+}
+
+.mode-btn:hover:not(.active) {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Stats del Jugador y Acciones */
+.player-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.coronas-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 183, 3, 0.12);
+    border: 1px solid var(--border-gold);
+    padding: 6px 12px;
+    border-radius: 999px;
+    box-shadow: inset 0 0 8px rgba(255, 183, 3, 0.2);
+}
+
+.coronas-icon {
+    font-size: 1.1rem;
+    animation: goldPulse 2s infinite ease-in-out;
+}
+
+.coronas-amount {
+    font-family: var(--font-pixel);
+    font-size: 0.8rem;
+    color: var(--gold-bright);
+    text-shadow: 0 0 8px var(--gold-glow);
+}
+
+.btn-header-action {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+}
+
+.btn-header-action:hover {
+    background: rgba(255, 183, 3, 0.2);
+    border-color: var(--gold-bright);
+    transform: translateY(-1px);
+}
+
+.btn-back-menu {
+    background: linear-gradient(135deg, rgba(239, 35, 60, 0.25), rgba(217, 4, 41, 0.4));
+    border-color: rgba(239, 35, 60, 0.5);
+}
+
+.btn-back-menu:hover {
+    background: linear-gradient(135deg, var(--red-king), var(--red-deep));
+    border-color: #fff;
+    color: #fff;
+}
+
+/* ==========================================================================
+   LIENZO DEL MAPA LEAFLET
+   ========================================================================== */
+#map {
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    background-color: #0b0d14;
+}
+
+/* Filtro Dark/Retro para los tiles de OpenStreetMap */
+.leaflet-tile-pane {
+    filter: brightness(0.68) invert(1) contrast(3.2) hue-rotate(200deg) saturate(0.35);
+}
+
+/* Personalización de controles de Leaflet */
+.leaflet-control-zoom {
+    border: 1px solid var(--border-gold) !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8) !important;
+    margin-top: 80px !important;
+    margin-right: 15px !important;
+}
+
+.leaflet-control-zoom a {
+    background-color: var(--bg-panel) !important;
+    color: var(--gold-primary) !important;
+    border-color: var(--border-subtle) !important;
+    width: 38px !important;
+    height: 38px !important;
+    line-height: 38px !important;
+    font-size: 1.2rem !important;
+    transition: all 0.2s;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: var(--gold-primary) !important;
+    color: #000 !important;
+}
+
+.leaflet-popup-content-wrapper {
+    background: var(--bg-panel) !important;
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border-gold) !important;
+    border-radius: 14px !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+    font-family: var(--font-main) !important;
+}
+
+.leaflet-popup-tip {
+    background: var(--bg-panel) !important;
+    border: 1px solid var(--border-gold) !important;
+}
+
+/* ==========================================================================
+   MARCADORES PERSONALIZADOS DEL MAPA (DIVICONS)
+   ========================================================================== */
+.marker-castillo {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.castillo-icon {
+    font-size: 2.2rem;
+    z-index: 2;
+    filter: drop-shadow(0 0 12px var(--gold-primary));
+    animation: beaconPulse 2s infinite ease-in-out;
+}
+
+.castillo-radar-pulse {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-primary);
+    background: rgba(255, 183, 3, 0.15);
+    animation: radarWave 2s infinite ease-out;
+    z-index: 1;
+}
+
+.marker-rey-moto {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: transform 0.1s ease;
+}
+
+.marker-rey-moto:active {
+    cursor: grabbing;
+    transform: scale(1.15);
+}
+
+.moto-avatar {
+    font-size: 2.4rem;
+    z-index: 3;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.9));
+    animation: motoVibe 0.4s infinite alternate ease-in-out;
+}
+
+.moto-shadow-glow {
+    position: absolute;
+    bottom: 2px;
+    width: 44px;
+    height: 16px;
+    background: radial-gradient(ellipse at center, rgba(255, 183, 3, 0.7) 0%, rgba(239, 35, 60, 0.4) 60%, transparent 80%);
+    border-radius: 50%;
+    z-index: 1;
+    animation: shadowPulse 0.4s infinite alternate;
+}
+
+.marker-target-cliente {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.target-icon {
+    font-size: 2.2rem;
+    animation: bounceDown 1.2s infinite ease-in-out;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 128, 0.7));
+}
+
+.target-badge {
+    background: rgba(0, 0, 0, 0.85);
+    color: #4ade80;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #4ade80;
+    white-space: nowrap;
+    margin-top: -4px;
+}
+
+/* ==========================================================================
+   HUDS Y PANELES FLOTANTES
+   ========================================================================== */
+
+/* HUD MODO AVENTURA / RPG */
+.hud-quest-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 620px;
+    z-index: 1000;
+    background: var(--bg-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-gold);
+    border-radius: 20px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 183, 3, 0.15);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quest-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.quest-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    color: var(--gold-bright);
+    background: rgba(255, 183, 3, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-gold);
+}
+
+.quest-timer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #ff6b6b;
+    text-shadow: 0 0 8px rgba(255, 107, 107, 0.6);
+}
+
+.quest-body {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.quest-burger-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid var(--gold-primary);
+    box-shadow: 0 0 12px var(--gold-glow);
+    flex-shrink: 0;
+}
+
+.quest-details {
+    flex-grow: 1;
+}
+
+.quest-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.2rem;
+}
+
+.quest-location {
+    font-size: 0.85rem;
+    color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 0.3rem;
+}
+
+.quest-reward {
+    font-size: 0.75rem;
+    color: #4ade80;
+    font-weight: 600;
+}
+
+.quest-actions {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 0.8rem;
+}
+
+.btn-game {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: none;
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-drive {
+    background: linear-gradient(135deg, #3a86ff, #0056b3);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4);
+}
+
+.btn-drive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(58, 134, 255, 0.6);
+}
+
+.btn-deliver {
+    background: linear-gradient(135deg, var(--gold-primary), #e5a100);
+    color: #000;
+    box-shadow: 0 4px 15px var(--gold-glow);
+}
+
+.btn-deliver:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 183, 3, 0.7);
+}
+
+.btn-deliver:disabled, .btn-drive:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* HUD MODO RADAR DELIVERY */
+.hud-radar-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 620px;
+    z-index: 1000;
+    background: var(--bg-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-gold);
+    border-radius: 20px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85);
+    display: none;
+}
+
+.radar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.radar-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.radar-instructions {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.radar-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.radar-stat-box {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-subtle);
+    padding: 8px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.radar-stat-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.radar-stat-val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.radar-stat-val.price {
+    color: var(--gold-primary);
+    text-shadow: 0 0 10px var(--gold-glow);
+}
+
+.radar-action-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--red-king), var(--red-deep));
+    color: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(239, 35, 60, 0.5);
+    transition: all 0.2s ease;
+}
+
+.radar-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(239, 35, 60, 0.7);
+}
+
+/* ==========================================================================
+   MINIMAPA FLOTANTE / ZONAS GUÍA
+   ========================================================================== */
+.zones-quick-legend {
+    position: absolute;
+    top: 75px;
+    left: 15px;
+    z-index: 990;
+    background: rgba(15, 17, 26, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 8px 12px;
+    max-width: 250px;
+    font-size: 0.75rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.legend-title {
+    font-weight: 800;
+    color: var(--gold-bright);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 3px 0;
+    color: var(--text-light);
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   MODAL: EL CASTILLO (MENÚ RPG DE ÍTEMS LEGENDARIOS)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.castillo-modal-window {
+    background: linear-gradient(160deg, #121422 0%, #0d0e17 100%);
+    border: 1.5px solid var(--border-gold);
+    box-shadow: 0 0 50px rgba(255, 183, 3, 0.2), 0 20px 60px rgba(0, 0, 0, 0.95);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.castillo-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-gold);
+    background: rgba(255, 183, 3, 0.05);
+}
+
+.castillo-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.castillo-modal-title {
+    font-family: var(--font-royal);
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--gold-bright);
+    letter-spacing: 1px;
+}
+
+.btn-close-modal {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-subtle);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-close-modal:hover {
+    background: var(--red-king);
+    transform: rotate(90deg);
+}
+
+.castillo-modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.rpg-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.2rem;
+}
+
+.rpg-item-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.rpg-item-card:hover {
+    border-color: var(--gold-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(255, 183, 3, 0.2);
+}
+
+.rpg-item-rarity {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.65rem;
+    font-family: var(--font-pixel);
+    background: rgba(255, 183, 3, 0.15);
+    color: var(--gold-bright);
+    padding: 3px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border-gold);
+    z-index: 2;
+}
+
+.rpg-item-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rpg-item-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.3rem;
+}
+
+.rpg-item-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+    flex-grow: 1;
+}
+
+.rpg-stats-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px 8px;
+    border-radius: 8px;
+}
+
+.rpg-stat {
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.rpg-stat.taste { color: #f59e0b; }
+.rpg-stat.power { color: #ef4444; }
+.rpg-stat.reward { color: #10b981; }
+
+.rpg-item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.rpg-item-price {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--gold-bright);
+}
+
+.btn-rpg-order {
+    background: linear-gradient(135deg, var(--gold-primary), #e5a100);
+    border: none;
+    color: #000;
+    font-weight: 800;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-rpg-order:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+
+/* ==========================================================================
+   MODAL: VICTORIA DE MISIÓN & PREMIOS
+   ========================================================================== */
+.victory-modal-content {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    max-width: 500px;
+}
+
+.victory-crown-anim {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: goldPulse 1s infinite alternate;
+}
+
+.victory-title {
+    font-family: var(--font-royal);
+    font-size: 1.8rem;
+    color: var(--gold-bright);
+    margin-bottom: 0.5rem;
+}
+
+.victory-code-box {
+    background: rgba(255, 183, 3, 0.1);
+    border: 2px dashed var(--gold-primary);
+    border-radius: 14px;
+    padding: 1rem;
+    margin: 1.2rem 0;
+}
+
+.coupon-code {
+    font-family: var(--font-pixel);
+    font-size: 1.1rem;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 0.4rem;
+}
+
+/* ==========================================================================
+   ANIMACIONES CLAVE
+   ========================================================================== */
+@keyframes crownGlow {
+    0% { filter: drop-shadow(0 0 4px var(--gold-primary)); }
+    100% { filter: drop-shadow(0 0 16px var(--gold-bright)); }
+}
+
+@keyframes goldPulse {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.1); filter: brightness(1.3); }
+}
+
+@keyframes beaconPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--gold-primary)); }
+    50% { transform: scale(1.12); filter: drop-shadow(0 0 22px var(--gold-bright)); }
+}
+
+@keyframes radarWave {
+    0% { transform: scale(0.6); opacity: 0.9; }
+    100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes motoVibe {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-4px) rotate(-1deg); }
+}
+
+@keyframes shadowPulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(0.8); opacity: 0.3; }
+}
+
+@keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes modalPop {
+    0% { transform: scale(0.85); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   RESPONSIVIDAD Y SMARTPHONES
+   ========================================================================== */
+@media (max-width: 768px) {
+    .game-header {
+        padding: 0 0.8rem;
+    }
+    
+    .brand-title {
+        font-size: 1rem;
+    }
+
+    .brand-tag {
+        display: none;
+    }
+
+    .mode-btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+
+    .player-stats {
+        gap: 0.4rem;
+    }
+
+    .coronas-badge {
+        padding: 4px 8px;
+    }
+
+    .coronas-amount {
+        font-size: 0.7rem;
+    }
+
+    .btn-header-action span {
+        display: none;
+    }
+
+    .hud-quest-panel, .hud-radar-panel {
+        bottom: 12px;
+        padding: 1rem;
+        width: 95%;
+    }
+
+    .quest-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .zones-quick-legend {
+        display: none; /* Ocultar en móviles para limpiar mapa */
+    }
+}
