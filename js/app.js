@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     menuGpsBtn.addEventListener('click', () => {
         appMenuDropdown.classList.remove('show');
         if (!navigator.geolocation) {
-            showToast("Tu navegador no soporta geolocalización");
+            showToast("Por favor, activá el GPS de tu celular para sincronizar 📍");
             return;
         }
         showToast("📍 Solicitando permiso GPS...");
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 deferredPrompt = null;
             });
         } else {
-            showToast('La app ya está instalada o tu navegador no lo soporta.');
+            showToast('Para instalar, usá "Agregar a Inicio" en el menú de tu navegador 📱👑');
         }
     });
 

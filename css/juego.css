@@ -945,13 +945,56 @@ body {
     }
 
     .hud-quest-panel, .hud-radar-panel {
-        bottom: 12px;
-        padding: 1rem;
-        width: 95%;
+        bottom: 8px;
+        padding: 0.6rem;
+        width: 96%;
+        border-radius: 14px;
+    }
+
+    .quest-header {
+        margin-bottom: 0.4rem;
+        padding-bottom: 0.3rem;
+    }
+
+    .quest-burger-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+    }
+
+    .quest-body {
+        gap: 0.6rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .quest-title {
+        font-size: 0.9rem;
+    }
+
+    .quest-location {
+        font-size: 0.75rem;
+    }
+
+    .quest-reward {
+        font-size: 0.65rem;
+    }
+
+    .btn-game {
+        padding: 8px;
+        font-size: 0.85rem;
+        border-radius: 8px;
     }
 
     .quest-actions {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: row;
+        gap: 0.4rem;
+    }
+    
+    .quest-actions .btn-game {
+        flex: 1;
+        text-align: center;
+        padding: 6px;
     }
 
     .zones-quick-legend {
