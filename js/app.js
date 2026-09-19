@@ -147,11 +147,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast(`✅ GPS sincronizado · Envío: $${priceByKm(km).toLocaleString('es-AR')}`);
             },
             (error) => {
-                console.error('Error GPS:', error);
-                showToast('❌ No pudimos acceder al GPS. Revisa tus permisos.');
+                console.error('Error GPS code:', error.code, error.message);
+                // Mensajes claros según el tipo de error
+                if (error.code === 1) {
+                    // PERMISSION_DENIED
+                    showToast('⚠️ Permiso de GPS denegado. Andá a Ajustes › Chrome › Permisos › Ubicación y activalo.');
+                } else if (error.code === 2) {
+                    // POSITION_UNAVAILABLE
+                    showToast('📡 GPS no disponible ahora. Activá el GPS de tu celu en los ajustes rápidos.');
+                } else if (error.code === 3) {
+                    // TIMEOUT
+                    showToast('⏱️ Tiempo agotado buscando GPS. Asegurate de estar al aire libre e intentá de nuevo.');
+                } else {
+                    showToast('❌ No pudimos obtener tu ubicación. Activá el GPS e intentá de nuevo.');
+                }
                 if (!deliveryMethod) showZoneSelector(true);
             },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
         );
     });
 
@@ -733,6 +745,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // --- REGISTRO DEL SERVICE WORKER (necesario para beforeinstallprompt) ---
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then((reg) => {
+                console.log('✅ TheKing SW registrado:', reg.scope);
+            })
+            .catch((err) => {
+                console.warn('⚠️ TheKing SW no pudo registrarse:', err);
+            });
+    }
+
     // --- LÓGICA ELEGANTE PWA NO INTRUSIVA ---
     const pwaBanner  = document.getElementById('pwa-install-banner');
     const pwaAddBtn  = document.getElementById('pwa-add-btn');
@@ -745,11 +768,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        console.log('✅ PWA: beforeinstallprompt capturado. Botón de instalación ACTIVO.');
         const isDismissed = localStorage.getItem('king_pwa_dismissed') === 'true';
         const completedOrders = parseInt(localStorage.getItem('king_completed_orders') || '0');
         if (!isDismissed && (visitCount >= 2 || completedOrders >= 1)) {
             setTimeout(() => { pwaBanner.style.display = 'flex'; }, 3000);
         }
+    });
+
+    // Si ya está instalada como PWA, marcar para no mostrar el banner
+    window.addEventListener('appinstalled', () => {
+        console.log('✅ TheKing instalada como PWA');
+        deferredPrompt = null;
+        if (pwaBanner) pwaBanner.style.display = 'none';
+        localStorage.setItem('king_pwa_dismissed', 'true');
+        showToast('👑 ¡The King Burger instalada en tu pantalla de inicio!');
     });
 
     pwaAddBtn.addEventListener('click', () => {
