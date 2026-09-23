@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The King | Hamburguesas en Corrientes Capital</title>
-    <meta name="description" content="The King Corrientes. Las mejores hamburguesas artesanales, pizzas y lomos de Corrientes Capital. Envío rápido y delivery propio. ¡Hacé tu pedido ahora!">
-    <meta name="keywords" content="hamburguesas corrientes, the king corrientes, the king burger corrientes, delivery de comida corrientes, pizzas corrientes, comida rápida corrientes, hamburguesas the king, don jose corrientes, rio chico corrientes">
-    
+    <meta name="description"
+        content="The King Corrientes. Las mejores hamburguesas artesanales, pizzas y lomos de Corrientes Capital. Envío rápido y delivery propio. ¡Hacé tu pedido ahora!">
+    <meta name="keywords"
+        content="hamburguesas corrientes, the king corrientes, the king burger corrientes, delivery de comida corrientes, pizzas corrientes, comida rápida corrientes, hamburguesas the king, don jose corrientes, rio chico corrientes">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="restaurant">
     <meta property="og:url" content="https://theking.sbs/">
     <meta property="og:title" content="The King | Hamburguesas en Corrientes Capital">
-    <meta property="og:description" content="Las mejores hamburguesas artesanales y pizzas de Corrientes. Pedí online con nuestro delivery propio.">
+    <meta property="og:description"
+        content="Las mejores hamburguesas artesanales y pizzas de Corrientes. Pedí online con nuestro delivery propio.">
     <meta property="og:image" content="https://theking.sbs/icon.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://theking.sbs/">
     <meta property="twitter:title" content="The King | Hamburguesas en Corrientes">
-    <meta property="twitter:description" content="Las mejores hamburguesas artesanales y pizzas de Corrientes. Pedí online con nuestro delivery propio.">
+    <meta property="twitter:description"
+        content="Las mejores hamburguesas artesanales y pizzas de Corrientes. Pedí online con nuestro delivery propio.">
     <meta property="twitter:image" content="https://theking.sbs/icon.png">
 
     <!-- JSON-LD Structured Data for Local Business -->
@@ -76,9 +81,10 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="icon.png">
 </head>
+
 <body>
     <div class="background-overlay"></div>
-    
+
     <header class="header glassmorphism">
         <!-- Menú de la App (Opciones Extras) -->
         <div class="app-menu-container">
@@ -93,12 +99,13 @@
                 <div class="app-menu-item" id="menu-install-btn">
                     <i class="ri-install-fill"></i> Agregar a Inicio (App)
                 </div>
-                <a href="juego.html" class="app-menu-item" id="menu-game-btn" style="text-decoration: none; color: inherit;">
+                <a href="juego.html" class="app-menu-item" id="menu-game-btn"
+                    style="text-decoration: none; color: inherit;">
                     <i class="ri-sword-fill" style="color: var(--accent-color);"></i> 🎮 Misión del Rey RPG & Mapa
                 </a>
             </div>
         </div>
-        
+
         <div class="logo-container">
             <h1 class="brand-title">THE KING <span class="accent">BURGER</span></h1>
             <p class="brand-subtitle">El Sabor de la Corona</p>
@@ -152,37 +159,51 @@
 
     <main class="container" id="menu">
         <!-- SECCIÓN DE SORTEO (Inyectada dinámicamente si está activa) -->
-        <section id="sorteo-section" class="glassmorphism" style="display: none; text-align: center; margin-bottom: 2.5rem; padding: 2rem; border-radius: 20px; background: linear-gradient(145deg, rgba(239, 35, 60, 0.1) 0%, rgba(15, 17, 26, 0.9) 100%); border-color: rgba(239, 35, 60, 0.3); position: relative; overflow: hidden;">
-            <div id="confetti-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></div>
-            
+        <section id="sorteo-section" class="glassmorphism"
+            style="display: none; text-align: center; margin-bottom: 2.5rem; padding: 2rem; border-radius: 20px; background: linear-gradient(145deg, rgba(239, 35, 60, 0.1) 0%, rgba(15, 17, 26, 0.9) 100%); border-color: rgba(239, 35, 60, 0.3); position: relative; overflow: hidden;">
+            <div id="confetti-container"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
+            </div>
+
             <div style="position: relative; z-index: 1;">
-                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #ef233c; text-shadow: 0 0 15px rgba(239,35,60,0.5);">
-                    <i class="ri-vip-crown-fill" style="color: var(--accent-color);"></i> ¡SORTEO THE KING! <i class="ri-vip-crown-fill" style="color: var(--accent-color);"></i>
+                <h2
+                    style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #ef233c; text-shadow: 0 0 15px rgba(239,35,60,0.5);">
+                    <i class="ri-vip-crown-fill" style="color: var(--accent-color);"></i> ¡SORTEO THE KING! <i
+                        class="ri-vip-crown-fill" style="color: var(--accent-color);"></i>
                 </h2>
-                
+
                 <div id="sorteo-content-active" style="display: block;">
                     <p style="color: #fff; font-size: 1.1rem; margin-bottom: 0.2rem;">Premio de hoy:</p>
-                    <h3 id="sorteo-premio-display" style="color: var(--accent-color); font-size: 1.4rem; margin-bottom: 1.5rem;">Cargando...</h3>
-                    
-                    <form id="sorteo-form" style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto 1.5rem auto;">
-                        <input type="text" id="sorteo-nombre" placeholder="Tu Nombre o Apodo" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
-                        <input type="tel" id="sorteo-tel" placeholder="Tu WhatsApp (para avisarte si ganás)" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
-                        <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #ef233c, #d90429); font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(239,35,60,0.4);">
+                    <h3 id="sorteo-premio-display"
+                        style="color: var(--accent-color); font-size: 1.4rem; margin-bottom: 1.5rem;">Cargando...</h3>
+
+                    <form id="sorteo-form"
+                        style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto 1.5rem auto;">
+                        <input type="text" id="sorteo-nombre" placeholder="Tu Nombre o Apodo" required
+                            style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
+                        <input type="tel" id="sorteo-tel" placeholder="Tu WhatsApp (para avisarte si ganás)" required
+                            style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
+                        <button type="submit" class="btn-primary"
+                            style="background: linear-gradient(135deg, #ef233c, #d90429); font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(239,35,60,0.4);">
                             🎟️ QUIERO PARTICIPAR
                         </button>
                     </form>
-                    
+
                     <p style="color: var(--text-muted); font-size: 0.9rem;">
-                        <i class="ri-group-fill"></i> <span id="sorteo-public-count" style="color: #fff; font-weight: bold;">0</span> Reinas y Reyes participando
+                        <i class="ri-group-fill"></i> <span id="sorteo-public-count"
+                            style="color: #fff; font-weight: bold;">0</span> Reinas y Reyes participando
                     </p>
                 </div>
 
                 <div id="sorteo-content-winner" style="display: none; padding: 1rem;">
                     <h3 style="font-size: 1.5rem; color: #fff; margin-bottom: 1rem;">🎉 ¡TENEMOS GANADOR/A! 🎉</h3>
-                    <div style="background: rgba(255,183,3,0.15); border: 2px solid var(--accent-color); padding: 1.5rem; border-radius: 15px; display: inline-block;">
-                        <h2 id="sorteo-ganador-nombre" style="font-size: 2rem; color: var(--accent-color); margin: 0;">-</h2>
+                    <div
+                        style="background: rgba(255,183,3,0.15); border: 2px solid var(--accent-color); padding: 1.5rem; border-radius: 15px; display: inline-block;">
+                        <h2 id="sorteo-ganador-nombre" style="font-size: 2rem; color: var(--accent-color); margin: 0;">-
+                        </h2>
                     </div>
-                    <p style="color: var(--text-muted); margin-top: 1rem;">Se lleva: <span id="sorteo-ganador-premio" style="color: #fff;"></span></p>
+                    <p style="color: var(--text-muted); margin-top: 1rem;">Se lleva: <span id="sorteo-ganador-premio"
+                            style="color: #fff;"></span></p>
                 </div>
             </div>
         </section>
@@ -197,10 +218,13 @@
         </nav>
 
         <!-- Buscador de productos -->
-        <div class="search-container glassmorphism" style="margin-bottom: 2rem; display: flex; align-items: center; padding: 0.6rem 1.2rem; border-radius: 12px; gap: 0.8rem; position: relative;">
+        <div class="search-container glassmorphism"
+            style="margin-bottom: 2rem; display: flex; align-items: center; padding: 0.6rem 1.2rem; border-radius: 12px; gap: 0.8rem; position: relative;">
             <i class="ri-search-2-line" style="color: var(--accent-color); font-size: 1.2rem;"></i>
-            <input type="text" id="search-input" placeholder="¿Qué antojo tenés hoy? Buscá acá..." style="background: transparent; border: none; color: #fff; width: 100%; font-family: inherit; font-size: 0.95rem; outline: none;">
-            <button id="clear-search-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: none; align-items: center; justify-content: center; padding: 0.2rem;">
+            <input type="text" id="search-input" placeholder="¿Qué antojo tenés hoy? Buscá acá..."
+                style="background: transparent; border: none; color: #fff; width: 100%; font-family: inherit; font-size: 0.95rem; outline: none;">
+            <button id="clear-search-btn"
+                style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: none; align-items: center; justify-content: center; padding: 0.2rem;">
                 <i class="ri-close-circle-fill" style="font-size: 1.2rem;"></i>
             </button>
         </div>
@@ -210,59 +234,121 @@
             <h2 class="section-title" id="section-title">Promociones</h2>
             <div class="products-grid" id="products-grid">
                 <!-- Skeleton loaders: se muestran mientras Firebase carga los productos -->
-                <div class="product-skeleton" style="background:rgba(255,255,255,0.04);border-radius:16px;padding:1rem;animation:skeletonPulse 1.4s ease-in-out infinite;"><div style="background:rgba(255,255,255,0.07);height:130px;border-radius:10px;margin-bottom:0.8rem;"></div><div style="background:rgba(255,255,255,0.07);height:16px;border-radius:6px;margin-bottom:0.5rem;width:70%;"></div><div style="background:rgba(255,255,255,0.05);height:12px;border-radius:6px;width:90%;"></div></div>
-                <div class="product-skeleton" style="background:rgba(255,255,255,0.04);border-radius:16px;padding:1rem;animation:skeletonPulse 1.4s ease-in-out 0.2s infinite;"><div style="background:rgba(255,255,255,0.07);height:130px;border-radius:10px;margin-bottom:0.8rem;"></div><div style="background:rgba(255,255,255,0.07);height:16px;border-radius:6px;margin-bottom:0.5rem;width:70%;"></div><div style="background:rgba(255,255,255,0.05);height:12px;border-radius:6px;width:90%;"></div></div>
-                <div class="product-skeleton" style="background:rgba(255,255,255,0.04);border-radius:16px;padding:1rem;animation:skeletonPulse 1.4s ease-in-out 0.4s infinite;"><div style="background:rgba(255,255,255,0.07);height:130px;border-radius:10px;margin-bottom:0.8rem;"></div><div style="background:rgba(255,255,255,0.07);height:16px;border-radius:6px;margin-bottom:0.5rem;width:70%;"></div><div style="background:rgba(255,255,255,0.05);height:12px;border-radius:6px;width:90%;"></div></div>
+                <div class="product-skeleton"
+                    style="background:rgba(255,255,255,0.04);border-radius:16px;padding:1rem;animation:skeletonPulse 1.4s ease-in-out infinite;">
+                    <div
+                        style="background:rgba(255,255,255,0.07);height:130px;border-radius:10px;margin-bottom:0.8rem;">
+                    </div>
+                    <div
+                        style="background:rgba(255,255,255,0.07);height:16px;border-radius:6px;margin-bottom:0.5rem;width:70%;">
+                    </div>
+                    <div style="background:rgba(255,255,255,0.05);height:12px;border-radius:6px;width:90%;"></div>
+                </div>
+                <div class="product-skeleton"
+                    style="background:rgba(255,255,255,0.04);border-radius:16px;padding:1rem;animation:skeletonPulse 1.4s ease-in-out 0.2s infinite;">
+                    <div
+                        style="background:rgba(255,255,255,0.07);height:130px;border-radius:10px;margin-bottom:0.8rem;">
+                    </div>
+                    <div
+                        style="background:rgba(255,255,255,0.07);height:16px;border-radius:6px;margin-bottom:0.5rem;width:70%;">
+                    </div>
+                    <div style="background:rgba(255,255,255,0.05);height:12px;border-radius:6px;width:90%;"></div>
+                </div>
+                <div class="product-skeleton"
+                    style="background:rgba(255,255,255,0.04);border-radius:16px;padding:1rem;animation:skeletonPulse 1.4s ease-in-out 0.4s infinite;">
+                    <div
+                        style="background:rgba(255,255,255,0.07);height:130px;border-radius:10px;margin-bottom:0.8rem;">
+                    </div>
+                    <div
+                        style="background:rgba(255,255,255,0.07);height:16px;border-radius:6px;margin-bottom:0.5rem;width:70%;">
+                    </div>
+                    <div style="background:rgba(255,255,255,0.05);height:12px;border-radius:6px;width:90%;"></div>
+                </div>
             </div>
         </section>
 
         <!-- SECCIÓN: NUESTRA HISTORIA Y MISIÓN -->
-        <section class="about-section glassmorphism" style="margin-top: 3rem; padding: 2.5rem; border-radius: 20px; background: linear-gradient(145deg, rgba(15, 17, 26, 0.9) 0%, rgba(255, 183, 3, 0.03) 100%); border-left: 4px solid var(--accent-color);">
+        <section class="about-section glassmorphism"
+            style="margin-top: 3rem; padding: 2.5rem; border-radius: 20px; background: linear-gradient(145deg, rgba(15, 17, 26, 0.9) 0%, rgba(255, 183, 3, 0.03) 100%); border-left: 4px solid var(--accent-color);">
             <div class="about-content">
-                <h2 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                <h2
+                    style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
                     <i class="ri-ancient-gate-fill" style="color: var(--accent-color);"></i> Nuestra Historia Real
                 </h2>
                 <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
-                    Somos un emprendimiento familiar, chico y con el corazón bien correntino. Nacimos con una idea simple pero ambiciosa: crear una hamburguesa tan exquisita y con tanto romance que, si un mismísimo Rey tuviera la oportunidad de probarla, quedaría fascinado. El gran secreto de esta magia reside en nuestro pan: una receta única, creada en casa y guardada bajo llave por nuestra familia y los colegas más fieles que nos acompañan desde el primer día.
+                    Somos un emprendimiento familiar, chico y con el corazón bien correntino. Nacimos con una idea
+                    simple pero ambiciosa: crear una hamburguesa tan exquisita y con tanto romance que, si un mismísimo
+                    Rey tuviera la oportunidad de probarla, quedaría fascinado. El gran secreto de esta magia reside en
+                    nuestro pan: una receta única, creada en casa y guardada bajo llave por nuestra familia y los
+                    colegas más fieles que nos acompañan desde el primer día.
                 </p>
 
-                <h3 style="font-size: 1.3rem; margin-bottom: 0.8rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                <h3
+                    style="font-size: 1.3rem; margin-bottom: 0.8rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
                     <i class="ri-scales-3-fill" style="color: var(--accent-color);"></i> Nuestra Promesa y Realidad
                 </h3>
                 <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;">
-                    Te hablamos con la verdad: no somos perfectos. Al ser una producción 100% artesanal, a veces nos cuesta cubrir la altísima demanda. ¿Por qué pasa esto? Porque cada nueva Reina o Rey que prueba nuestro sabor, elige repetir al día siguiente. Esto hace que nuestro crecimiento sea constante y genuino. Cuando hay demoras, te pedimos paciencia; elegimos cuidar la calidad extrema antes que la rapidez industrial, porque el sabor de nuestra casa no se puede apurar.
+                    Te hablamos con la verdad: no somos perfectos. Al ser una producción 100% artesanal, a veces nos
+                    cuesta cubrir la altísima demanda. ¿Por qué pasa esto? Porque cada nueva Reina o Rey que prueba
+                    nuestro sabor, elige repetir al día siguiente. Esto hace que nuestro crecimiento sea constante y
+                    genuino. Cuando hay demoras, te pedimos paciencia; elegimos cuidar la calidad extrema antes que la
+                    rapidez industrial, porque el sabor de nuestra casa no se puede apurar.
                 </p>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
-                    <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,183,3,0.1);">
-                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; font-size: 1.1rem;"><i class="ri-focus-2-line"></i> Nuestra Misión</h4>
-                        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">Llevar el sabor más auténtico y placentero de Corrientes a tu mesa, con la dedicación que solo una familia apasionada te puede dar.</p>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div
+                        style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,183,3,0.1);">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; font-size: 1.1rem;"><i
+                                class="ri-focus-2-line"></i> Nuestra Misión</h4>
+                        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">Llevar el sabor más auténtico y
+                            placentero de Corrientes a tu mesa, con la dedicación que solo una familia apasionada te
+                            puede dar.</p>
                     </div>
-                    <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,183,3,0.1);">
-                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; font-size: 1.1rem;"><i class="ri-eye-line"></i> Nuestra Visión</h4>
-                        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">Crecer a paso firme, manteniendo un estándar de calidad digno de la realeza, sin perder jamás nuestra esencia de barrio ni la receta que nos hizo Reyes.</p>
+                    <div
+                        style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,183,3,0.1);">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; font-size: 1.1rem;"><i
+                                class="ri-eye-line"></i> Nuestra Visión</h4>
+                        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">Crecer a paso firme, manteniendo un
+                            estándar de calidad digno de la realeza, sin perder jamás nuestra esencia de barrio ni la
+                            receta que nos hizo Reyes.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- SECCIÓN DE RESEÑAS GOOGLE MAPS -->
-        <section class="reviews-section glassmorphism" style="margin-top: 3rem; text-align: center; padding: 2.5rem 1.5rem; border-radius: 20px; background: linear-gradient(145deg, rgba(255, 183, 3, 0.05) 0%, rgba(15, 17, 26, 0.8) 100%); position: relative; overflow: hidden; border-color: rgba(255, 183, 3, 0.2);">
-            <div style="position: absolute; top: -20px; left: -20px; width: 100px; height: 100px; background: var(--accent-color); filter: blur(60px); opacity: 0.2; z-index: 0;"></div>
-            <div style="position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: #ea4335; filter: blur(50px); opacity: 0.15; z-index: 0;"></div>
+        <section class="reviews-section glassmorphism"
+            style="margin-top: 3rem; text-align: center; padding: 2.5rem 1.5rem; border-radius: 20px; background: linear-gradient(145deg, rgba(255, 183, 3, 0.05) 0%, rgba(15, 17, 26, 0.8) 100%); position: relative; overflow: hidden; border-color: rgba(255, 183, 3, 0.2);">
+            <div
+                style="position: absolute; top: -20px; left: -20px; width: 100px; height: 100px; background: var(--accent-color); filter: blur(60px); opacity: 0.2; z-index: 0;">
+            </div>
+            <div
+                style="position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: #ea4335; filter: blur(50px); opacity: 0.15; z-index: 0;">
+            </div>
             <div style="position: relative; z-index: 1;">
-                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #fff;">¿Qué te pareció <span style="color: var(--accent-color);">The King Burger</span>? 👑</h2>
-                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    Tu opinión nos hace Reyes. Dejanos tus estrellitas y un comentario en Google para ayudarnos a crecer. ¡Tardás 10 segundos!
+                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #fff;">¿Qué te pareció <span
+                        style="color: var(--accent-color);">The King Burger</span>? 👑</h2>
+                <p
+                    style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    Tu opinión nos hace Reyes. Dejanos tus estrellitas y un comentario en Google para ayudarnos a
+                    crecer. ¡Tardás 10 segundos!
                 </p>
-                <div class="stars-container" id="stars-container" style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem;">
-                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="1"><i class="ri-star-line"></i></a>
-                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="2"><i class="ri-star-line"></i></a>
-                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="3"><i class="ri-star-line"></i></a>
-                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="4"><i class="ri-star-line"></i></a>
-                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="star-rating" data-index="5"><i class="ri-star-line"></i></a>
+                <div class="stars-container" id="stars-container"
+                    style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer"
+                        class="star-rating" data-index="1"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer"
+                        class="star-rating" data-index="2"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer"
+                        class="star-rating" data-index="3"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer"
+                        class="star-rating" data-index="4"><i class="ri-star-line"></i></a>
+                    <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer"
+                        class="star-rating" data-index="5"><i class="ri-star-line"></i></a>
                 </div>
-                <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer" class="btn-review">
+                <a href="https://maps.app.goo.gl/xa9dcDaG32M8LTRF8" target="_blank" rel="noopener noreferrer"
+                    class="btn-review">
                     <i class="ri-google-fill" style="font-size: 1.2rem; color: #4285F4;"></i> Calificanos en Google
                 </a>
             </div>
@@ -276,77 +362,90 @@
             <button id="close-cart"><i class="ri-close-line"></i></button>
         </div>
         <div class="cart-body">
-        <div class="cart-items" id="cart-items">
-            <!-- Items se insertan aquí vía JS -->
-            <p class="empty-cart-msg">Tu carrito está vacío</p>
-        </div>
-        
-        <!-- Formulario de Datos para WhatsApp -->
-        <div class="checkout-form" id="checkout-form" style="display: none;">
-            <input type="text" id="customer-name" placeholder="Tu Nombre y Apellido" required>
-            <!-- Opción de Entrega -->
-            <div class="delivery-option-selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
-                <button type="button" id="option-delivery" class="option-btn active" style="background: var(--accent-color); border: none; color: #000; padding: 0.6rem; border-radius: 8px; font-weight: 700; cursor: pointer;">🛵 Envío</button>
-                <button type="button" id="option-takeaway" class="option-btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; padding: 0.6rem; border-radius: 8px; font-weight: 700; cursor: pointer;">🛍️ Retiro</button>
+            <div class="cart-items" id="cart-items">
+                <!-- Items se insertan aquí vía JS -->
+                <p class="empty-cart-msg">Tu carrito está vacío</p>
             </div>
 
-            <div id="delivery-details-container">
-                <input type="text" id="customer-address" placeholder="Ej: Av. Costanera 1234" required autocomplete="street-address">
-                <!-- Vista previa del mapa: aparece al escribir la dirección -->
-                <div id="map-preview-container" style="display:none; margin-top: 0.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent-color);">
-                    <div style="background: rgba(255,183,3,0.08); padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                        <span style="font-size: 0.78rem; color: #ccc;"><i class="ri-map-pin-2-fill" style="color: var(--accent-color);"></i> Vista previa del destino:</span>
-                        <a id="map-preview-link" href="#" target="_blank" rel="noopener noreferrer"
-                           style="font-size: 0.78rem; font-weight: 700; color: var(--accent-color); text-decoration: none; background: rgba(255,183,3,0.15); padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--accent-color);">
-                            <i class="ri-external-link-fill"></i> Ver en Google Maps
-                        </a>
+            <!-- Formulario de Datos para WhatsApp -->
+            <div class="checkout-form" id="checkout-form" style="display: none;">
+                <input type="text" id="customer-name" placeholder="Tu Nombre y Apellido" required>
+                <!-- Opción de Entrega -->
+                <div class="delivery-option-selector"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <button type="button" id="option-delivery" class="option-btn active"
+                        style="background: var(--accent-color); border: none; color: #000; padding: 0.6rem; border-radius: 8px; font-weight: 700; cursor: pointer;">🛵
+                        Envío</button>
+                    <button type="button" id="option-takeaway" class="option-btn"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; padding: 0.6rem; border-radius: 8px; font-weight: 700; cursor: pointer;">🛍️
+                        Retiro</button>
+                </div>
+
+                <div id="delivery-details-container">
+                    <input type="text" id="customer-address" placeholder="Ej: Av. Costanera 1234" required
+                        autocomplete="street-address">
+                    <!-- Vista previa del mapa: aparece al escribir la dirección -->
+                    <div id="map-preview-container"
+                        style="display:none; margin-top: 0.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent-color);">
+                        <div
+                            style="background: rgba(255,183,3,0.08); padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                            <span style="font-size: 0.78rem; color: #ccc;"><i class="ri-map-pin-2-fill"
+                                    style="color: var(--accent-color);"></i> Vista previa del destino:</span>
+                            <a id="map-preview-link" href="#" target="_blank" rel="noopener noreferrer"
+                                style="font-size: 0.78rem; font-weight: 700; color: var(--accent-color); text-decoration: none; background: rgba(255,183,3,0.15); padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--accent-color);">
+                                <i class="ri-external-link-fill"></i> Ver en Google Maps
+                            </a>
+                        </div>
+                        <iframe id="map-preview-iframe" src="" width="100%" height="160"
+                            style="border:none; display:block;" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade" allowfullscreen>
+                        </iframe>
                     </div>
-                    <iframe id="map-preview-iframe"
-                        src=""
-                        width="100%"
-                        height="160"
-                        style="border:none; display:block;"
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
-                        allowfullscreen>
-                    </iframe>
                 </div>
-            </div>
 
-            <!-- SISTEMA DE ENVÍO: Selector de Zona (Método 3 - Fallback siempre disponible) -->
-            <div id="zone-selector-container" class="zone-selector-block" style="display: none;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                    <i class="ri-map-2-line" style="color: var(--accent-color);"></i>
-                    <span style="font-size: 0.82rem; color: #bbb;">Seleccioná tu barrio para calcular el envío:</span>
+                <!-- SISTEMA DE ENVÍO: Selector de Zona (Método 3 - Fallback siempre disponible) -->
+                <div id="zone-selector-container" class="zone-selector-block" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <i class="ri-map-2-line" style="color: var(--accent-color);"></i>
+                        <span style="font-size: 0.82rem; color: #bbb;">Seleccioná tu barrio para calcular el
+                            envío:</span>
+                    </div>
+                    <select id="zone-select" class="zone-select-input">
+                        <option value="">— Elegí tu zona / barrio —</option>
+                    </select>
                 </div>
-                <select id="zone-select" class="zone-select-input">
-                    <option value="">— Elegí tu zona / barrio —</option>
+
+                <!-- Badge: método de cálculo activo (GPS / OSM / Manual) -->
+                <div id="delivery-method-info" class="delivery-method-badge" style="display: none;">
+                    <i class="ri-checkbox-circle-fill" style="color: #4ade80; flex-shrink:0;"></i>
+                    <span id="delivery-method-label">Calculado automáticamente</span>
+                    <button id="change-zone-btn" type="button" class="change-zone-btn" title="Cambiar zona">✏️
+                        Cambiar</button>
+                </div>
+
+                <div id="takeaway-details-container"
+                    style="display: none; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; text-align: center;">
+                    <p style="font-size: 0.85rem; color: #ccc; margin: 0;">📍 Retiras en: <strong
+                            style="color: var(--accent-color);">Local The King Burger</strong></p>
+                    <p style="font-size: 0.75rem; color: #aaa; margin-top: 0.2rem;">Av. Río Chico 5410, Corrientes</p>
+                    <a href="https://maps.google.com/?q=Av.+Río+Chico+5410,+Corrientes,+Argentina" target="_blank"
+                        style="display: inline-block; font-size: 0.8rem; color: var(--accent-color); text-decoration: underline; margin-top: 0.4rem;"><i
+                            class="ri-map-pin-fill"></i> Ver cómo llegar</a>
+                </div>
+                <select id="payment-method">
+                    <option value="Efectivo">Pago en Efectivo</option>
+                    <option value="Transferencia">Transferencia (Alias/CBU)</option>
                 </select>
+                <div id="alias-container"
+                    style="display: none; align-items: center; justify-content: space-between; background: rgba(255,183,3,0.1); border: 1px dashed var(--accent-color); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
+                    <span style="font-size: 0.9rem; color: #fff;">Alias: <strong
+                            style="color: var(--accent-color);">olivares.95</strong></span>
+                    <button id="copy-alias-btn" type="button"
+                        style="background: var(--accent-color); border: none; color: #000; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+                        <i class="ri-file-copy-line"></i> Copiar
+                    </button>
+                </div>
             </div>
-
-            <!-- Badge: método de cálculo activo (GPS / OSM / Manual) -->
-            <div id="delivery-method-info" class="delivery-method-badge" style="display: none;">
-                <i class="ri-checkbox-circle-fill" style="color: #4ade80; flex-shrink:0;"></i>
-                <span id="delivery-method-label">Calculado automáticamente</span>
-                <button id="change-zone-btn" type="button" class="change-zone-btn" title="Cambiar zona">✏️ Cambiar</button>
-            </div>
-
-            <div id="takeaway-details-container" style="display: none; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; text-align: center;">
-                <p style="font-size: 0.85rem; color: #ccc; margin: 0;">📍 Retiras en: <strong style="color: var(--accent-color);">Local The King Burger</strong></p>
-                <p style="font-size: 0.75rem; color: #aaa; margin-top: 0.2rem;">Av. Río Chico 5410, Corrientes</p>
-                <a href="https://maps.google.com/?q=Av.+Río+Chico+5410,+Corrientes,+Argentina" target="_blank" style="display: inline-block; font-size: 0.8rem; color: var(--accent-color); text-decoration: underline; margin-top: 0.4rem;"><i class="ri-map-pin-fill"></i> Ver cómo llegar</a>
-            </div>
-            <select id="payment-method">
-                <option value="Efectivo">Pago en Efectivo</option>
-                <option value="Transferencia">Transferencia (Alias/CBU)</option>
-            </select>
-            <div id="alias-container" style="display: none; align-items: center; justify-content: space-between; background: rgba(255,183,3,0.1); border: 1px dashed var(--accent-color); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
-                <span style="font-size: 0.9rem; color: #fff;">Alias: <strong style="color: var(--accent-color);">olivares.95</strong></span>
-                <button id="copy-alias-btn" type="button" style="background: var(--accent-color); border: none; color: #000; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
-                    <i class="ri-file-copy-line"></i> Copiar
-                </button>
-            </div>
-        </div>
         </div>
 
         <div class="cart-footer">
@@ -367,19 +466,24 @@
             </button>
         </div>
     </div>
-    
+
     <!-- PWA Install Promotion Banner -->
-    <div id="pwa-install-banner" style="display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(19, 21, 31, 0.95); border: 1px solid var(--accent-color); border-radius: 16px; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1900; align-items: center; justify-content: space-between; backdrop-filter: blur(10px); animation: fadeIn 0.4s ease;">
+    <div id="pwa-install-banner"
+        style="display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(19, 21, 31, 0.95); border: 1px solid var(--accent-color); border-radius: 16px; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1900; align-items: center; justify-content: space-between; backdrop-filter: blur(10px); animation: fadeIn 0.4s ease;">
         <div style="display: flex; align-items: center; gap: 0.8rem;">
             <div style="font-size: 2rem;">👑</div>
             <div>
                 <h4 style="color: #fff; margin: 0; font-size: 0.9rem;">¿Pedir más rápido?</h4>
-                <p style="color: #aaa; margin: 2px 0 0 0; font-size: 0.75rem;">Instalá el acceso directo en tu celular</p>
+                <p style="color: #aaa; margin: 2px 0 0 0; font-size: 0.75rem;">Instalá el acceso directo en tu celular
+                </p>
             </div>
         </div>
         <div style="display: flex; gap: 0.5rem;">
-            <button id="pwa-close-btn" style="background: transparent; border: 1px solid #444; color: #ccc; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.75rem; cursor: pointer;">Quizás luego</button>
-            <button id="pwa-add-btn" style="background: var(--accent-color); border: none; color: #000; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">Instalar</button>
+            <button id="pwa-close-btn"
+                style="background: transparent; border: 1px solid #444; color: #ccc; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.75rem; cursor: pointer;">Quizás
+                luego</button>
+            <button id="pwa-add-btn"
+                style="background: var(--accent-color); border: none; color: #000; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">Instalar</button>
         </div>
     </div>
 
@@ -388,14 +492,19 @@
 
     <!-- SISTEMA DE CORONAS (VALORACIÓN PÚBLICA) -->
     <div class="container" style="margin-top: 3rem; margin-bottom: 2rem;">
-        <div class="glassmorphism" style="padding: 2.5rem 2rem; border-radius: 20px; text-align: center; position: relative; overflow: hidden; border-color: var(--accent-color);">
-            <div style="position: absolute; top: -20px; right: -20px; font-size: 8rem; opacity: 0.05; transform: rotate(15deg);">👑</div>
-            
+        <div class="glassmorphism"
+            style="padding: 2.5rem 2rem; border-radius: 20px; text-align: center; position: relative; overflow: hidden; border-color: var(--accent-color);">
+            <div
+                style="position: absolute; top: -20px; right: -20px; font-size: 8rem; opacity: 0.05; transform: rotate(15deg);">
+                👑</div>
+
             <h3 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 0.5rem;">¿Cuál se merece la Corona? 👑</h3>
-            <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem;">Contanos cuál de nuestras hamburguesas es tu favorita suprema.</p>
-            
+            <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem;">Contanos cuál de nuestras
+                hamburguesas es tu favorita suprema.</p>
+
             <div style="max-width: 400px; margin: 0 auto;">
-                <select id="crown-product-select" style="width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: #fff; font-family: inherit; font-size: 1rem; margin-bottom: 1.5rem; outline: none;">
+                <select id="crown-product-select"
+                    style="width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: #fff; font-family: inherit; font-size: 1rem; margin-bottom: 1.5rem; outline: none;">
                     <option value="" disabled selected>Elegí tu hamburguesa preferida...</option>
                     <option value="Provolone Doble">Provolone Doble</option>
                     <option value="King Bacon Doble">King Bacon Doble</option>
@@ -404,7 +513,8 @@
                     <option value="Veggie King">Veggie King</option>
                 </select>
 
-                <div id="crown-stars-container" style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                <div id="crown-stars-container"
+                    style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem;">
                     <button class="crown-btn" data-val="1"><i class="ri-vip-crown-line"></i></button>
                     <button class="crown-btn" data-val="2"><i class="ri-vip-crown-line"></i></button>
                     <button class="crown-btn" data-val="3"><i class="ri-vip-crown-line"></i></button>
@@ -412,10 +522,12 @@
                     <button class="crown-btn" data-val="5"><i class="ri-vip-crown-line"></i></button>
                 </div>
 
-                <button id="crown-submit-btn" style="width: 100%; background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); color: #000; border: none; padding: 1rem; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s;">
+                <button id="crown-submit-btn"
+                    style="width: 100%; background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); color: #000; border: none; padding: 1rem; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s;">
                     CORONAR AHORA
                 </button>
-                <div id="crown-thanks-msg" style="display: none; color: #2ecc71; font-weight: 700; margin-top: 1rem; font-size: 1.1rem;">
+                <div id="crown-thanks-msg"
+                    style="display: none; color: #2ecc71; font-weight: 700; margin-top: 1rem; font-size: 1.1rem;">
                     ¡Gracias por tu voto real! 👑
                 </div>
             </div>
@@ -423,22 +535,27 @@
     </div>
 
     <!-- FOOTER DE LA APLICACIÓN -->
-    <footer class="app-footer" style="margin-top: 4rem; padding: 2rem 1rem; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0,0,0,0.3);">
+    <footer class="app-footer"
+        style="margin-top: 4rem; padding: 2rem 1rem; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0,0,0,0.3);">
         <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
-            <a href="https://www.instagram.com/theking.ctes/" target="_blank" rel="noopener noreferrer" style="color: #fff; background: rgba(255,255,255,0.05); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 1.5rem; transition: all 0.3s; text-decoration: none; border: 1px solid rgba(255,255,255,0.1);" onmouseover="this.style.background='var(--accent-color)'; this.style.color='#000'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff'; this.style.transform='translateY(0)';">
+            <a href="https://www.instagram.com/theking.ctes/" target="_blank" rel="noopener noreferrer"
+                style="color: #fff; background: rgba(255,255,255,0.05); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 1.5rem; transition: all 0.3s; text-decoration: none; border: 1px solid rgba(255,255,255,0.1);"
+                onmouseover="this.style.background='var(--accent-color)'; this.style.color='#000'; this.style.transform='translateY(-3px)';"
+                onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff'; this.style.transform='translateY(0)';">
                 <i class="ri-instagram-line"></i>
             </a>
             <!-- Agrega más redes aquí si es necesario -->
         </div>
-        
+
         <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">
             <i class="ri-map-pin-2-fill" style="color: var(--accent-color);"></i> Río Chico 5410, Corrientes, Argentina
         </p>
         <p style="color: #777; font-size: 0.8rem; margin-bottom: 1rem;">
             Forjado con pasión en Corrientes, Argentina.
         </p>
-        
-        <div style="display: inline-block; background: rgba(255, 183, 3, 0.1); border: 1px solid rgba(255, 183, 3, 0.2); padding: 0.4rem 1rem; border-radius: 20px;">
+
+        <div
+            style="display: inline-block; background: rgba(255, 183, 3, 0.1); border: 1px solid rgba(255, 183, 3, 0.2); padding: 0.4rem 1rem; border-radius: 20px;">
             <span style="color: var(--accent-color); font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;">
                 THE KING WEBMENU v8.8 — VERIX OS
             </span>
@@ -450,7 +567,8 @@
     <script defer src="js/app.js"></script>
 
     <!-- ===== MODAL RADAR DE DELIVERY ===== -->
-    <div id="delivery-radar-modal" class="delivery-radar-modal" role="dialog" aria-modal="true" aria-label="Precios de Delivery">
+    <div id="delivery-radar-modal" class="delivery-radar-modal" role="dialog" aria-modal="true"
+        aria-label="Precios de Delivery">
         <div class="delivery-radar-overlay" id="close-radar-overlay"></div>
         <div class="delivery-radar-panel glassmorphism">
 
@@ -481,27 +599,37 @@
             <!-- Zonas y precios -->
             <div class="radar-zones-list">
                 <div class="radar-zone-item">
-                    <span class="radar-zone-badge" style="background:rgba(74,222,128,0.18);border-color:rgba(74,222,128,0.5);color:#4ade80;">🟢 Zona 1</span>
+                    <span class="radar-zone-badge"
+                        style="background:rgba(74,222,128,0.18);border-color:rgba(74,222,128,0.5);color:#4ade80;">🟢
+                        Zona 1</span>
                     <span class="radar-zone-desc">Lomas del Mirador, Frondizi, Seis Hectáreas</span>
                     <span class="radar-zone-price">$1.800</span>
                 </div>
                 <div class="radar-zone-item">
-                    <span class="radar-zone-badge" style="background:rgba(250,204,21,0.15);border-color:rgba(250,204,21,0.5);color:#facc15;">🟡 Zona 2</span>
+                    <span class="radar-zone-badge"
+                        style="background:rgba(250,204,21,0.15);border-color:rgba(250,204,21,0.5);color:#facc15;">🟡
+                        Zona 2</span>
                     <span class="radar-zone-desc">Shopping, UNNE, Sol de Mayo, Molina Punta</span>
                     <span class="radar-zone-price">$2.200</span>
                 </div>
                 <div class="radar-zone-item">
-                    <span class="radar-zone-badge" style="background:rgba(251,146,60,0.15);border-color:rgba(251,146,60,0.5);color:#fb923c;">🟠 Zona 3</span>
+                    <span class="radar-zone-badge"
+                        style="background:rgba(251,146,60,0.15);border-color:rgba(251,146,60,0.5);color:#fb923c;">🟠
+                        Zona 3</span>
                     <span class="radar-zone-desc">Centro, Parque Mitre, Bañado Norte, Camba Cuá</span>
                     <span class="radar-zone-price">$3.000</span>
                 </div>
                 <div class="radar-zone-item">
-                    <span class="radar-zone-badge" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:#ef4444;">🔴 Zona 4</span>
+                    <span class="radar-zone-badge"
+                        style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:#ef4444;">🔴 Zona
+                        4</span>
                     <span class="radar-zone-desc">Barrio Ponce, Maipú, Santa Lucía, Boca Unidos</span>
                     <span class="radar-zone-price">$4.000</span>
                 </div>
                 <div class="radar-zone-item">
-                    <span class="radar-zone-badge" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:#ef4444;">🔴 Zona 5</span>
+                    <span class="radar-zone-badge"
+                        style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:#ef4444;">🔴 Zona
+                        5</span>
                     <span class="radar-zone-desc">Costanera, Arazaty, Galván, Hosp. Vidal</span>
                     <span class="radar-zone-price">$4.000</span>
                 </div>
@@ -514,28 +642,29 @@
     </div>
 
     <script>
-    // ── Delivery Radar Modal ──────────────────────────────────
-    (function() {
-        const modal   = document.getElementById('delivery-radar-modal');
-        const openBtn = document.getElementById('open-delivery-radar');
-        const closeBtn = document.getElementById('close-delivery-radar');
-        const overlay  = document.getElementById('close-radar-overlay');
-        if (!modal || !openBtn) return;
+        // ── Delivery Radar Modal ──────────────────────────────────
+        (function () {
+            const modal = document.getElementById('delivery-radar-modal');
+            const openBtn = document.getElementById('open-delivery-radar');
+            const closeBtn = document.getElementById('close-delivery-radar');
+            const overlay = document.getElementById('close-radar-overlay');
+            if (!modal || !openBtn) return;
 
-        function openRadar() {
-            modal.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeRadar() {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-        }
+            function openRadar() {
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeRadar() {
+                modal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
 
-        openBtn.addEventListener('click', openRadar);
-        closeBtn.addEventListener('click', closeRadar);
-        overlay.addEventListener('click', closeRadar);
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRadar(); });
-    })();
+            openBtn.addEventListener('click', openRadar);
+            closeBtn.addEventListener('click', closeRadar);
+            overlay.addEventListener('click', closeRadar);
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRadar(); });
+        })();
     </script>
 </body>
+
 </html>

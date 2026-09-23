@@ -37,7 +37,7 @@ try {
     if ('BroadcastChannel' in window) {
         _menuChannel = new BroadcastChannel('theking_menu_channel');
     }
-} catch(e) {}
+} catch (e) { }
 
 class KingDatabaseEngine {
     constructor() {
@@ -82,7 +82,7 @@ class KingDatabaseEngine {
                 }
                 return data;
             }
-        } catch(e) {}
+        } catch (e) { }
 
         return null;
     }
@@ -112,7 +112,7 @@ class KingDatabaseEngine {
                 if (data.phoneWhatsApp) this._phoneWhatsApp = data.phoneWhatsApp;
                 return data;
             }
-        } catch(e) {}
+        } catch (e) { }
 
         return null;
     }
@@ -134,7 +134,7 @@ class KingDatabaseEngine {
         try {
             const cached = localStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_PRODUCTS);
             if (cached) return JSON.parse(cached);
-        } catch(e) {}
+        } catch (e) { }
 
         return (typeof PRODUCTS !== 'undefined') ? PRODUCTS : null;
     }
@@ -353,23 +353,23 @@ class KingDatabaseEngine {
         try {
             const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
             const docRef = this.db.collection('stats_orders').doc(dateStr);
-            
+
             await this.db.runTransaction(async (transaction) => {
                 const doc = await transaction.get(docRef);
-                
+
                 let data = doc.exists ? doc.data() : { totalOrders: 0, products: {} };
                 data.totalOrders += 1;
-                
+
                 cartItems.forEach(item => {
                     const cleanName = item.name.replace(/[^a-zA-Z0-9]/g, '_');
                     if (!data.products[cleanName]) data.products[cleanName] = 0;
                     data.products[cleanName] += item.quantity;
                 });
-                
+
                 transaction.set(docRef, data);
             });
             return true;
-        } catch(e) {
+        } catch (e) {
             console.warn('[Verix Engine] No se pudo guardar stat:', e);
             return false;
         }
@@ -380,19 +380,19 @@ class KingDatabaseEngine {
         try {
             const cleanName = productName.replace(/[^a-zA-Z0-9]/g, '_');
             const docRef = this.db.collection('stats_ratings').doc(cleanName);
-            
+
             await this.db.runTransaction(async (transaction) => {
                 const doc = await transaction.get(docRef);
                 let data = doc.exists ? doc.data() : { productName, totalVotes: 0, totalStars: 0, average: 0 };
-                
+
                 data.totalVotes += 1;
                 data.totalStars += stars;
                 data.average = data.totalStars / data.totalVotes;
-                
+
                 transaction.set(docRef, data);
             });
             return true;
-        } catch(e) {
+        } catch (e) {
             console.warn('[Verix Engine] No se pudo guardar rating:', e);
             return false;
         }
@@ -405,7 +405,7 @@ class KingDatabaseEngine {
             d.setDate(d.getDate() - i);
             return d.toISOString().split('T')[0];
         });
-        
+
         return this.db.collection('stats_orders').onSnapshot(snapshot => {
             const stats = [];
             snapshot.forEach(doc => {
@@ -413,7 +413,7 @@ class KingDatabaseEngine {
                     stats.push({ date: doc.id, ...doc.data() });
                 }
             });
-            stats.sort((a,b) => a.date.localeCompare(b.date)); // Cronológico
+            stats.sort((a, b) => a.date.localeCompare(b.date)); // Cronológico
             callback(stats);
         });
     }

@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     // --- DATOS DEL MENÚ ---
     // phoneWhatsApp es mutable: se actualiza desde Firebase si la secretaria lo cambia en el admin
     let phoneWhatsApp = "5493794299964";
-    
-    // VELOCIDAD MÁXIMA: Renderizar inmediatamente con datos locales (products.js).
-    // Firebase actualiza en segundo plano sin bloquear la interfaz.
+
+    // VELOCIDAD MÁXIMA & SINCRONIZACIÓN EN TIEMPO REAL CON FIREBASE
     if (window.kingDB) {
         // Cargar banners en background (sin await, no bloquea)
         window.kingDB.initialLoadBanners().then(firebaseBanners => {
@@ -16,13 +15,50 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }).catch(e => console.warn('[TheKing] Banners Firebase fallido, usando locales', e));
 
-        // Cargar productos en background (actualiza la UI cuando llegan)
-        window.kingDB.initialLoadProducts().catch(
+        // Cargar productos en background
+        window.kingDB.initialLoadProducts().then(() => {
+            refreshActiveCategoryUI();
+        }).catch(
             e => console.warn('[TheKing] Productos Firebase fallidos, usando locales', e)
         );
+
+        // ⚡ ESCUCHADOR EN TIEMPO REAL DE PRODUCTOS: actualiza el celular si la secretaria edita en el admin
+        window.kingDB.listenProducts((newProducts) => {
+            console.log('⚡ [TheKing Realtime] Productos actualizados en vivo desde Firebase!');
+            refreshActiveCategoryUI();
+        });
+
+        // ⚡ ESCUCHADOR EN TIEMPO REAL DE BANNERS
+        window.kingDB.listenBanners((banners) => {
+            if (banners && banners.phoneWhatsApp) {
+                phoneWhatsApp = banners.phoneWhatsApp;
+            }
+            const promoBarText = document.getElementById('promo-bar-text');
+            if (promoBarText && banners.promoBarText) {
+                promoBarText.textContent = banners.promoBarText;
+            }
+        });
+
+        // ⚡ ESCUCHADOR EN TIEMPO REAL DE SORTEOS
+        window.kingDB.listenSorteo((sorteo) => {
+            if (sorteo && sorteo.ganador) {
+                showSorteoWinnerToast(sorteo.ganador, sorteo.premio || 'Premio Corona');
+            }
+        });
     }
-    
-    // Los productos se cargan desde products.js de forma global (con Firebase merge ya aplicado)
+
+    // Escuchar eventos globales de sincronización entre pestañas (BroadcastChannel)
+    window.addEventListener('king_products_changed', () => {
+        refreshActiveCategoryUI();
+    });
+
+    function refreshActiveCategoryUI() {
+        const activeBtn = document.querySelector('.category-btn.active');
+        const activeCategory = activeBtn ? activeBtn.getAttribute('data-target') : 'promos';
+        if (typeof renderProducts === 'function') {
+            renderProducts(activeCategory);
+        }
+    }
 
     let cart = JSON.parse(localStorage.getItem('king_cart')) || [];
     let deliveryCost = 0;       // Costo de envío (calculado por GPS, OSM o zona manual)
@@ -41,11 +77,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categoryBtns = document.querySelectorAll('.category-btn');
     const sectionTitle = document.getElementById('section-title');
     const productsGrid = document.getElementById('products-grid');
-    
+
     // Buscador
     const searchInput = document.getElementById('search-input');
     const clearSearchBtn = document.getElementById('clear-search-btn');
-    
+
     // Menú de App
     const appMenuBtn = document.getElementById('app-menu-btn');
     const appMenuDropdown = document.getElementById('app-menu-dropdown');
@@ -472,7 +508,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Cargar estado inicial desde los datos ya fusionados (Firebase + estáticos)
     renderProducts('promos');
     updateCartUI();
-    
+
     // Si Firebase cargó banners con éxito, aplicarlos ahora
     if (window.kingDB && window.kingDB.localBanners) {
         applyBannersData(window.kingDB.localBanners);
@@ -553,12 +589,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const grandTotal = subtotal + envio;
 
         if (envio > 0) {
-            if (subtotalRow)     { subtotalRow.style.display = 'flex'; }
-            if (cartSubtotal)      cartSubtotal.textContent = `$${subtotal.toLocaleString('es-AR')}`;
-            if (deliveryCostRow)  { deliveryCostRow.style.display = 'flex'; }
-            if (cartDeliveryCost)  cartDeliveryCost.textContent = `$${envio.toLocaleString('es-AR')}`;
+            if (subtotalRow) { subtotalRow.style.display = 'flex'; }
+            if (cartSubtotal) cartSubtotal.textContent = `$${subtotal.toLocaleString('es-AR')}`;
+            if (deliveryCostRow) { deliveryCostRow.style.display = 'flex'; }
+            if (cartDeliveryCost) cartDeliveryCost.textContent = `$${envio.toLocaleString('es-AR')}`;
         } else {
-            if (subtotalRow)    subtotalRow.style.display = 'none';
+            if (subtotalRow) subtotalRow.style.display = 'none';
             if (deliveryCostRow) deliveryCostRow.style.display = 'none';
         }
 
@@ -588,8 +624,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
         const a = Math.sin(dLat / 2) ** 2 +
-                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                  Math.sin(dLon / 2) ** 2;
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) ** 2;
         return R * 2 * Math.asin(Math.sqrt(a));
     }
 
@@ -638,7 +674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (deliveryMethod === 'gps') return; // GPS tiene prioridad absoluta
 
         const dirLower = direccion.toLowerCase();
-        
+
         // 1. Detección Híbrida Inteligente por Palabras Clave de Barrio
         for (const zone of DELIVERY_ZONES) {
             if (zone.keywords && zone.keywords.some(kw => dirLower.includes(kw))) {
@@ -676,7 +712,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     checkoutBtn.addEventListener('click', () => {
         if (cart.length === 0) { showToast('El carrito está vacío'); return; }
 
-        const name    = customerName.value.trim();
+        const name = customerName.value.trim();
         const address = customerAddress.value.trim();
         const payment = paymentMethod.value;
 
@@ -757,8 +793,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- LÓGICA ELEGANTE PWA NO INTRUSIVA ---
-    const pwaBanner  = document.getElementById('pwa-install-banner');
-    const pwaAddBtn  = document.getElementById('pwa-add-btn');
+    const pwaBanner = document.getElementById('pwa-install-banner');
+    const pwaAddBtn = document.getElementById('pwa-add-btn');
     const pwaCloseBtn = document.getElementById('pwa-close-btn');
 
     let visitCount = parseInt(localStorage.getItem('king_visit_count') || '0');
@@ -831,7 +867,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.kingDB.listenBanners((banners) => {
             applyBannersData(banners);
         });
-        
+
         // --- LÓGICA DE SORTEO PÚBLICO ---
         const sorteoSection = document.getElementById('sorteo-section');
         const sorteoPremioDisplay = document.getElementById('sorteo-premio-display');
@@ -841,7 +877,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const sorteoContentWinner = document.getElementById('sorteo-content-winner');
         const sorteoGanadorNombre = document.getElementById('sorteo-ganador-nombre');
         const sorteoGanadorPremio = document.getElementById('sorteo-ganador-premio');
-        
+
         let sorteoData = {};
 
         if (sorteoSection) {
@@ -850,7 +886,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (config.active) {
                     sorteoSection.style.display = 'block';
                     sorteoPremioDisplay.textContent = config.premio;
-                    
+
                     if (config.ganador) {
                         sorteoContentActive.style.display = 'none';
                         sorteoContentWinner.style.display = 'block';
@@ -874,7 +910,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (sorteoForm) {
                 sorteoForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    
+
                     // Solo permitir una inscripción por sesión local
                     if (localStorage.getItem('king_sorteo_participado_v1')) {
                         showToast('¡Ya estás participando en el sorteo actual!');
@@ -883,7 +919,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     const name = document.getElementById('sorteo-nombre').value.trim();
                     const tel = document.getElementById('sorteo-tel').value.trim();
-                    
+
                     const btn = sorteoForm.querySelector('button');
                     btn.innerHTML = 'Enviando...';
                     btn.disabled = true;
@@ -894,7 +930,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             telefono: tel,
                             fecha: firebase.firestore.FieldValue.serverTimestamp()
                         });
-                        
+
                         showToast('🎉 ¡Genial! Ya estás participando del sorteo.');
                         localStorage.setItem('king_sorteo_participado_v1', 'true');
                         sorteoForm.innerHTML = '<h3 style="color: #2ecc71;">¡Ya estás inscripto! ¡Mucha Suerte! 🍀</h3>';
@@ -914,7 +950,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (starRatings.length > 0 && starsContainer) {
         starRatings.forEach(star => {
-            star.addEventListener('mouseenter', function() {
+            star.addEventListener('mouseenter', function () {
                 const index = parseInt(this.getAttribute('data-index'));
                 // Iluminar todas las estrellas hasta la actual
                 starRatings.forEach(s => {
@@ -930,7 +966,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
-        starsContainer.addEventListener('mouseleave', function() {
+        starsContainer.addEventListener('mouseleave', function () {
             // Limpiar al salir del contenedor
             starRatings.forEach(s => {
                 s.classList.remove('hovered');
@@ -951,7 +987,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn.addEventListener('click', () => {
                 const val = parseInt(btn.getAttribute('data-val'));
                 currentCrownRating = val;
-                
+
                 crownBtns.forEach(b => {
                     const bVal = parseInt(b.getAttribute('data-val'));
                     if (bVal <= val) {
@@ -991,13 +1027,40 @@ document.addEventListener('DOMContentLoaded', async () => {
                     localStorage.setItem('king_crown_voted', 'true');
                     crownSubmitBtn.style.display = 'none';
                     crownThanks.style.display = 'block';
-                } else {
-                    showToast('Hubo un error al enviar tu corona. Intenta de nuevo.');
-                    crownSubmitBtn.textContent = 'CORONAR AHORA';
-                    crownSubmitBtn.disabled = false;
                 }
             }
         });
+    }
+
+    // --- NOTIFICACIÓN FLOTANTE DE GANADOR EN TIEMPO REAL ---
+    function showSorteoWinnerToast(ganador, premio) {
+        let toastSorteo = document.getElementById('toast-sorteo-winner');
+        if (!toastSorteo) {
+            toastSorteo = document.createElement('div');
+            toastSorteo.id = 'toast-sorteo-winner';
+            toastSorteo.style.cssText = `
+                position: fixed;
+                bottom: 25px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+                border: 2px solid #f59e0b;
+                color: #fff;
+                padding: 16px 24px;
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+                z-index: 999999;
+                text-align: center;
+                animation: popUpSorteo 0.5s ease-out;
+            `;
+            document.body.appendChild(toastSorteo);
+        }
+        toastSorteo.innerHTML = `
+            <div style="font-size: 1.4rem; font-weight: 800; color: #f59e0b; margin-bottom: 4px;">🎉 ¡TENEMOS GANADOR EN VIVO! 🎉</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">🏆 ${ganador.nombre || 'Participante'} (${ganador.telefono || '***'})</div>
+            <div style="font-size: 0.9rem; color: #9ca3af; margin-top: 4px;">Premio: <strong>${premio}</strong></div>
+        `;
+        toastSorteo.style.display = 'block';
     }
 
 });

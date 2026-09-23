@@ -5,7 +5,7 @@
  * ==========================================================================
  */
 
-(function() {
+(function () {
     'use strict';
 
     // --- COORDENADAS BASE DEL CASTILLO THE KING (Río Chico 5410, Corrientes) ---
@@ -592,7 +592,7 @@
     }
 
     // Función global para pedir item desde el modal
-    window.orderItemViaWhatsApp = function(itemName) {
+    window.orderItemViaWhatsApp = function (itemName) {
         const decoded = decodeURIComponent(itemName);
         const text = encodeURIComponent(`👑 ¡Hola The King! Vi "${decoded}" en el Menú del Castillo y quiero hacer el pedido. ¿Tienen disponibilidad ahora?`);
         window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${text}`, '_blank');
