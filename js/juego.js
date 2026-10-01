@@ -16,10 +16,10 @@
     // --- ZONAS DE DELIVERY OFICIALES ---
     const ZONES_CONFIG = [
         { id: 1, name: 'Zona 1 ($1.800)', price: 1800, maxKm: 1.8, color: '#10b981', barrios: 'Lomas del Mirador, Frondizi, 6 Hectáreas' },
-        { id: 2, name: 'Zona 2 ($2.200)', price: 2200, maxKm: 3.2, color: '#f59e0b', barrios: 'Molina Punta, Punta Taítalo, Sol de Mayo, Shopping, UNNE Eragia' },
+        { id: 2, name: 'Zona 2 ($2.200)', price: 2200, maxKm: 3.5, color: '#f59e0b', barrios: 'Molina Punta, Punta Taítalo, Sol de Mayo, Shopping, UNNE Eragia' },
         { id: 3, name: 'Zona 3 ($3.000)', price: 3000, maxKm: 5.2, color: '#f97316', barrios: 'Centro, Bañado Norte, Parque Mitre, Cambá Cuá, 17 de Agosto' },
-        { id: 4, name: 'Zona 4 ($4.000)', price: 4000, maxKm: 7.2, color: '#ef4444', barrios: 'Maipú, La Reina, Santa Lucía, Ponce, Boca Unidos' },
-        { id: 5, name: 'Zona 5 ($4.000)', price: 4000, maxKm: 10.0, color: '#ec4899', barrios: 'Costanera Sur, Arazaty, Galván, Hosp. Vidal' }
+        { id: 4, name: 'Zona 4 ($4.000)', price: 4000, maxKm: 6.8, color: '#ef4444', barrios: 'Maipú, La Reina, Santa Lucía, Ponce, Boca Unidos' },
+        { id: 5, name: 'Zona 5 (> 6.8 km · $4.000)', price: 4000, maxKm: 6.8, color: '#ec4899', barrios: 'Costanera Sur, Arazaty, Galván, Hosp. Vidal' }
     ];
 
     // --- BASE DE DATOS DE DESTINOS / CLIENTES RPG EN CORRIENTES ---
@@ -135,7 +135,7 @@
         }).addTo(map);
 
         // Capas circulares de Zonas de Delivery
-        ZONES_CONFIG.slice().reverse().forEach(zone => {
+        ZONES_CONFIG.slice(0, -1).reverse().forEach(zone => {
             L.circle([LOCAL_LAT, LOCAL_LON], {
                 radius: zone.maxKm * 1000,
                 color: zone.color,

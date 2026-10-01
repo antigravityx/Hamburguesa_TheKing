@@ -631,10 +631,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     /** Convierte distancia en km al precio de envío correspondiente */
     function priceByKm(km) {
-        if (km <= 1.8) return 1500;
-        if (km <= 3.5) return 2500;
+        if (km <= 1.8) return 1800;
+        if (km <= 3.5) return 2200;
         if (km <= 5.2) return 3000;
-        if (km <= 6.8) return 3500;
+        if (km <= 6.8) return 4000;
         return 4000;
     }
 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE KING - TETRIX ZONE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tetrix.css">
+    <!-- Meta Theme -->
+    <meta name="theme-color" content="#1a1a1a">
+</head>
+<body>
+    <div class="tetrix-container">
+        <header class="tetrix-header">
+            <h1>THE KING <span class="neon-text">TETRIX</span></h1>
+            <a href="index.html" class="btn-back">VOLVER AL MENÚ</a>
+        </header>
+
+        <div class="game-area">
+            <div class="left-panel">
+                <div class="stat-box">
+                    <h3>PUNTOS</h3>
+                    <p id="score">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>LÍNEAS</h3>
+                    <p id="lines">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>NIVEL</h3>
+                    <p id="level">1</p>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="tetris" width="240" height="480"></canvas>
+                <div id="game-over-overlay" class="overlay hidden">
+                    <h2>GAME OVER</h2>
+                    <p>Puntuación Final: <span id="final-score">0</span></p>
+                    <button id="btn-restart" class="btn-neon">JUGAR DE NUEVO</button>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="stat-box">
+                    <h3>SIGUIENTE</h3>
+                    <canvas id="next-piece" width="80" height="80"></canvas>
+                </div>
+                <div class="controls-info desktop-only">
+                    <p>Flechas para mover</p>
+                    <p>Arriba para rotar</p>
+                    <p>Abajo bajar rápido</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-controls mobile-only">
+            <button class="control-btn" id="btn-left">⬅️</button>
+            <div class="center-controls">
+                <button class="control-btn" id="btn-rotate">🔄</button>
+                <button class="control-btn" id="btn-down">⬇️</button>
+            </div>
+            <button class="control-btn" id="btn-right">➡️</button>
+        </div>
+    </div>
+
+    <script src="js/tetrix.js"></script>
+</body>
+</html>
