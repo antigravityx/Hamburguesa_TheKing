@@ -1,3 +1,25 @@
+/**
+ * 🕹️ THE KING TETRIX — Motor del Juego v2
+ * Con pantalla de bienvenida, pausa y controles mejorados
+ */
+
+// ===== PANTALLA DE BIENVENIDA =====
+const welcomeScreen = document.getElementById('welcome-screen');
+const gameZone = document.getElementById('game-zone');
+const btnStartGame = document.getElementById('btn-start-game');
+
+let gameStarted = false;
+
+btnStartGame.addEventListener('click', () => {
+    welcomeScreen.style.display = 'none';
+    gameZone.style.display = 'flex';
+    gameStarted = true;
+    playerReset();
+    updateScore();
+    update();
+});
+
+// ===== SETUP DEL CANVAS =====
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 const nextCanvas = document.getElementById('next-piece');
@@ -6,28 +28,134 @@ const nextContext = nextCanvas.getContext('2d');
 context.scale(24, 24); // 240/10 = 24
 nextContext.scale(20, 20); // 80/4 = 20
 
-function arenaSweep() {
-    let rowCount = 1;
-    outer: for (let y = arena.length - 1; y > 0; --y) {
-        for (let x = 0; x < arena[y].length; ++x) {
-            if (arena[y][x] === 0) {
-                continue outer;
+// ===== COLORES NEON =====
+const colors = [
+    null,
+    '#FF0D72', // T - Rosa
+    '#0DC2FF', // O - Azul
+    '#0DFF72', // L - Verde
+    '#F538FF', // J - Púrpura
+    '#FF8E0D', // I - Naranja
+    '#FFE138', // S - Amarillo
+    '#3877FF'  // Z - Azul profundo
+];
+
+// ===== FUNCIONES CORE =====
+
+function createMatrix(w, h) {
+    const matrix = [];
+    while (h--) {
+        matrix.push(new Array(w).fill(0));
+    }
+    return matrix;
+}
+
+function createPiece(type) {
+    const pieces = {
+        'T': [[0,0,0],[1,1,1],[0,1,0]],
+        'O': [[2,2],[2,2]],
+        'L': [[0,3,0],[0,3,0],[0,3,3]],
+        'J': [[0,4,0],[0,4,0],[4,4,0]],
+        'I': [[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]],
+        'S': [[0,6,6],[6,6,0],[0,0,0]],
+        'Z': [[7,7,0],[0,7,7],[0,0,0]]
+    };
+    return pieces[type];
+}
+
+function drawMatrix(matrix, offset, ctx) {
+    matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                // Bloque principal
+                ctx.fillStyle = colors[value];
+                ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
+                
+                // Efecto de profundidad (borde interno)
+                ctx.fillStyle = 'rgba(255,255,255,0.15)';
+                ctx.fillRect(x + offset.x, y + offset.y, 1, 0.08);
+                ctx.fillRect(x + offset.x, y + offset.y, 0.08, 1);
+                
+                ctx.fillStyle = 'rgba(0,0,0,0.25)';
+                ctx.fillRect(x + offset.x + 0.92, y + offset.y, 0.08, 1);
+                ctx.fillRect(x + offset.x, y + offset.y + 0.92, 1, 0.08);
+                
+                // Borde exterior
+                ctx.lineWidth = 0.04;
+                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
             }
-        }
-        const row = arena.splice(y, 1)[0].fill(0);
-        arena.unshift(row);
-        ++y;
-        player.score += rowCount * 10;
-        player.lines += 1;
-        rowCount *= 2;
-        
-        // Level up every 5 lines
-        player.level = Math.floor(player.lines / 5) + 1;
-        dropInterval = Math.max(100, 1000 - (player.level - 1) * 100);
+        });
+    });
+}
+
+function draw() {
+    // Fondo con patrón grid sutil
+    context.fillStyle = '#0a0a12';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Grid lines sutiles
+    context.strokeStyle = 'rgba(255,255,255,0.03)';
+    context.lineWidth = 0.02;
+    for (let x = 0; x < 10; x++) {
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, 20);
+        context.stroke();
+    }
+    for (let y = 0; y < 20; y++) {
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(10, y);
+        context.stroke();
+    }
+    
+    drawMatrix(arena, {x: 0, y: 0}, context);
+    
+    // Ghost piece (sombra de donde va a caer)
+    if (!isGameOver && !isPaused) {
+        drawGhost();
+    }
+    
+    drawMatrix(player.matrix, player.pos, context);
+    
+    // Next Piece
+    nextContext.fillStyle = '#0a0a12';
+    nextContext.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+    if (nextPiece) {
+        const offsetX = (4 - nextPiece[0].length) / 2;
+        const offsetY = (4 - nextPiece.length) / 2;
+        drawMatrix(nextPiece, {x: offsetX, y: offsetY}, nextContext);
     }
 }
 
-function collide(arena, player) {
+// ===== GHOST PIECE (preview de dónde cae) =====
+function drawGhost() {
+    const ghost = {
+        pos: { x: player.pos.x, y: player.pos.y },
+        matrix: player.matrix
+    };
+    
+    while (!collideCheck(arena, ghost)) {
+        ghost.pos.y++;
+    }
+    ghost.pos.y--;
+    
+    // Dibujar ghost semi-transparente
+    ghost.matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                context.fillStyle = 'rgba(255,255,255,0.08)';
+                context.fillRect(x + ghost.pos.x, y + ghost.pos.y, 1, 1);
+                context.strokeStyle = 'rgba(255,255,255,0.15)';
+                context.lineWidth = 0.04;
+                context.strokeRect(x + ghost.pos.x, y + ghost.pos.y, 1, 1);
+            }
+        });
+    });
+}
+
+function collideCheck(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
@@ -41,105 +169,8 @@ function collide(arena, player) {
     return false;
 }
 
-function createMatrix(w, h) {
-    const matrix = [];
-    while (h--) {
-        matrix.push(new Array(w).fill(0));
-    }
-    return matrix;
-}
-
-function createPiece(type) {
-    if (type === 'T') {
-        return [
-            [0, 0, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-        ];
-    } else if (type === 'O') {
-        return [
-            [2, 2],
-            [2, 2],
-        ];
-    } else if (type === 'L') {
-        return [
-            [0, 3, 0],
-            [0, 3, 0],
-            [0, 3, 3],
-        ];
-    } else if (type === 'J') {
-        return [
-            [0, 4, 0],
-            [0, 4, 0],
-            [4, 4, 0],
-        ];
-    } else if (type === 'I') {
-        return [
-            [0, 5, 0, 0],
-            [0, 5, 0, 0],
-            [0, 5, 0, 0],
-            [0, 5, 0, 0],
-        ];
-    } else if (type === 'S') {
-        return [
-            [0, 6, 6],
-            [6, 6, 0],
-            [0, 0, 0],
-        ];
-    } else if (type === 'Z') {
-        return [
-            [7, 7, 0],
-            [0, 7, 7],
-            [0, 0, 0],
-        ];
-    }
-}
-
-function draw() {
-    context.fillStyle = '#000';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    drawMatrix(arena, {x: 0, y: 0}, context);
-    drawMatrix(player.matrix, player.pos, context);
-    
-    // Draw Next Piece
-    nextContext.fillStyle = '#111';
-    nextContext.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
-    if(nextPiece) {
-        // Center the next piece
-        const offsetX = (4 - nextPiece[0].length) / 2;
-        const offsetY = (4 - nextPiece.length) / 2;
-        drawMatrix(nextPiece, {x: offsetX, y: offsetY}, nextContext);
-    }
-}
-
-const colors = [
-    null,
-    '#FF0D72', // T
-    '#0DC2FF', // O
-    '#0DFF72', // L
-    '#F538FF', // J
-    '#FF8E0D', // I
-    '#FFE138', // S
-    '#3877FF'  // Z
-];
-
-function drawMatrix(matrix, offset, ctx) {
-    matrix.forEach((row, y) => {
-        row.forEach((value, x) => {
-            if (value !== 0) {
-                ctx.fillStyle = colors[value];
-                ctx.fillRect(x + offset.x,
-                             y + offset.y,
-                             1, 1);
-                // Grid effect
-                ctx.fillStyle = 'rgba(0,0,0,0.3)';
-                ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
-                ctx.lineWidth = 0.05;
-                ctx.strokeStyle = '#fff';
-                ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
-            }
-        });
-    });
+function collide(arena, player) {
+    return collideCheck(arena, player);
 }
 
 function merge(arena, player) {
@@ -152,6 +183,45 @@ function merge(arena, player) {
     });
 }
 
+function arenaSweep() {
+    let rowCount = 1;
+    let linesCleared = 0;
+    
+    outer: for (let y = arena.length - 1; y > 0; --y) {
+        for (let x = 0; x < arena[y].length; ++x) {
+            if (arena[y][x] === 0) {
+                continue outer;
+            }
+        }
+        const row = arena.splice(y, 1)[0].fill(0);
+        arena.unshift(row);
+        ++y;
+        player.score += rowCount * 10;
+        player.lines += 1;
+        linesCleared++;
+        rowCount *= 2;
+    }
+    
+    // Level up cada 5 líneas
+    player.level = Math.floor(player.lines / 5) + 1;
+    dropInterval = Math.max(80, 1000 - (player.level - 1) * 100);
+    
+    // Flash effect on line clear
+    if (linesCleared > 0) {
+        flashEffect();
+    }
+}
+
+function flashEffect() {
+    const container = document.querySelector('.canvas-container');
+    container.style.boxShadow = '0 0 40px rgba(0, 243, 255, 0.8), inset 0 0 20px rgba(0, 243, 255, 0.3)';
+    setTimeout(() => {
+        container.style.boxShadow = '0 0 25px rgba(255, 0, 234, 0.4), inset 0 0 15px rgba(255, 0, 234, 0.1)';
+    }, 200);
+}
+
+// ===== MOVIMIENTO DEL JUGADOR =====
+
 function playerDrop() {
     player.pos.y++;
     if (collide(arena, player)) {
@@ -161,6 +231,18 @@ function playerDrop() {
         arenaSweep();
         updateScore();
     }
+    dropCounter = 0;
+}
+
+function playerHardDrop() {
+    while (!collide(arena, player)) {
+        player.pos.y++;
+    }
+    player.pos.y--;
+    merge(arena, player);
+    playerReset();
+    arenaSweep();
+    updateScore();
     dropCounter = 0;
 }
 
@@ -179,13 +261,14 @@ function getRandomPiece() {
 let nextPiece = null;
 
 function playerReset() {
-    if(!nextPiece) nextPiece = getRandomPiece();
+    if (!nextPiece) nextPiece = getRandomPiece();
     player.matrix = nextPiece;
     nextPiece = getRandomPiece();
     
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) -
                    (player.matrix[0].length / 2 | 0);
+    
     if (collide(arena, player)) {
         // Game Over
         arena.forEach(row => row.fill(0));
@@ -213,13 +296,7 @@ function playerRotate(dir) {
 function rotate(matrix, dir) {
     for (let y = 0; y < matrix.length; ++y) {
         for (let x = 0; x < y; ++x) {
-            [
-                matrix[x][y],
-                matrix[y][x],
-            ] = [
-                matrix[y][x],
-                matrix[x][y],
-            ];
+            [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
         }
     }
     if (dir > 0) {
@@ -229,19 +306,29 @@ function rotate(matrix, dir) {
     }
 }
 
+// ===== GAME LOOP =====
+
 let dropCounter = 0;
 let dropInterval = 1000;
 let lastTime = 0;
 let isGameOver = false;
+let isPaused = false;
 
 function update(time = 0) {
-    if(isGameOver) return;
+    if (isGameOver) return;
+    if (isPaused) {
+        requestAnimationFrame(update);
+        return;
+    }
+    
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
+    
     if (dropCounter > dropInterval) {
         playerDrop();
     }
+    
     draw();
     requestAnimationFrame(update);
 }
@@ -252,6 +339,21 @@ function updateScore() {
     document.getElementById('level').innerText = player.level;
 }
 
+// ===== PAUSA =====
+function togglePause() {
+    if (isGameOver) return;
+    isPaused = !isPaused;
+    const pauseOverlay = document.getElementById('pause-overlay');
+    if (isPaused) {
+        pauseOverlay.classList.remove('hidden');
+    } else {
+        pauseOverlay.classList.add('hidden');
+        lastTime = performance.now();
+        dropCounter = 0;
+    }
+}
+
+// ===== ARENA & PLAYER =====
 const arena = createMatrix(10, 20);
 const player = {
     pos: {x: 0, y: 0},
@@ -261,24 +363,45 @@ const player = {
     level: 1
 };
 
+// ===== CONTROLES DE TECLADO =====
 document.addEventListener('keydown', event => {
-    if(isGameOver) return;
-    if (event.keyCode === 37) {
+    if (!gameStarted || isGameOver) return;
+    
+    if (event.key === 'p' || event.key === 'P') {
+        togglePause();
+        return;
+    }
+    
+    if (isPaused) return;
+    
+    if (event.keyCode === 37) {          // Izquierda
         playerMove(-1);
-    } else if (event.keyCode === 39) {
+    } else if (event.keyCode === 39) {   // Derecha
         playerMove(1);
-    } else if (event.keyCode === 40) {
+    } else if (event.keyCode === 40) {   // Abajo
         playerDrop();
-    } else if (event.keyCode === 38) {
+    } else if (event.keyCode === 38) {   // Arriba (rotar)
         playerRotate(1);
+    } else if (event.keyCode === 32) {   // Espacio (hard drop)
+        playerHardDrop();
     }
 });
 
-// Mobile Controls
-document.getElementById('btn-left').addEventListener('touchstart', (e) => { e.preventDefault(); playerMove(-1); });
-document.getElementById('btn-right').addEventListener('touchstart', (e) => { e.preventDefault(); playerMove(1); });
-document.getElementById('btn-down').addEventListener('touchstart', (e) => { e.preventDefault(); playerDrop(); });
-document.getElementById('btn-rotate').addEventListener('touchstart', (e) => { e.preventDefault(); playerRotate(1); });
+// ===== CONTROLES MÓVILES =====
+document.getElementById('btn-left').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerMove(-1); });
+document.getElementById('btn-right').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerMove(1); });
+document.getElementById('btn-down').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerDrop(); });
+document.getElementById('btn-rotate').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerRotate(1); });
+
+// Fallback click para escritorio
+document.getElementById('btn-left').addEventListener('click', () => { if (!isPaused) playerMove(-1); });
+document.getElementById('btn-right').addEventListener('click', () => { if (!isPaused) playerMove(1); });
+document.getElementById('btn-down').addEventListener('click', () => { if (!isPaused) playerDrop(); });
+document.getElementById('btn-rotate').addEventListener('click', () => { if (!isPaused) playerRotate(1); });
+
+// ===== BOTONES DE UI =====
+document.getElementById('btn-pause').addEventListener('click', () => togglePause());
+document.getElementById('btn-resume').addEventListener('click', () => togglePause());
 
 document.getElementById('btn-restart').addEventListener('click', () => {
     player.score = 0;
@@ -289,9 +412,7 @@ document.getElementById('btn-restart').addEventListener('click', () => {
     isGameOver = false;
     document.getElementById('game-over-overlay').classList.add('hidden');
     playerReset();
+    lastTime = performance.now();
+    dropCounter = 0;
     update();
 });
-
-playerReset();
-updateScore();
-update();
