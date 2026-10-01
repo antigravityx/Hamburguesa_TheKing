@@ -1,15 +1,14 @@
 /**
- * 👑 THE KING BURGER - AUTENTICACIÓN v2
- * Firebase Auth (Google Sign-In) — Método Redirect (anti-bloqueo de popup)
+ * 👑 THE KING BURGER - AUTENTICACIÓN v3
+ * Firebase Auth (Google Sign-In) — Con diagnóstico de errores
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     const userProfileBtn = document.getElementById('user-profile-btn');
-    const userNameDisplay = document.getElementById('user-name-display');
 
-    // Esperar a que Firebase esté listo
+    // Verificar que Firebase Auth esté cargado
     if (typeof firebase === 'undefined' || !firebase.auth) {
-        console.warn('[Auth] Firebase Auth no está cargado aún');
+        console.warn('[Auth] Firebase Auth SDK no cargado');
         return;
     }
 
@@ -18,26 +17,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 1. Capturar resultado del redirect (si vuelve de Google) ===
     firebase.auth().getRedirectResult().then((result) => {
         if (result.user) {
-            console.log('[Auth] Redirect exitoso:', result.user.displayName);
+            console.log('[Auth] ✅ Login exitoso:', result.user.displayName);
         }
     }).catch((error) => {
-        console.error('[Auth] Error en redirect result:', error);
+        console.error('[Auth] Error en redirect:', error.code, error.message);
+        // No mostramos alert aquí — solo log
     });
 
     // === 2. Escuchar estado de autenticación ===
     firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            console.log('[Auth] Usuario autenticado:', user.displayName);
+        if (!userProfileBtn) return;
 
-            // Actualizar botón con foto y nombre
-            if (userProfileBtn) {
-                userProfileBtn.innerHTML = `
-                    <img src="${user.photoURL || ''}" alt="${user.displayName}" 
-                         style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--accent-color);"
-                         onerror="this.style.display='none'">
-                    <span style="font-size: 0.85rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.displayName ? user.displayName.split(' ')[0] : 'Usuario'}</span>
-                `;
-            }
+        if (user) {
+            console.log('[Auth] ✅ Usuario:', user.displayName);
+            userProfileBtn.innerHTML = `
+                <img src="${user.photoURL || ''}" alt="${user.displayName || ''}" 
+                     style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--accent-color);"
+                     onerror="this.style.display='none'">
+                <span style="font-size: 0.85rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.displayName ? user.displayName.split(' ')[0] : 'Usuario'}</span>
+            `;
 
             // Guardar perfil en Firestore
             try {
@@ -49,17 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             } catch (e) {
-                console.warn('[Auth] No se pudo guardar perfil en Firestore:', e);
+                console.warn('[Auth] Error guardando perfil:', e);
             }
 
         } else {
-            // No logueado — mostrar botón de entrar
-            if (userProfileBtn) {
-                userProfileBtn.innerHTML = `
-                    <i class="ri-google-fill" style="font-size: 1.5rem; color: var(--accent-color);"></i>
-                    <span style="font-size: 0.85rem;">Entrar</span>
-                `;
-            }
+            userProfileBtn.innerHTML = `
+                <i class="ri-google-fill" style="font-size: 1.5rem; color: var(--accent-color);"></i>
+                <span style="font-size: 0.85rem;">Entrar</span>
+            `;
         }
     });
 
@@ -69,18 +64,51 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentUser = firebase.auth().currentUser;
 
             if (currentUser) {
-                // Ya logueado → Mostrar mini-menú
                 showUserMenu(currentUser);
             } else {
-                // No logueado → Iniciar sesión con redirect (NO popup)
-                firebase.auth().signInWithRedirect(provider);
+                // Intentar login — primero popup, fallback a redirect
+                loginWithGoogle();
             }
+        });
+    }
+
+    // === Login inteligente: intenta popup primero, si falla usa redirect ===
+    function loginWithGoogle() {
+        // Intentar con popup primero (más rápido)
+        firebase.auth().signInWithPopup(provider).then((result) => {
+            if (result.user) {
+                console.log('[Auth] ✅ Popup login OK:', result.user.displayName);
+            }
+        }).catch((error) => {
+            console.warn('[Auth] Popup falló:', error.code);
+
+            // Errores que indican que el popup fue bloqueado → usar redirect
+            if (error.code === 'auth/popup-blocked' || 
+                error.code === 'auth/popup-closed-by-user' ||
+                error.code === 'auth/cancelled-popup-request') {
+                console.log('[Auth] Intentando con redirect...');
+                firebase.auth().signInWithRedirect(provider);
+                return;
+            }
+
+            // Error de configuración → mostrar mensaje claro al usuario
+            if (error.code === 'auth/operation-not-allowed') {
+                alert('⚠️ El inicio de sesión con Google aún no está activado.\n\nEl administrador debe habilitarlo desde Firebase Console:\n→ Authentication → Sign-in method → Google → Habilitar');
+                return;
+            }
+
+            if (error.code === 'auth/unauthorized-domain') {
+                alert('⚠️ Este dominio no está autorizado en Firebase.\n\nEl administrador debe agregar "theking.sbs" en:\n→ Firebase Console → Authentication → Settings → Authorized domains');
+                return;
+            }
+
+            // Otro error → mostrar código para diagnóstico
+            alert(`⚠️ Error de autenticación:\n${error.code}\n${error.message}\n\nContactá al administrador.`);
         });
     }
 
     // === Mini-menú de usuario logueado ===
     function showUserMenu(user) {
-        // Remover menú existente si hay uno
         const existing = document.getElementById('king-user-menu');
         if (existing) { existing.remove(); return; }
 
@@ -105,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${user.photoURL || ''}" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #FFB703;" onerror="this.style.display='none'">
                 <div>
                     <div style="font-weight: 700; font-size: 0.95rem;">${user.displayName || 'Usuario'}</div>
-                    <div style="font-size: 0.75rem; color: #888; max-width: 160px; overflow: hidden; text-overflow: ellipsis;">${user.email || ''}</div>
+                    <div style="font-size: 0.75rem; color: #888;">${user.email || ''}</div>
                 </div>
             </div>
             <div class="king-menu-item" id="king-menu-arcade">
@@ -118,18 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.body.appendChild(menu);
 
-        // Eventos del menú
         document.getElementById('king-menu-arcade').addEventListener('click', () => {
             window.location.href = 'tetrix.html';
         });
 
         document.getElementById('king-menu-logout').addEventListener('click', () => {
-            firebase.auth().signOut().then(() => {
-                menu.remove();
-            });
+            firebase.auth().signOut().then(() => { menu.remove(); });
         });
 
-        // Cerrar al hacer click fuera
         setTimeout(() => {
             document.addEventListener('click', function closeMenu(e) {
                 if (!menu.contains(e.target) && !userProfileBtn.contains(e.target)) {
