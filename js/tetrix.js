@@ -40,6 +40,17 @@ const colors = [
     '#3877FF'  // Z - Azul profundo
 ];
 
+const foodEmojis = [
+    null,
+    '🍔', // T - Burger
+    '🍕', // O - Pizza
+    '🍅', // L - Tomato
+    '👑', // J - Crown
+    '🍟', // I - Fries
+    '🌭', // S - Hotdog
+    '🧀'  // Z - Cheese
+];
+
 // ===== FUNCIONES CORE =====
 
 function createMatrix(w, h) {
@@ -67,22 +78,19 @@ function drawMatrix(matrix, offset, ctx) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                // Bloque principal
-                ctx.fillStyle = colors[value];
+                // Fondo oscuro opcional para resaltar el bloque
+                ctx.fillStyle = 'rgba(0,0,0,0.3)';
                 ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
                 
-                // Efecto de profundidad (borde interno)
-                ctx.fillStyle = 'rgba(255,255,255,0.15)';
-                ctx.fillRect(x + offset.x, y + offset.y, 1, 0.08);
-                ctx.fillRect(x + offset.x, y + offset.y, 0.08, 1);
+                // Dibujar el emoji
+                ctx.font = '0.8px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(foodEmojis[value], x + offset.x + 0.5, y + offset.y + 0.55);
                 
-                ctx.fillStyle = 'rgba(0,0,0,0.25)';
-                ctx.fillRect(x + offset.x + 0.92, y + offset.y, 0.08, 1);
-                ctx.fillRect(x + offset.x, y + offset.y + 0.92, 1, 0.08);
-                
-                // Borde exterior
+                // Borde exterior muy sutil
                 ctx.lineWidth = 0.04;
-                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
                 ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
