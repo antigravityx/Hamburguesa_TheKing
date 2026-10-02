@@ -268,8 +268,8 @@ body {
 /* Adaptación para celulares: 2 columnas */
 @media (max-width: 600px) {
     .products-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.8rem !important;
     }
     .product-img-wrapper {
         height: 110px; /* Más bajo para celular */

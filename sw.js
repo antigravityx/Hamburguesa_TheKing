@@ -1,7 +1,7 @@
-// ⚡ TheKing Burger — Service Worker v2.0
+// ⚡ TheKing Burger — Service Worker v3.0
 // Verix Fix: activate + clients.claim() para habilitar beforeinstallprompt
 
-const CACHE_NAME = 'theking-v2';
+const CACHE_NAME = 'theking-v3';
 const OFFLINE_URLS = [
   './',
   './index.html',
