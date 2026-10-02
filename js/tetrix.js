@@ -42,13 +42,14 @@ const colors = [
 
 const foodEmojis = [
     null,
-    '🍔', // T - Burger
-    '🍕', // O - Pizza
-    '🍅', // L - Tomato
-    '👑', // J - Crown
-    '🍟', // I - Fries
-    '🌭', // S - Hotdog
-    '🧀'  // Z - Cheese
+    // Comida rápida y carnivora
+    '🍔', '🍕', '🍟', '🌭', '🧀', '🥓', '🥩', '🍗', '🌮', '🌯', '🥪', '🥨',
+    // Realeza TheKing
+    '👑', '🤴', '👸', '🏰', '💎', '🛡️', '⚔️',
+    // Frutas y verduras (para el blend)
+    '🍅', '🥑', '🥒', '🧅', '🍄', '🌶️', '🌽', '🥬',
+    // Dulces y bebidas
+    '🥤', '🍹', '🍦', '🍩', '🍪'
 ];
 
 // ===== FUNCIONES CORE =====
@@ -71,7 +72,19 @@ function createPiece(type) {
         'S': [[0,6,6],[6,6,0],[0,0,0]],
         'Z': [[7,7,0],[0,7,7],[0,0,0]]
     };
-    return pieces[type];
+    
+    const p = pieces[type];
+    // Elegir un emoji aleatorio del inmenso arsenal
+    const randomId = Math.floor(Math.random() * (foodEmojis.length - 1)) + 1;
+    
+    for (let y = 0; y < p.length; y++) {
+        for (let x = 0; x < p[y].length; x++) {
+            if (p[y][x] !== 0) {
+                p[y][x] = randomId;
+            }
+        }
+    }
+    return p;
 }
 
 function drawMatrix(matrix, offset, ctx) {
