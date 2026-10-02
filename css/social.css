@@ -1,0 +1,646 @@
+/* ═══════════════════════════════════════════════════
+   👑 THE KING SOCIAL — Red Social de la Comunidad
+   CSS Styles — Glassmorphism + Neon + Premium Dark
+   ═══════════════════════════════════════════════════ */
+
+/* ── Section Container ────────────────────────── */
+.social-section-wrapper {
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.social-section-inner {
+    padding: 2rem;
+    border-radius: 20px;
+    border-color: rgba(255, 0, 234, 0.25);
+    background: linear-gradient(145deg, rgba(255, 0, 234, 0.04) 0%, rgba(15, 17, 26, 0.95) 100%);
+}
+
+.social-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+}
+
+.social-section-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Login Prompt ─────────────────────────────── */
+.social-login-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1.2rem;
+    background: rgba(255, 183, 3, 0.08);
+    border: 1px dashed rgba(255, 183, 3, 0.3);
+    border-radius: 12px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-login-prompt i {
+    font-size: 1.4rem;
+    color: var(--accent-color);
+}
+
+/* ── Composer (Crear Publicación) ─────────────── */
+.social-composer {
+    display: none;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-composer-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.social-composer-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    display: none;
+}
+
+.social-composer-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--accent-color);
+}
+
+.social-post-textarea {
+    width: 100%;
+    min-height: 70px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    resize: none;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.social-post-textarea:focus {
+    border-color: rgba(255, 0, 234, 0.4);
+}
+
+.social-post-textarea::placeholder {
+    color: #666;
+}
+
+/* ── Photo Preview ────────────────────────────── */
+.social-photo-preview {
+    display: none;
+    margin-top: 0.8rem;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 200px;
+}
+
+.social-photo-preview img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.social-photo-preview .remove-photo {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Composer Actions ─────────────────────────── */
+.social-composer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.8rem;
+    gap: 0.5rem;
+}
+
+.social-composer-tools {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.social-tool-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    border-radius: 10px;
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.3s;
+}
+
+.social-tool-btn:hover {
+    background: rgba(255, 183, 3, 0.1);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.social-publish-btn {
+    background: linear-gradient(135deg, #ff00ea, #7b2ff7);
+    border: none;
+    color: #fff;
+    padding: 0.6rem 1.4rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.3s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.social-publish-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255, 0, 234, 0.4);
+}
+
+.social-publish-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Feed ─────────────────────────────────────── */
+.social-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.social-empty-state {
+    text-align: center;
+    color: #888;
+    padding: 3rem 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ── Post Card ────────────────────────────────── */
+.social-post {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 1.2rem;
+    transition: border-color 0.3s;
+}
+
+.social-post:hover {
+    border-color: rgba(255, 0, 234, 0.2);
+}
+
+.social-post-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.8rem;
+}
+
+.social-post-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    object-fit: cover;
+}
+
+.social-post-author {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.social-post-time {
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.social-post-text {
+    color: #ddd;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+    word-wrap: break-word;
+}
+
+.social-post-photo {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 0.8rem;
+}
+
+.social-post-photo img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Post Actions (Like, Comment) ─────────────── */
+.social-post-actions {
+    display: flex;
+    gap: 0.8rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.social-action-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.social-action-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+
+.social-action-btn.liked {
+    color: #ef233c;
+}
+
+.social-action-btn.liked i {
+    animation: heartBeat 0.4s ease;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* ── Comments Area ────────────────────────────── */
+.social-comments-area {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.social-comments-list {
+    max-height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+    padding-right: 0.3rem;
+}
+
+.social-comments-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.social-comments-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.social-no-comments {
+    text-align: center;
+    color: #666;
+    font-size: 0.85rem;
+    padding: 1rem;
+    font-style: italic;
+}
+
+/* ── Single Comment ───────────────────────────── */
+.social-comment {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 0.7rem 0.9rem;
+}
+
+.social-comment-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.social-comment-header strong {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+}
+
+.social-comment-time {
+    font-size: 0.7rem;
+    color: #555;
+}
+
+.social-comment-text {
+    font-size: 0.88rem;
+    color: #ccc;
+    line-height: 1.4;
+}
+
+/* ── Comment Input Row ────────────────────────── */
+.social-comment-input-row {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.social-comment-input {
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.social-comment-input:focus {
+    border-color: rgba(255, 0, 234, 0.4);
+}
+
+.social-comment-input::placeholder {
+    color: #555;
+}
+
+.social-comment-send-btn {
+    background: var(--accent-color);
+    border: none;
+    color: #000;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.social-comment-send-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 183, 3, 0.4);
+}
+
+/* ── Mic Button ───────────────────────────────── */
+.social-mic-btn {
+    background: transparent;
+    border: 2px solid rgba(255, 0, 234, 0.4);
+    color: #ff00ea;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.social-mic-btn:hover {
+    background: rgba(255, 0, 234, 0.15);
+    transform: scale(1.1);
+}
+
+.social-mic-btn.recording {
+    background: #ef233c;
+    border-color: #ef233c;
+    color: #fff;
+    animation: micPulse 1s ease infinite;
+}
+
+@keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 35, 60, 0.5); }
+    50% { box-shadow: 0 0 0 10px rgba(239, 35, 60, 0); }
+}
+
+/* ── Recording Indicator ──────────────────────── */
+.social-recording-indicator {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    background: rgba(239, 35, 60, 0.1);
+    border: 1px solid rgba(239, 35, 60, 0.3);
+    border-radius: 12px;
+    color: #ef233c;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.recording-pulse {
+    width: 12px;
+    height: 12px;
+    background: #ef233c;
+    border-radius: 50%;
+    animation: recPulse 1s ease infinite;
+}
+
+@keyframes recPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.8); }
+}
+
+.social-recording-stop-btn {
+    background: rgba(239, 35, 60, 0.2);
+    border: 1px solid #ef233c;
+    color: #ef233c;
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.8rem;
+    margin-left: auto;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* ── Audio Comment (Playback) ─────────────────── */
+.social-audio-comment {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, rgba(255, 0, 234, 0.08), rgba(123, 47, 247, 0.08));
+    border: 1px solid rgba(255, 0, 234, 0.2);
+    border-radius: 20px;
+    padding: 0.5rem 0.8rem;
+}
+
+.social-play-audio-btn {
+    background: transparent;
+    border: none;
+    color: #ff00ea;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.social-play-audio-btn:hover {
+    transform: scale(1.15);
+}
+
+.social-play-audio-btn.playing {
+    color: var(--accent-color);
+}
+
+.social-audio-wave {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 20px;
+}
+
+.social-audio-wave span {
+    display: block;
+    width: 3px;
+    height: 8px;
+    background: rgba(255, 0, 234, 0.4);
+    border-radius: 2px;
+    transition: height 0.15s ease;
+}
+
+.social-audio-wave.animating span {
+    animation: audioWave 0.6s ease infinite alternate;
+}
+
+.social-audio-wave.animating span:nth-child(1) { animation-delay: 0s; }
+.social-audio-wave.animating span:nth-child(2) { animation-delay: 0.08s; }
+.social-audio-wave.animating span:nth-child(3) { animation-delay: 0.16s; }
+.social-audio-wave.animating span:nth-child(4) { animation-delay: 0.24s; }
+.social-audio-wave.animating span:nth-child(5) { animation-delay: 0.32s; }
+.social-audio-wave.animating span:nth-child(6) { animation-delay: 0.24s; }
+.social-audio-wave.animating span:nth-child(7) { animation-delay: 0.16s; }
+.social-audio-wave.animating span:nth-child(8) { animation-delay: 0.08s; }
+.social-audio-wave.animating span:nth-child(9) { animation-delay: 0s; }
+.social-audio-wave.animating span:nth-child(10) { animation-delay: 0.08s; }
+
+@keyframes audioWave {
+    0% { height: 4px; }
+    100% { height: 18px; }
+}
+
+.social-audio-badge {
+    font-size: 0.7rem;
+    color: #ff00ea;
+    font-weight: 600;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+/* ── Toast Notification ───────────────────────── */
+.social-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(15, 17, 26, 0.95);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--accent-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.social-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ── Spin Animation (for loader) ──────────────── */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ── Shake Animation ──────────────────────────── */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 600px) {
+    .social-section-inner {
+        padding: 1.2rem;
+    }
+    
+    .social-section-title {
+        font-size: 1.2rem;
+    }
+
+    .social-post {
+        padding: 0.9rem;
+    }
+    
+    .social-composer-actions {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .social-publish-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

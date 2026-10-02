@@ -75,6 +75,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/social.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
@@ -553,22 +554,72 @@
         </div>
     </div>
 
-    <!-- CHAT GLOBAL (Muro de la Familia TheKing) -->
-    <div class="container" style="margin-top: 1rem; margin-bottom: 3rem;" id="chat-section">
-        <div class="glassmorphism" style="padding: 2rem; border-radius: 20px; border-color: rgba(255, 183, 3, 0.3);">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; color: #fff;">
-                <i class="ri-chat-smile-3-fill" style="color: var(--accent-color);"></i> Muro de la Familia TheKing
+    <!-- ═══════════════════════════════════════════
+         👑 THE KING SOCIAL — Red Social de la Comunidad
+         Motor: js/semilla-social.js | Estilos: css/social.css
+         Almacenamiento: Firestore base64 (100% gratis)
+         ═══════════════════════════════════════════ -->
+    <div class="container social-section-wrapper" id="social-feed-section">
+        <div class="glassmorphism social-section-inner">
+
+            <h3 class="social-section-title">
+                <i class="ri-community-fill" style="color: #ff00ea;"></i>
+                La Familia TheKing 👑
             </h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Dejanos un comentario o interactuá con otros clientes. ¡Este espacio es tuyo!</p>
-            
-            <div id="chat-messages" style="background: rgba(0,0,0,0.5); border-radius: 12px; padding: 1.5rem; height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 1rem; border: 1px inset rgba(255,255,255,0.05);">
-                <div style="text-align: center; color: #888; font-style: italic; margin-top: auto; margin-bottom: auto;">Cargando mensajes...</div>
+            <p class="social-section-subtitle">Compartí tu experiencia, comentá con audio y conectá con otros Reyes y Reinas de Corrientes.</p>
+
+            <!-- Prompt para usuarios no logueados -->
+            <div class="social-login-prompt" id="social-login-prompt">
+                <i class="ri-google-fill"></i>
+                <span>Iniciá sesión con Google (arriba ☝️) para publicar o comentar en la comunidad</span>
             </div>
 
-            <div id="chat-input-area" style="display: flex; gap: 0.5rem;">
-                <input type="text" id="chat-input" placeholder="Iniciá sesión (arriba ☝️) para comentar..." disabled style="flex-grow: 1; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: #fff; outline: none; font-family: inherit; font-size: 0.95rem;">
-                <button id="chat-send-btn" disabled style="background: rgba(255,255,255,0.1); color: #555; border: none; padding: 0 1.5rem; border-radius: 12px; cursor: not-allowed; font-size: 1.2rem; transition: all 0.3s;"><i class="ri-send-plane-fill"></i></button>
+            <!-- Compositor de publicaciones (solo visible si está logueado) -->
+            <div class="social-composer" id="social-composer">
+                <div class="social-composer-header">
+                    <img src="" alt="" class="social-composer-avatar" id="composer-avatar">
+                    <div>
+                        <span class="social-composer-name" id="composer-name">Rey/Reina</span>
+                    </div>
+                </div>
+                <textarea
+                    id="social-post-text"
+                    class="social-post-textarea"
+                    placeholder="¿Qué estás comiendo hoy? Compartí tu momento TheKing... 🍔👑"
+                    maxlength="500"
+                    rows="3"
+                ></textarea>
+
+                <!-- Preview foto -->
+                <div class="social-photo-preview" id="social-photo-preview">
+                    <img src="" alt="Preview" id="social-photo-preview-img">
+                    <button class="remove-photo" onclick="document.getElementById('social-photo-preview').style.display='none'; document.getElementById('social-photo-preview-img').src='';">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+
+                <input type="file" id="social-photo-input" accept="image/*" style="display:none;">
+
+                <div class="social-composer-actions">
+                    <div class="social-composer-tools">
+                        <button class="social-tool-btn" id="social-photo-btn" title="Adjuntar foto">
+                            <i class="ri-image-add-line"></i> Foto
+                        </button>
+                    </div>
+                    <button class="social-publish-btn" id="social-publish-btn">
+                        <i class="ri-send-plane-fill"></i> Publicar
+                    </button>
+                </div>
             </div>
+
+            <!-- FEED de publicaciones -->
+            <div class="social-feed" id="social-feed">
+                <div class="social-empty-state">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+                    <p>Conectando con la comunidad...</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -604,7 +655,113 @@
     <script defer src="js/auth.js"></script>
     <script defer src="js/products.js"></script>
     <script defer src="js/app.js"></script>
-    <script defer src="js/chat.js"></script>
+    <script defer src="js/semilla-social.js"></script>
+
+    <!-- ═══════════════════════════════════════════
+         🛡️ SENTINELA DE SEMILLA — Reportero de Estado
+         Alimenta la Semilla con datos del ecosistema.
+         Reporta: auth, red, performance, errores.
+         ═══════════════════════════════════════════ -->
+    <script>
+    (function SentinelaDeSemill() {
+        'use strict';
+        const SEMILLA_VERSION = 'v1.0.0';
+        const REPORTE_COLLECTION = 'semilla_reportes';
+        let _db = null;
+        let _uid = null;
+
+        // Esperar a que Firebase esté disponible
+        function initSentinela() {
+            if (typeof firebase === 'undefined' || !firebase.firestore) return;
+            _db = firebase.firestore();
+
+            // Escuchar Auth para saber UID
+            firebase.auth().onAuthStateChanged(function(user) {
+                _uid = user ? user.uid : null;
+                if (user) reportarEvento('auth_login', { nombre: user.displayName, email: user.email });
+            });
+
+            // Reportar estado inicial del ecosistema
+            reportarEstadoEcosistema();
+
+            // Sentinela de red: detecta si el usuario pierde conexión
+            window.addEventListener('offline', function() {
+                reportarEvento('red_offline', { timestamp: new Date().toISOString() });
+            });
+            window.addEventListener('online', function() {
+                reportarEvento('red_online', { timestamp: new Date().toISOString() });
+            });
+
+            // Sentinela de performance: cuánto tardó en cargar la página
+            if (window.performance && window.performance.timing) {
+                window.addEventListener('load', function() {
+                    var t = window.performance.timing;
+                    var loadTime = t.loadEventEnd - t.navigationStart;
+                    reportarEvento('performance_carga', { ms: loadTime, segundos: (loadTime / 1000).toFixed(2) });
+                });
+            }
+
+            // Sentinela de errores JS globales
+            window.addEventListener('error', function(e) {
+                reportarEvento('error_js', {
+                    mensaje: e.message,
+                    archivo: e.filename,
+                    linea: e.lineno
+                });
+            });
+
+            // Sentinela de visibilidad: cuándo el usuario deja/vuelve a la página
+            document.addEventListener('visibilitychange', function() {
+                reportarEvento('visibilidad', { estado: document.hidden ? 'oculta' : 'activa' });
+            });
+
+            // Reporte periódico cada 5 minutos (heartbeat de la Semilla)
+            setInterval(function() {
+                reportarEvento('heartbeat', { activo: !document.hidden });
+            }, 5 * 60 * 1000);
+        }
+
+        function reportarEstadoEcosistema() {
+            var estado = {
+                version: SEMILLA_VERSION,
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                idioma: navigator.language,
+                pantalla: window.screen.width + 'x' + window.screen.height,
+                conexion: navigator.onLine ? 'online' : 'offline',
+                esMovil: /Mobi|Android/i.test(navigator.userAgent),
+                timestamp: new Date().toISOString()
+            };
+            reportarEvento('sesion_inicio', estado);
+        }
+
+        function reportarEvento(tipo, datos) {
+            if (!_db) return;
+            try {
+                var reporte = Object.assign({}, datos || {}, {
+                    tipo: tipo,
+                    uid: _uid || 'anonimo',
+                    ts: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                _db.collection(REPORTE_COLLECTION).add(reporte).catch(function(e) {
+                    // Silencioso — no interrumpir el flujo
+                });
+            } catch(e) { /* silencioso */ }
+        }
+
+        // Exponer para que otros módulos puedan reportar
+        window.SentinelaSemill = { reportar: reportarEvento };
+
+        // Iniciar cuando Firebase esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initSentinela, 1500);
+            });
+        } else {
+            setTimeout(initSentinela, 1500);
+        }
+    })();
+    </script>
 
     <!-- ===== MODAL RADAR DE DELIVERY ===== -->
     <div id="delivery-radar-modal" class="delivery-radar-modal" role="dialog" aria-modal="true"

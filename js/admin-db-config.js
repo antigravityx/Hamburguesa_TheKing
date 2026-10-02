@@ -15,10 +15,19 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase (compat mode)
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+let db = null;
+try {
+    if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
+    } else {
+        console.warn('[Verix Engine] Firebase no cargó (posible adblocker o sin internet). Funcionando en modo local.');
+    }
+} catch(e) {
+    console.error('[Verix Engine] Error inicializando Firebase:', e);
 }
-const db = firebase.firestore();
 
 const KING_ADMIN_CONFIG = {
     STORAGE_KEY_AUTH: 'king_admin_session',
@@ -52,11 +61,25 @@ class KingDatabaseEngine {
      * Lee de Firebase primero, actualiza PRODUCTS global y localStorage.
      */
     async initialLoadProducts() {
-        try {
-            const doc = await this.db.collection('menu').doc('current').get();
-            if (doc.exists) {
-                const data = doc.data();
-                this.localProducts = data;
+        if (this.db) {
+            try {
+                const doc = await this.db.collection('menu').doc('current').get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    this.localProducts = data;
+                    if (typeof PRODUCTS !== 'undefined') {
+                        Object.keys(data).forEach(key => { PRODUCTS[key] = data[key]; });
+                        Object.keys(PRODUCTS).forEach(key => {
+                            if (!(key in data)) delete PRODUCTS[key];
+                        });
+                    }
+                    localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(data));
+                    return data;
+                }
+            } catch (e) {
+                console.warn('[Verix Engine] initialLoadProducts: usando datos estáticos como fallback', e);
+            }
+        }
                 if (typeof PRODUCTS !== 'undefined') {
                     // Reemplazar categoría por categoría
                     Object.keys(data).forEach(key => { PRODUCTS[key] = data[key]; });
@@ -91,10 +114,11 @@ class KingDatabaseEngine {
      * Carga inicial de banners al arrancar la carta pública.
      */
     async initialLoadBanners() {
-        try {
-            const doc = await this.db.collection('config').doc('banners').get();
-            if (doc.exists) {
-                const data = doc.data();
+        if (this.db) {
+            try {
+                const doc = await this.db.collection('config').doc('banners').get();
+                if (doc.exists) {
+                    const data = doc.data();
                 this.localBanners = data;
                 if (data.phoneWhatsApp) this._phoneWhatsApp = data.phoneWhatsApp;
                 localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_BANNERS, JSON.stringify(data));
@@ -121,14 +145,16 @@ class KingDatabaseEngine {
      * Obtiene los productos desde Firestore (usado por el admin)
      */
     async getProductsAsync() {
-        try {
-            const doc = await this.db.collection('menu').doc('current').get();
-            if (doc.exists) {
-                this.localProducts = doc.data();
-                return this.localProducts;
+        if (this.db) {
+            try {
+                const doc = await this.db.collection('menu').doc('current').get();
+                if (doc.exists) {
+                    this.localProducts = doc.data();
+                    return this.localProducts;
+                }
+            } catch (e) {
+                console.warn('[Verix Engine] Sin conexión a Firebase, usando datos locales', e);
             }
-        } catch (e) {
-            console.warn('[Verix Engine] Sin conexión a Firebase, usando datos locales', e);
         }
 
         try {
@@ -144,7 +170,9 @@ class KingDatabaseEngine {
      */
     async saveProductsAsync(productsObject) {
         try {
-            await this.db.collection('menu').doc('current').set(productsObject);
+            if (this.db) {
+                await this.db.collection('menu').doc('current').set(productsObject);
+            }
             this.localProducts = productsObject;
             localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(productsObject));
             if (_menuChannel) {
@@ -173,11 +201,13 @@ class KingDatabaseEngine {
         };
 
         try {
-            const doc = await this.db.collection('config').doc('banners').get();
-            if (doc.exists) {
-                this.localBanners = { ...defaultBanners, ...doc.data() };
-                if (this.localBanners.phoneWhatsApp) this._phoneWhatsApp = this.localBanners.phoneWhatsApp;
-                return this.localBanners;
+            if (this.db) {
+                const doc = await this.db.collection('config').doc('banners').get();
+                if (doc.exists) {
+                    this.localBanners = { ...defaultBanners, ...doc.data() };
+                    if (this.localBanners.phoneWhatsApp) this._phoneWhatsApp = this.localBanners.phoneWhatsApp;
+                    return this.localBanners;
+                }
             }
         } catch (e) {
             console.warn('[Verix Engine] Error al leer banners de Firebase', e);
@@ -189,6 +219,7 @@ class KingDatabaseEngine {
      * Escuchadores en tiempo real — Sincronización FULL
      */
     listenProducts(callback) {
+        if (!this.db) return null;
         return this.db.collection('menu').doc('current').onSnapshot(doc => {
             if (doc.exists) {
                 const data = doc.data();
@@ -209,6 +240,7 @@ class KingDatabaseEngine {
     }
 
     listenBanners(callback) {
+        if (!this.db) return null;
         return this.db.collection('config').doc('banners').onSnapshot(doc => {
             if (doc.exists) {
                 const data = doc.data();
@@ -221,6 +253,7 @@ class KingDatabaseEngine {
     }
 
     listenSorteo(callback) {
+        if (!this.db) { callback({ active: false }); return null; }
         return this.db.collection('config').doc('sorteo').onSnapshot(doc => {
             if (doc.exists) {
                 callback(doc.data());
@@ -235,7 +268,9 @@ class KingDatabaseEngine {
      */
     async saveBannersAsync(bannersObject) {
         try {
-            await this.db.collection('config').doc('banners').set(bannersObject);
+            if (this.db) {
+                await this.db.collection('config').doc('banners').set(bannersObject);
+            }
             this.localBanners = bannersObject;
             if (bannersObject.phoneWhatsApp) this._phoneWhatsApp = bannersObject.phoneWhatsApp;
             localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_BANNERS, JSON.stringify(bannersObject));
@@ -251,9 +286,11 @@ class KingDatabaseEngine {
      */
     async getSorteoConfig() {
         try {
-            const doc = await this.db.collection('config').doc('sorteo').get();
-            if (doc.exists) {
-                return doc.data();
+            if (this.db) {
+                const doc = await this.db.collection('config').doc('sorteo').get();
+                if (doc.exists) {
+                    return doc.data();
+                }
             }
         } catch (e) {
             console.error(e);
@@ -263,7 +300,9 @@ class KingDatabaseEngine {
 
     async saveSorteoConfig(config) {
         try {
-            await this.db.collection('config').doc('sorteo').set(config, { merge: true });
+            if (this.db) {
+                await this.db.collection('config').doc('sorteo').set(config, { merge: true });
+            }
             return { success: true };
         } catch (e) {
             return { success: false, error: e.message };
@@ -274,6 +313,7 @@ class KingDatabaseEngine {
      * Participantes del Sorteo (Observador en tiempo real)
      */
     listenSorteoParticipantes(callback) {
+        if (!this.db) { callback([]); return null; }
         return this.db.collection('sorteo_participantes').onSnapshot((snapshot) => {
             const participantes = [];
             snapshot.forEach(doc => {
@@ -285,13 +325,15 @@ class KingDatabaseEngine {
 
     async clearSorteoParticipantes() {
         try {
-            const snapshot = await this.db.collection('sorteo_participantes').get();
-            const batch = this.db.batch();
-            snapshot.docs.forEach((doc) => {
-                batch.delete(doc.ref);
-            });
-            await batch.commit();
-            await this.db.collection('config').doc('sorteo').set({ ganador: null }, { merge: true });
+            if (this.db) {
+                const snapshot = await this.db.collection('sorteo_participantes').get();
+                const batch = this.db.batch();
+                snapshot.docs.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+                await this.db.collection('config').doc('sorteo').set({ ganador: null }, { merge: true });
+            }
             return { success: true };
         } catch (e) {
             return { success: false, error: e.message };
@@ -352,6 +394,7 @@ class KingDatabaseEngine {
     // Guardar Intento de Pedido (Web -> Firebase)
     async saveOrderIntent(cartItems) {
         try {
+            if (!this.db) return true; // Pretender éxito si estamos offline
             const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
             const docRef = this.db.collection('stats_orders').doc(dateStr);
 
@@ -379,6 +422,7 @@ class KingDatabaseEngine {
     // Guardar Valoración de Corona (Web -> Firebase)
     async saveCrownRating(productName, stars) {
         try {
+            if (!this.db) return true;
             const cleanName = productName.replace(/[^a-zA-Z0-9]/g, '_');
             const docRef = this.db.collection('stats_ratings').doc(cleanName);
 
@@ -401,6 +445,7 @@ class KingDatabaseEngine {
 
     // Escuchar Stats de los últimos 7 días (Para Admin Dashboard)
     listenStats7Days(callback) {
+        if (!this.db) { callback([]); return null; }
         const past7Days = [...Array(7)].map((_, i) => {
             const d = new Date();
             d.setDate(d.getDate() - i);
@@ -421,6 +466,7 @@ class KingDatabaseEngine {
 
     // Escuchar Ratings (Para Admin Dashboard)
     listenRatings(callback) {
+        if (!this.db) { callback([]); return null; }
         return this.db.collection('stats_ratings').onSnapshot(snapshot => {
             const ratings = [];
             snapshot.forEach(doc => {

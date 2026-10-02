@@ -1,0 +1,22 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Regla global: Cualquiera puede leer (para escuchar los audios y ver fotos)
+    allow read: if true;
+
+    // Solo almas autenticadas pueden subir archivos
+    match /comentarios_audio/{postId}/{fileName} {
+      allow write: if request.auth != null 
+                   && request.resource.size < 5 * 1024 * 1024 // Máximo 5MB por audio
+                   && request.resource.contentType.matches('audio/.*'); // Solo audios
+    }
+    
+    match /publicaciones_fotos/{userId}/{fileName} {
+      allow write: if request.auth != null 
+                   && request.auth.uid == userId
+                   && request.resource.size < 10 * 1024 * 1024 // Máximo 10MB por foto
+                   && request.resource.contentType.matches('image/.*'); // Solo imágenes
+    }
+  }
+}
