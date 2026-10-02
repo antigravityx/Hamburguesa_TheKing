@@ -422,6 +422,31 @@ touchZone.addEventListener('touchmove', (e) => {
 document.getElementById('btn-pause').addEventListener('click',  () => togglePause());
 document.getElementById('btn-resume').addEventListener('click', () => togglePause());
 
+// ===== REPRODUCTOR DE MÚSICA =====
+const bgMusic = document.getElementById('bg-music');
+const btnMusic = document.getElementById('btn-music');
+let musicPlaying = false;
+
+btnMusic.addEventListener('click', () => {
+    if (musicPlaying) {
+        bgMusic.pause();
+        musicPlaying = false;
+        btnMusic.innerText = '🎵 MÚSICA: OFF';
+        btnMusic.style.background = 'rgba(0, 243, 255, 0.1)';
+    } else {
+        // Establecer volumen agradable de fondo
+        bgMusic.volume = 0.4;
+        bgMusic.play().then(() => {
+            musicPlaying = true;
+            btnMusic.innerText = '🔊 MÚSICA: ON';
+            btnMusic.style.background = 'rgba(0, 243, 255, 0.3)';
+        }).catch(err => {
+            console.log("No se pudo reproducir el audio. Falta el archivo o el navegador lo bloqueó.", err);
+            alert("¡Falta cargar la pista 'theking_lofi.mp3' en la carpeta 'audio'!");
+        });
+    }
+});
+
 document.getElementById('btn-restart').addEventListener('click', () => {
     player.score = 0; player.lines = 0; player.level = 1;
     dropInterval = 1000;

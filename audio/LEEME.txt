@@ -1,0 +1,7 @@
+¡Hola mi bro R1CH0N! 👑
+
+Para que funcione el nuevo reproductor de música lofi en el Tetrix, debes colocar un archivo mp3 aquí mismo en esta carpeta con el nombre exacto:
+
+theking_lofi.mp3
+
+¡Y listo! Cuando la gente presione "MÚSICA: OFF" en el juego, comenzará a sonar la vibra de fondo. 🎧🔥
