@@ -15,89 +15,87 @@
             <a href="index.html" class="btn-back">VOLVER AL MENÚ</a>
         </header>
 
-        <!-- ====== PANTALLA DE BIENVENIDA / TUTORIAL ====== -->
+        <!-- ====== PANTALLA DE BIENVENIDA ====== -->
         <div id="welcome-screen" class="welcome-screen">
             <div class="welcome-card">
                 <h2 class="welcome-title">🕹️ ¿CÓMO SE JUEGA?</h2>
-                
                 <div class="tutorial-grid">
                     <div class="tutorial-item">
                         <span class="tutorial-icon">⬅️ ➡️</span>
-                        <p><strong>Mover</strong><br>Flechas izquierda/derecha o botones</p>
+                        <p><strong>Mover</strong><br>Flechas o botones</p>
                     </div>
                     <div class="tutorial-item">
                         <span class="tutorial-icon">⬆️</span>
-                        <p><strong>Rotar</strong><br>Flecha arriba o botón 🔄</p>
+                        <p><strong>Rotar</strong><br>Flecha arriba o 🔄</p>
                     </div>
                     <div class="tutorial-item">
                         <span class="tutorial-icon">⬇️</span>
-                        <p><strong>Bajar Rápido</strong><br>Flecha abajo o botón ⬇️</p>
+                        <p><strong>Bajar</strong><br>Flecha abajo o ⬇️</p>
                     </div>
                     <div class="tutorial-item">
-                        <span class="tutorial-icon">⭐</span>
-                        <p><strong>Objetivo</strong><br>Completá filas enteras para sumar puntos</p>
+                        <span class="tutorial-icon">👆</span>
+                        <p><strong>Táctil</strong><br>Deslizá en el tablero</p>
                     </div>
                 </div>
-
                 <div class="tutorial-tips">
-                    <p>💡 <strong>Tip:</strong> Cada 5 líneas subís de nivel y las piezas caen más rápido.</p>
-                    <p>🏆 <strong>Bonus:</strong> Si completás varias filas de una vez, ¡los puntos se multiplican!</p>
+                    <p>💡 Cada 5 líneas subís de nivel y las piezas caen más rápido.</p>
+                    <p>🏆 Completá varias filas de una vez para multiplicar puntos.</p>
                 </div>
-
-                <button id="btn-start-game" class="btn-start-game">
-                    ▶ EMPEZAR A JUGAR
-                </button>
+                <button id="btn-start-game" class="btn-start-game">▶ EMPEZAR A JUGAR</button>
             </div>
         </div>
 
-        <!-- ====== ZONA DE JUEGO (oculta hasta START) ====== -->
+        <!-- ====== ZONA DE JUEGO ====== -->
         <div id="game-zone" class="game-zone" style="display: none;">
-            <div class="game-area">
-                <div class="left-panel">
-                    <div class="stat-box">
-                        <h3>PUNTOS</h3>
-                        <p id="score">0</p>
-                    </div>
-                    <div class="stat-box">
-                        <h3>LÍNEAS</h3>
-                        <p id="lines">0</p>
-                    </div>
-                    <div class="stat-box">
-                        <h3>NIVEL</h3>
-                        <p id="level">1</p>
-                    </div>
-                </div>
 
-                <div class="canvas-container">
-                    <canvas id="tetris" width="240" height="480"></canvas>
-                    <div id="game-over-overlay" class="overlay hidden">
-                        <h2>GAME OVER</h2>
-                        <p>Puntuación Final: <span id="final-score">0</span></p>
-                        <button id="btn-restart" class="btn-neon">JUGAR DE NUEVO</button>
-                    </div>
-                    <div id="pause-overlay" class="overlay hidden">
-                        <h2>⏸️ PAUSA</h2>
-                        <p style="font-size: 0.8rem; color: #aaa;">Presioná P o el botón para continuar</p>
-                        <button id="btn-resume" class="btn-neon">▶ CONTINUAR</button>
+            <!-- Barra stats horizontal -->
+            <div class="stats-bar">
+                <div class="stat-box">
+                    <h3>PUNTOS</h3>
+                    <p id="score">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>LÍNEAS</h3>
+                    <p id="lines">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>NIVEL</h3>
+                    <p id="level">1</p>
+                </div>
+            </div>
+
+            <!-- Canvas + siguiente pieza -->
+            <div class="game-area">
+                <div class="canvas-wrapper">
+                    <div class="canvas-container" id="canvas-touch-zone">
+                        <canvas id="tetris" width="240" height="480"></canvas>
+                        <div id="game-over-overlay" class="overlay hidden">
+                            <h2>GAME OVER</h2>
+                            <p>Puntuación: <span id="final-score">0</span></p>
+                            <button id="btn-restart" class="btn-neon">JUGAR DE NUEVO</button>
+                        </div>
+                        <div id="pause-overlay" class="overlay hidden">
+                            <h2>⏸️ PAUSA</h2>
+                            <p>Tocá para continuar</p>
+                            <button id="btn-resume" class="btn-neon">▶ CONTINUAR</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="right-panel">
                     <div class="stat-box">
                         <h3>SIGUIENTE</h3>
-                        <canvas id="next-piece" width="80" height="80"></canvas>
+                        <canvas id="next-piece" width="60" height="60"></canvas>
                     </div>
-                    <div class="controls-info desktop-only">
-                        <p>⬅️ ➡️ Mover</p>
-                        <p>⬆️ Rotar</p>
-                        <p>⬇️ Bajar</p>
-                        <p>P Pausa</p>
-                    </div>
-                    <button id="btn-pause" class="btn-neon" style="font-size: 0.7rem; padding: 6px 10px; margin-top: 10px;">⏸️ PAUSA</button>
+                    <button id="btn-pause" class="btn-pause-inline">⏸️ PAUSA</button>
                 </div>
             </div>
 
-            <div class="mobile-controls mobile-only">
+            <!-- Pista de swipe -->
+            <div class="swipe-hint">👆 Deslizá en el tablero o usá los botones</div>
+
+            <!-- Controles táctiles compactos -->
+            <div class="mobile-controls">
                 <button class="control-btn" id="btn-left">⬅️</button>
                 <div class="center-controls">
                     <button class="control-btn" id="btn-rotate">🔄</button>
@@ -105,6 +103,7 @@
                 </div>
                 <button class="control-btn" id="btn-right">➡️</button>
             </div>
+
         </div>
     </div>
 

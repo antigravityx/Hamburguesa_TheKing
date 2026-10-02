@@ -1,175 +1,185 @@
 /**
- * 🕹️ THE KING TETRIX — Motor del Juego v2
- * Con pantalla de bienvenida, pausa y controles mejorados
+ * 🕹️ THE KING TETRIX — Motor del Juego v4
+ * ⚡ Canvas responsivo, swipe táctil, emojis a todo color
  */
 
 // ===== PANTALLA DE BIENVENIDA =====
 const welcomeScreen = document.getElementById('welcome-screen');
 const gameZone = document.getElementById('game-zone');
 const btnStartGame = document.getElementById('btn-start-game');
-
 let gameStarted = false;
 
 btnStartGame.addEventListener('click', () => {
     welcomeScreen.style.display = 'none';
     gameZone.style.display = 'flex';
     gameStarted = true;
+    setupCanvas();     // Escalar canvas antes de empezar
     playerReset();
     updateScore();
     update();
 });
 
-// ===== SETUP DEL CANVAS =====
+// ===== SETUP DEL CANVAS RESPONSIVO =====
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 const nextCanvas = document.getElementById('next-piece');
 const nextContext = nextCanvas.getContext('2d');
 
-context.scale(24, 24); // 240/10 = 24
-nextContext.scale(20, 20); // 80/4 = 20
+// Dimensiones lógicas fijas del tablero
+const COLS = 10;
+const ROWS = 20;
+let CELL = 24; // se recalcula
 
-// ===== COLORES NEON =====
-const colors = [
-    null,
-    '#FF0D72', // T - Rosa
-    '#0DC2FF', // O - Azul
-    '#0DFF72', // L - Verde
-    '#F538FF', // J - Púrpura
-    '#FF8E0D', // I - Naranja
-    '#FFE138', // S - Amarillo
-    '#3877FF'  // Z - Azul profundo
-];
+function setupCanvas() {
+    // Calculamos cuánto espacio hay disponible
+    const container = document.querySelector('.canvas-wrapper');
+    const parent = document.querySelector('.game-area');
+    
+    // Espacio vertical disponible (descontamos header + stats + controles)
+    const vh = window.innerHeight;
+    const availH = vh - 160; // reservamos ~160px para header+stats+controles+márgenes
+    const availW = Math.min(window.innerWidth * 0.65, 300); // max 65% del ancho
 
+    // Celda = mínimo entre lo que entra en alto y en ancho
+    CELL = Math.floor(Math.min(availH / ROWS, availW / COLS));
+    CELL = Math.max(CELL, 18); // mínimo 18px por celda
+
+    const W = COLS * CELL;
+    const H = ROWS * CELL;
+
+    canvas.width = W;
+    canvas.height = H;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+
+    // Next piece canvas: 4x4 celdas
+    const NC = Math.floor(CELL * 0.85);
+    nextCanvas.width  = 4 * NC;
+    nextCanvas.height = 4 * NC;
+    nextCanvas.style.width  = 4 * NC + 'px';
+    nextCanvas.style.height = 4 * NC + 'px';
+
+    context.scale(CELL, CELL);
+    nextContext.scale(NC, NC);
+}
+
+// ===== ARSENAL DE EMOJIS (30 iconos para máxima diversión) =====
 const foodEmojis = [
     null,
-    // Comida rápida y carnivora
-    '🍔', '🍕', '🍟', '🌭', '🧀', '🥓', '🥩', '🍗', '🌮', '🌯', '🥪', '🥨',
-    // Realeza TheKing
-    '👑', '🤴', '👸', '🏰', '💎', '🛡️', '⚔️',
-    // Frutas y verduras (para el blend)
-    '🍅', '🥑', '🥒', '🧅', '🍄', '🌶️', '🌽', '🥬',
-    // Dulces y bebidas
-    '🥤', '🍹', '🍦', '🍩', '🍪'
+    // 🍔 Comida TheKing
+    '🍔', '🍕', '🍟', '🌭', '🧀', '🥓', '🥩', '🍗', '🌮', '🌯', '🥪',
+    // 👑 Realeza
+    '👑', '🤴', '👸', '🏰', '💎', '⚔️', '🛡️',
+    // 🍅 Frutas y verduras
+    '🍅', '🥑', '🌶️', '🌽', '🍄', '🥬',
+    // 🍦 Dulces
+    '🍦', '🍩', '🍪', '🎂', '🧁', '🍫'
 ];
 
 // ===== FUNCIONES CORE =====
-
 function createMatrix(w, h) {
     const matrix = [];
-    while (h--) {
-        matrix.push(new Array(w).fill(0));
-    }
+    while (h--) matrix.push(new Array(w).fill(0));
     return matrix;
 }
 
 function createPiece(type) {
-    const pieces = {
+    // Plantillas de forma (valores temporales, se reemplazan abajo)
+    const templates = {
         'T': [[0,0,0],[1,1,1],[0,1,0]],
-        'O': [[2,2],[2,2]],
-        'L': [[0,3,0],[0,3,0],[0,3,3]],
-        'J': [[0,4,0],[0,4,0],[4,4,0]],
-        'I': [[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]],
-        'S': [[0,6,6],[6,6,0],[0,0,0]],
-        'Z': [[7,7,0],[0,7,7],[0,0,0]]
+        'O': [[1,1],[1,1]],
+        'L': [[0,1,0],[0,1,0],[0,1,1]],
+        'J': [[0,1,0],[0,1,0],[1,1,0]],
+        'I': [[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]],
+        'S': [[0,1,1],[1,1,0],[0,0,0]],
+        'Z': [[1,1,0],[0,1,1],[0,0,0]]
     };
     
-    const p = pieces[type];
-    // Elegir un emoji aleatorio del inmenso arsenal
+    // Clonar la plantilla (importante para no mutar el original)
+    const template = templates[type];
+    const p = template.map(row => [...row]);
+    
+    // Emoji aleatorio del arsenal, único por pieza
     const randomId = Math.floor(Math.random() * (foodEmojis.length - 1)) + 1;
     
     for (let y = 0; y < p.length; y++) {
         for (let x = 0; x < p[y].length; x++) {
-            if (p[y][x] !== 0) {
-                p[y][x] = randomId;
-            }
+            if (p[y][x] !== 0) p[y][x] = randomId;
         }
     }
     return p;
 }
 
-function drawMatrix(matrix, offset, ctx) {
+function drawMatrix(matrix, offset, ctx, cellSize) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                // Fondo oscuro opcional para resaltar el bloque
-                ctx.fillStyle = 'rgba(0,0,0,0.3)';
-                ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
+                const px = x + offset.x;
+                const py = y + offset.y;
                 
-                // Dibujar el emoji
-                ctx.font = '0.8px sans-serif';
+                // Emoji a todo color sin fondo oscuro
+                ctx.font = `${cellSize * 0.78}px serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(foodEmojis[value], x + offset.x + 0.5, y + offset.y + 0.55);
+                ctx.fillText(
+                    foodEmojis[value],
+                    px + 0.5,
+                    py + 0.55
+                );
                 
-                // Borde exterior muy sutil
-                ctx.lineWidth = 0.04;
-                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
+                // Borde sutil para separar bloques
+                ctx.lineWidth = 0.05;
+                ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+                ctx.strokeRect(px, py, 1, 1);
             }
         });
     });
 }
 
 function draw() {
-    // Fondo con patrón grid sutil
+    // Fondo oscuro
     context.fillStyle = '#0a0a12';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, COLS, ROWS);
     
-    // Grid lines sutiles
-    context.strokeStyle = 'rgba(255,255,255,0.03)';
+    // Grid sutil
+    context.strokeStyle = 'rgba(255,255,255,0.04)';
     context.lineWidth = 0.02;
-    for (let x = 0; x < 10; x++) {
-        context.beginPath();
-        context.moveTo(x, 0);
-        context.lineTo(x, 20);
-        context.stroke();
+    for (let x = 0; x <= COLS; x++) {
+        context.beginPath(); context.moveTo(x, 0); context.lineTo(x, ROWS); context.stroke();
     }
-    for (let y = 0; y < 20; y++) {
-        context.beginPath();
-        context.moveTo(0, y);
-        context.lineTo(10, y);
-        context.stroke();
+    for (let y = 0; y <= ROWS; y++) {
+        context.beginPath(); context.moveTo(0, y); context.lineTo(COLS, y); context.stroke();
     }
     
-    drawMatrix(arena, {x: 0, y: 0}, context);
+    drawMatrix(arena, {x:0, y:0}, context, 1);
     
-    // Ghost piece (sombra de donde va a caer)
-    if (!isGameOver && !isPaused) {
-        drawGhost();
-    }
+    if (!isGameOver && !isPaused) drawGhost();
     
-    drawMatrix(player.matrix, player.pos, context);
+    drawMatrix(player.matrix, player.pos, context, 1);
     
-    // Next Piece
+    // Next piece
+    const NC_scale = nextCanvas.width / 4;
     nextContext.fillStyle = '#0a0a12';
-    nextContext.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+    nextContext.fillRect(0, 0, 4, 4);
     if (nextPiece) {
-        const offsetX = (4 - nextPiece[0].length) / 2;
-        const offsetY = (4 - nextPiece.length) / 2;
-        drawMatrix(nextPiece, {x: offsetX, y: offsetY}, nextContext);
+        const ox = (4 - nextPiece[0].length) / 2;
+        const oy = (4 - nextPiece.length) / 2;
+        drawMatrix(nextPiece, {x: ox, y: oy}, nextContext, 1);
     }
 }
 
-// ===== GHOST PIECE (preview de dónde cae) =====
+// ===== GHOST PIECE =====
 function drawGhost() {
-    const ghost = {
-        pos: { x: player.pos.x, y: player.pos.y },
-        matrix: player.matrix
-    };
-    
-    while (!collideCheck(arena, ghost)) {
-        ghost.pos.y++;
-    }
+    const ghost = { pos: {x: player.pos.x, y: player.pos.y}, matrix: player.matrix };
+    while (!collideCheck(arena, ghost)) ghost.pos.y++;
     ghost.pos.y--;
-    
-    // Dibujar ghost semi-transparente
     ghost.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                context.fillStyle = 'rgba(255,255,255,0.08)';
+                context.fillStyle = 'rgba(255,255,255,0.06)';
                 context.fillRect(x + ghost.pos.x, y + ghost.pos.y, 1, 1);
-                context.strokeStyle = 'rgba(255,255,255,0.15)';
-                context.lineWidth = 0.04;
+                context.strokeStyle = 'rgba(255,255,255,0.12)';
+                context.lineWidth = 0.05;
                 context.strokeRect(x + ghost.pos.x, y + ghost.pos.y, 1, 1);
             }
         });
@@ -180,9 +190,7 @@ function collideCheck(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 &&
-               (arena[y + o.y] &&
-                arena[y + o.y][x + o.x]) !== 0) {
+            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -190,29 +198,21 @@ function collideCheck(arena, player) {
     return false;
 }
 
-function collide(arena, player) {
-    return collideCheck(arena, player);
-}
+function collide(arena, player) { return collideCheck(arena, player); }
 
 function merge(arena, player) {
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
-            if (value !== 0) {
-                arena[y + player.pos.y][x + player.pos.x] = value;
-            }
+            if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
         });
     });
 }
 
 function arenaSweep() {
-    let rowCount = 1;
-    let linesCleared = 0;
-    
+    let rowCount = 1, linesCleared = 0;
     outer: for (let y = arena.length - 1; y > 0; --y) {
         for (let x = 0; x < arena[y].length; ++x) {
-            if (arena[y][x] === 0) {
-                continue outer;
-            }
+            if (arena[y][x] === 0) continue outer;
         }
         const row = arena.splice(y, 1)[0].fill(0);
         arena.unshift(row);
@@ -222,15 +222,9 @@ function arenaSweep() {
         linesCleared++;
         rowCount *= 2;
     }
-    
-    // Level up cada 5 líneas
     player.level = Math.floor(player.lines / 5) + 1;
     dropInterval = Math.max(80, 1000 - (player.level - 1) * 100);
-    
-    // Flash effect on line clear
-    if (linesCleared > 0) {
-        flashEffect();
-    }
+    if (linesCleared > 0) flashEffect();
 }
 
 function flashEffect() {
@@ -241,8 +235,7 @@ function flashEffect() {
     }, 200);
 }
 
-// ===== MOVIMIENTO DEL JUGADOR =====
-
+// ===== MOVIMIENTO =====
 function playerDrop() {
     player.pos.y++;
     if (collide(arena, player)) {
@@ -256,9 +249,7 @@ function playerDrop() {
 }
 
 function playerHardDrop() {
-    while (!collide(arena, player)) {
-        player.pos.y++;
-    }
+    while (!collide(arena, player)) player.pos.y++;
     player.pos.y--;
     merge(arena, player);
     playerReset();
@@ -269,9 +260,7 @@ function playerHardDrop() {
 
 function playerMove(dir) {
     player.pos.x += dir;
-    if (collide(arena, player)) {
-        player.pos.x -= dir;
-    }
+    if (collide(arena, player)) player.pos.x -= dir;
 }
 
 function getRandomPiece() {
@@ -285,13 +274,9 @@ function playerReset() {
     if (!nextPiece) nextPiece = getRandomPiece();
     player.matrix = nextPiece;
     nextPiece = getRandomPiece();
-    
     player.pos.y = 0;
-    player.pos.x = (arena[0].length / 2 | 0) -
-                   (player.matrix[0].length / 2 | 0);
-    
+    player.pos.x = (COLS / 2 | 0) - (player.matrix[0].length / 2 | 0);
     if (collide(arena, player)) {
-        // Game Over
         arena.forEach(row => row.fill(0));
         document.getElementById('game-over-overlay').classList.remove('hidden');
         document.getElementById('final-score').innerText = player.score;
@@ -320,36 +305,21 @@ function rotate(matrix, dir) {
             [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
         }
     }
-    if (dir > 0) {
-        matrix.forEach(row => row.reverse());
-    } else {
-        matrix.reverse();
-    }
+    if (dir > 0) matrix.forEach(row => row.reverse());
+    else matrix.reverse();
 }
 
 // ===== GAME LOOP =====
-
-let dropCounter = 0;
-let dropInterval = 1000;
-let lastTime = 0;
-let isGameOver = false;
-let isPaused = false;
+let dropCounter = 0, dropInterval = 1000, lastTime = 0;
+let isGameOver = false, isPaused = false;
 
 function update(time = 0) {
     if (isGameOver) return;
-    if (isPaused) {
-        requestAnimationFrame(update);
-        return;
-    }
-    
+    if (isPaused) { requestAnimationFrame(update); return; }
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
-    
-    if (dropCounter > dropInterval) {
-        playerDrop();
-    }
-    
+    if (dropCounter > dropInterval) playerDrop();
     draw();
     requestAnimationFrame(update);
 }
@@ -364,70 +334,96 @@ function updateScore() {
 function togglePause() {
     if (isGameOver) return;
     isPaused = !isPaused;
-    const pauseOverlay = document.getElementById('pause-overlay');
+    const overlay = document.getElementById('pause-overlay');
     if (isPaused) {
-        pauseOverlay.classList.remove('hidden');
+        overlay.classList.remove('hidden');
     } else {
-        pauseOverlay.classList.add('hidden');
+        overlay.classList.add('hidden');
         lastTime = performance.now();
         dropCounter = 0;
     }
 }
 
 // ===== ARENA & PLAYER =====
-const arena = createMatrix(10, 20);
-const player = {
-    pos: {x: 0, y: 0},
-    matrix: null,
-    score: 0,
-    lines: 0,
-    level: 1
-};
+const arena = createMatrix(COLS, ROWS);
+const player = { pos: {x:0, y:0}, matrix: null, score: 0, lines: 0, level: 1 };
 
 // ===== CONTROLES DE TECLADO =====
 document.addEventListener('keydown', event => {
     if (!gameStarted || isGameOver) return;
-    
-    if (event.key === 'p' || event.key === 'P') {
-        togglePause();
-        return;
-    }
-    
+    if (event.key === 'p' || event.key === 'P') { togglePause(); return; }
     if (isPaused) return;
-    
-    if (event.keyCode === 37) {          // Izquierda
-        playerMove(-1);
-    } else if (event.keyCode === 39) {   // Derecha
-        playerMove(1);
-    } else if (event.keyCode === 40) {   // Abajo
-        playerDrop();
-    } else if (event.keyCode === 38) {   // Arriba (rotar)
-        playerRotate(1);
-    } else if (event.keyCode === 32) {   // Espacio (hard drop)
-        playerHardDrop();
-    }
+    if (event.keyCode === 37) playerMove(-1);
+    else if (event.keyCode === 39) playerMove(1);
+    else if (event.keyCode === 40) playerDrop();
+    else if (event.keyCode === 38) playerRotate(1);
+    else if (event.keyCode === 32) { event.preventDefault(); playerHardDrop(); }
 });
 
-// ===== CONTROLES MÓVILES =====
-document.getElementById('btn-left').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerMove(-1); });
-document.getElementById('btn-right').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerMove(1); });
-document.getElementById('btn-down').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerDrop(); });
-document.getElementById('btn-rotate').addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused) playerRotate(1); });
+// ===== CONTROLES BOTONES (touch + click) =====
+function addControl(id, fn) {
+    const el = document.getElementById(id);
+    el.addEventListener('touchstart', (e) => { e.preventDefault(); if (!isPaused && !isGameOver) fn(); }, {passive: false});
+    el.addEventListener('click', () => { if (!isPaused && !isGameOver) fn(); });
+}
 
-// Fallback click para escritorio
-document.getElementById('btn-left').addEventListener('click', () => { if (!isPaused) playerMove(-1); });
-document.getElementById('btn-right').addEventListener('click', () => { if (!isPaused) playerMove(1); });
-document.getElementById('btn-down').addEventListener('click', () => { if (!isPaused) playerDrop(); });
-document.getElementById('btn-rotate').addEventListener('click', () => { if (!isPaused) playerRotate(1); });
+addControl('btn-left',   () => playerMove(-1));
+addControl('btn-right',  () => playerMove(1));
+addControl('btn-down',   () => playerDrop());
+addControl('btn-rotate', () => playerRotate(1));
 
-// ===== BOTONES DE UI =====
-document.getElementById('btn-pause').addEventListener('click', () => togglePause());
+// ===== SWIPE TÁCTIL EN EL CANVAS =====
+let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+const SWIPE_THRESHOLD = 20;   // px para considerar un swipe
+const TAP_THRESHOLD   = 10;   // px de movimiento para considerar tap
+const TAP_TIME        = 220;  // ms máximo para un tap
+
+const touchZone = document.getElementById('canvas-touch-zone');
+
+touchZone.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    touchStartX    = t.clientX;
+    touchStartY    = t.clientY;
+    touchStartTime = Date.now();
+    e.preventDefault();
+}, {passive: false});
+
+touchZone.addEventListener('touchend', (e) => {
+    if (!gameStarted || isGameOver || isPaused) return;
+    const t  = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    const dt = Date.now() - touchStartTime;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+
+    if (absDx < TAP_THRESHOLD && absDy < TAP_THRESHOLD && dt < TAP_TIME) {
+        // Tap → rotar
+        playerRotate(1);
+    } else if (absDx > absDy && absDx > SWIPE_THRESHOLD) {
+        // Swipe horizontal → mover
+        playerMove(dx > 0 ? 1 : -1);
+    } else if (absDy > absDx && dy > SWIPE_THRESHOLD) {
+        // Swipe hacia abajo → hard drop
+        playerHardDrop();
+    } else if (absDy > absDx && dy < -SWIPE_THRESHOLD) {
+        // Swipe hacia arriba → pausa
+        togglePause();
+    }
+    e.preventDefault();
+}, {passive: false});
+
+// Swipe contínuo (arrastrando) → movimiento fluido
+touchZone.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+}, {passive: false});
+
+// ===== UI BUTTONS =====
+document.getElementById('btn-pause').addEventListener('click',  () => togglePause());
 document.getElementById('btn-resume').addEventListener('click', () => togglePause());
 
 document.getElementById('btn-restart').addEventListener('click', () => {
-    player.score = 0;
-    player.lines = 0;
-    player.level = 1;
+    player.score = 0; player.lines = 0; player.level = 1;
     dropInterval = 1000;
     updateScore();
     isGameOver = false;
