@@ -101,6 +101,10 @@
                 <div class="app-menu-item" id="menu-install-btn">
                     <i class="ri-install-fill"></i> Agregar a Inicio (App)
                 </div>
+                <a href="comunidad.html" class="app-menu-item" id="menu-comunidad-btn"
+                    style="text-decoration: none; color: inherit; border-left: 3px solid #ff00ea;">
+                    <i class="ri-community-fill" style="color: #ff00ea;"></i> 👑 Comunidad & Muro con Audios
+                </a>
                 <a href="juego.html" class="app-menu-item" id="menu-game-btn"
                     style="text-decoration: none; color: inherit;">
                     <i class="ri-sword-fill" style="color: var(--accent-color);"></i> 🎮 Misión del Rey RPG & Mapa
@@ -108,6 +112,10 @@
                 <a href="tetrix.html" class="app-menu-item" id="menu-tetrix-btn"
                     style="text-decoration: none; color: inherit;">
                     <i class="ri-gamepad-fill" style="color: #ff00ea;"></i> 👾 THE KING TETRIX
+                </a>
+                <a href="stacker.html" class="app-menu-item" id="menu-stacker-btn"
+                    style="text-decoration: none; color: inherit; border-left: 3px solid var(--accent-color);">
+                    <i class="ri-stack-fill" style="color: var(--accent-color);"></i> 🍔 Burger Stacker (Nuevo Juego)
                 </a>
             </div>
         </div>
@@ -149,6 +157,14 @@
                 <i class="ri-restaurant-2-line"></i> Ver Menú
             </a>
 
+            <!-- BOTÓN DESTACADO: LA COMUNIDAD THEKING -->
+            <a href="comunidad.html" class="hero-rpg-btn" id="open-comunidad-hub" aria-label="Entrar a la Comunidad TheKing" style="border-color: #ff00ea; box-shadow: 0 0 15px rgba(255, 0, 234, 0.4); margin-bottom: 0.5rem;">
+                <span class="rpg-btn-badge" style="background: linear-gradient(90deg, #ff00ea, #ffb703); color: #000; font-weight: 800;">🎙️ RED SOCIAL CON AUDIOS</span>
+                <span class="rpg-btn-icon">👑💬</span>
+                <span class="rpg-btn-text" style="color: #fff;">LA COMUNIDAD THEKING</span>
+                <span class="rpg-btn-sub">Muro social, fotos y comentarios con notas de voz</span>
+            </a>
+
             <!-- BOTÓN DELIVERY RADAR — Rey en la Moto -->
             <button class="delivery-radar-btn" id="open-delivery-radar" aria-label="Consultar precios de delivery">
                 <span class="moto-scene">
@@ -161,7 +177,7 @@
 
             <!-- BOTÓN JUEGO DEL REY RPG & RADAR -->
             <a href="juego.html" class="hero-rpg-btn" id="open-rpg-game" aria-label="Jugar a la Misión del Rey RPG">
-                <span class="rpg-btn-badge">⚔️ NUEVO JUEGO</span>
+                <span class="rpg-btn-badge">⚔️ JUEGO RPG</span>
                 <span class="rpg-btn-icon">👑🎮</span>
                 <span class="rpg-btn-text">Misión del Rey: Juego & Mapa RPG</span>
                 <span class="rpg-btn-sub">Repartí por Corrientes y ganá Coronas</span>
@@ -173,6 +189,14 @@
                 <span class="rpg-btn-icon">🕹️</span>
                 <span class="rpg-btn-text" style="color: #00f3ff;">THE KING TETRIX</span>
                 <span class="rpg-btn-sub">Jugá offline para practicar. ¡Multijugador pronto!</span>
+            </a>
+
+            <!-- BOTÓN BURGER STACKER (NUEVO) -->
+            <a href="stacker.html" class="hero-rpg-btn" id="open-stacker-game" aria-label="Jugar a Burger Stacker" style="margin-top: 10px; border-color: #ffb703; box-shadow: 0 0 10px rgba(255, 183, 3, 0.3);">
+                <span class="rpg-btn-badge" style="background: var(--accent-color); color: #000; font-weight: 800;">🔥 NUEVO JUEGO</span>
+                <span class="rpg-btn-icon">🍔🏗️</span>
+                <span class="rpg-btn-text" style="color: var(--accent-color);">BURGER STACKER</span>
+                <span class="rpg-btn-sub">¡Apilá ingredientes sin tirar la torre y ganá Coronas!</span>
             </a>
         </div>
     </section>
@@ -457,13 +481,42 @@
                     <option value="Transferencia">Transferencia (Alias/CBU)</option>
                 </select>
                 <div id="alias-container"
-                    style="display: none; align-items: center; justify-content: space-between; background: rgba(255,183,3,0.1); border: 1px dashed var(--accent-color); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem;">
-                    <span style="font-size: 0.9rem; color: #fff;">Alias: <strong
-                            style="color: var(--accent-color);">olivares.95</strong></span>
-                    <button id="copy-alias-btn" type="button"
-                        style="background: var(--accent-color); border: none; color: #000; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
-                        <i class="ri-file-copy-line"></i> Copiar
+                    style="display: none; flex-direction: column; gap: 0.6rem; background: rgba(255,183,3,0.08); border: 1px dashed var(--accent-color); padding: 0.9rem; border-radius: 10px; margin-top: 0.6rem;">
+                    
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 0.9rem; color: #fff;">Alias MP: <strong
+                                style="color: var(--accent-color); letter-spacing: 0.5px;">olivares.95</strong></span>
+                        <button id="copy-alias-btn" type="button"
+                            style="background: rgba(255,255,255,0.12); border: 1px solid var(--accent-color); color: var(--accent-color); padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
+                            <i class="ri-file-copy-line"></i> Copiar
+                        </button>
+                    </div>
+
+                    <!-- Botón Deep-link directo a Mercado Pago -->
+                    <button id="open-mp-btn" type="button"
+                        style="width: 100%; background: linear-gradient(135deg, #009ee3 0%, #007ebb 100%); border: none; color: #fff; padding: 0.65rem 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(0,158,227,0.3); transition: transform 0.2s;">
+                        <i class="ri-bank-card-fill" style="font-size: 1.1rem;"></i>
+                        <span>Pagar en Mercado Pago (<span id="mp-total-badge">$0</span>)</span>
                     </button>
+
+                    <!-- Adjuntar comprobante -->
+                    <div style="background: rgba(0,0,0,0.25); border-radius: 8px; padding: 0.5rem 0.7rem; border: 1px solid rgba(255,255,255,0.08);">
+                        <label for="receipt-file-input" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 0.8rem; color: #ccc;">
+                            <span id="receipt-label-text"><i class="ri-image-add-line" style="color: var(--accent-color);"></i> Adjuntar comprobante (opcional)</span>
+                            <span style="font-size: 0.75rem; color: var(--accent-color); font-weight: 600; text-decoration: underline;">Subir</span>
+                        </label>
+                        <input type="file" id="receipt-file-input" accept="image/*,.pdf" style="display: none;">
+                        <div id="receipt-preview-container" style="display: none; align-items: center; justify-content: space-between; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                            <span id="receipt-filename" style="font-size: 0.75rem; color: #4ade80; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px;"></span>
+                            <button id="remove-receipt-btn" type="button" style="background: none; border: none; color: #ef4444; font-size: 0.95rem; cursor: pointer;">
+                                <i class="ri-close-circle-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 0.72rem; color: #aaa; margin: 0; line-height: 1.2;">
+                        💡 <em>Al enviar el pedido por WhatsApp, adjuntá la foto del comprobante para despachar más rápido.</em>
+                    </p>
                 </div>
             </div>
         </div>

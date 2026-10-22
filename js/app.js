@@ -104,6 +104,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const paymentMethod = document.getElementById('payment-method');
     const aliasContainer = document.getElementById('alias-container');
     const copyAliasBtn = document.getElementById('copy-alias-btn');
+    const openMpBtn = document.getElementById('open-mp-btn');
+    const mpTotalBadge = document.getElementById('mp-total-badge');
+    const receiptFileInput = document.getElementById('receipt-file-input');
+    const receiptPreviewContainer = document.getElementById('receipt-preview-container');
+    const receiptFilename = document.getElementById('receipt-filename');
+    const removeReceiptBtn = document.getElementById('remove-receipt-btn');
+    let attachedReceiptName = null;
 
     // Delivery vs Retiro y mapa inteligente
     const optionDelivery = document.getElementById('option-delivery');
@@ -218,16 +225,64 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Manejar visibilidad y lógica de copia de Alias
+    // Manejar visibilidad y lógica de copia de Alias & Mercado Pago
     paymentMethod.addEventListener('change', () => {
         aliasContainer.style.display = paymentMethod.value === 'Transferencia' ? 'flex' : 'none';
     });
 
     copyAliasBtn.addEventListener('click', () => {
         navigator.clipboard.writeText('olivares.95').then(() => {
-            showToast('¡Alias copiado al portapapeles!');
+            showToast('¡Alias olivares.95 copiado al portapapeles!');
         }).catch(err => console.error('Error al copiar:', err));
     });
+
+    if (openMpBtn) {
+        openMpBtn.addEventListener('click', () => {
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const envio = (deliveryType === 'Delivery') ? deliveryCost : 0;
+            const grandTotal = subtotal + envio;
+
+            if (grandTotal <= 0) {
+                showToast('Agregá productos al carrito primero');
+                return;
+            }
+
+            const mpDeepLink = `mercadopago://payment?amount=${grandTotal}&alias=olivares.95&description=Pedido%20TheKing`;
+            const mpWebLink = `https://www.mercadopago.com.ar/pay?alias=olivares.95&amount=${grandTotal}`;
+
+            showToast('Abriendo Mercado Pago... ¡Recordá sacar captura del comprobante!');
+            
+            // Intentar abrir la app nativa de MP; si no está, abrir versión web
+            const start = Date.now();
+            window.location.href = mpDeepLink;
+            setTimeout(() => {
+                if (Date.now() - start < 1500) {
+                    window.open(mpWebLink, '_blank');
+                }
+            }, 1200);
+        });
+    }
+
+    if (receiptFileInput) {
+        receiptFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                attachedReceiptName = file.name;
+                if (receiptFilename) receiptFilename.textContent = `📎 ${file.name}`;
+                if (receiptPreviewContainer) receiptPreviewContainer.style.display = 'flex';
+                showToast('✅ Comprobante adjunto. ¡Envialo por WhatsApp!');
+            }
+        });
+    }
+
+    if (removeReceiptBtn) {
+        removeReceiptBtn.addEventListener('click', () => {
+            attachedReceiptName = null;
+            if (receiptFileInput) receiptFileInput.value = '';
+            if (receiptPreviewContainer) receiptPreviewContainer.style.display = 'none';
+            showToast('Comprobante desadjuntado');
+        });
+    }
 
     // Manejar alternancia entre Delivery y Retiro
     optionDelivery.addEventListener('click', () => {
@@ -599,6 +654,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         cartTotal.textContent = `$${grandTotal.toLocaleString('es-AR')}`;
+        if (mpTotalBadge) {
+            mpTotalBadge.textContent = `$${grandTotal.toLocaleString('es-AR')}`;
+        }
 
         document.querySelectorAll('.minus-btn').forEach(btn => {
             btn.addEventListener('click', (e) => changeQuantity(e.target.getAttribute('data-id'), -1));
@@ -765,7 +823,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         message += `\n*TOTAL A PAGAR: $${grandTotal.toLocaleString('es-AR')}*\n\n`;
 
         if (payment === 'Transferencia') {
-            message += `⚠️ *RECUERDE ENVIARNOS EL COMPROBANTE DE LA TRANSFERENCIA PARA PROCESAR SU PEDIDO.*\n\n`;
+            if (attachedReceiptName) {
+                message += `💳 *Pago:* Transferencia (Alias: olivares.95)\n`;
+                message += `📸 *Comprobante preparado:* "${attachedReceiptName}" (adjuntando captura)\n\n`;
+            } else {
+                message += `💳 *Pago:* Transferencia (Alias: olivares.95)\n`;
+                message += `⚠️ *RECUERDE ENVIARNOS EL COMPROBANTE DE LA TRANSFERENCIA PARA PROCESAR SU PEDIDO.*\n\n`;
+            }
         }
         message += `_¡Muchas gracias por elegirnos!_`;
 

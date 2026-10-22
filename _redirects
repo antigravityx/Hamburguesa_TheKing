@@ -1,4 +1,9 @@
-# Reglas de Redirección Netlify para The King Burger Admin
-/admin    /admin.html    200
-/admin/   /admin.html    200
-/sorteo   /#sorteo-section 200
+# Reglas de Redirección Netlify para The King Burger
+/admin       /admin.html       200
+/admin/      /admin.html       200
+/sorteo      /#sorteo-section  200
+/comunidad   /comunidad.html   200
+/comunidad/  /comunidad.html   200
+/stacker     /stacker.html     200
+/stacker/    /stacker.html     200
+

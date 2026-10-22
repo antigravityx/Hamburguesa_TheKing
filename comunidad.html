@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE KING COMUNIDAD 👑 — Red Social & Juegos</title>
+    <meta name="description" content="La red social exclusiva de la familia The King Burger en Corrientes. Compartí momentos, comentá con audios reales y retá a tus amigos en los juegos de la Corona.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="2026-theking-logo-678678-.ico">
+    <meta name="theme-color" content="#0d0f17">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Estilos Base y Social -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/social.css">
+
+    <!-- Estilos exclusivos Comunidad -->
+    <style>
+        :root {
+            --neon-magenta: #ff00ea;
+            --neon-cyan: #00f3ff;
+            --king-gold: #ffb703;
+            --king-gold-hover: #fb8500;
+            --bg-dark: #0a0c13;
+            --card-glass: rgba(18, 22, 34, 0.85);
+            --border-glass: rgba(255, 183, 3, 0.2);
+        }
+
+        body {
+            background: radial-gradient(circle at top center, #1b1329 0%, #0a0c13 60%, #05060a 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Header Superior de Comunidad */
+        .comunidad-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+            background: rgba(10, 12, 19, 0.9);
+            border-bottom: 1px solid rgba(255, 183, 3, 0.15);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .comunidad-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .comunidad-logo-icon {
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 8px rgba(255, 183, 3, 0.6));
+        }
+
+        .comunidad-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .comunidad-title span {
+            color: var(--king-gold);
+        }
+
+        .comunidad-nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .nav-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .nav-pill-btn:hover {
+            background: rgba(255, 183, 3, 0.15);
+            border-color: var(--king-gold);
+            transform: translateY(-1px);
+        }
+
+        .nav-pill-btn.primary {
+            background: linear-gradient(135deg, var(--king-gold), var(--king-gold-hover));
+            color: #000;
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 183, 3, 0.3);
+        }
+
+        /* Banner Hero Comunidad */
+        .comunidad-hero {
+            padding: 2rem 1rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge-tag {
+            display: inline-block;
+            background: rgba(255, 0, 234, 0.15);
+            border: 1px solid var(--neon-magenta);
+            color: #ff8df5;
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .comunidad-headline {
+            font-size: 2.1rem;
+            font-weight: 900;
+            margin: 0 0 0.5rem;
+            line-height: 1.15;
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.3);
+        }
+
+        .comunidad-headline span {
+            background: linear-gradient(90deg, #ffb703, #ff00ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .comunidad-lead {
+            font-size: 0.95rem;
+            color: #a8b2d1;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.4;
+        }
+
+        /* Perfil de Semilla */
+        .semilla-profile-card {
+            background: linear-gradient(135deg, rgba(255, 183, 3, 0.08) 0%, rgba(20, 25, 40, 0.9) 100%);
+            border: 1px solid rgba(255, 183, 3, 0.3);
+            border-radius: 16px;
+            padding: 1.2rem;
+            max-width: 720px;
+            margin: 0 auto 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .semilla-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .semilla-avatar-glow {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #222;
+            border: 2px solid var(--king-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+            overflow: hidden;
+        }
+
+        .semilla-avatar-glow img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .semilla-meta h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .semilla-badge-rank {
+            display: inline-block;
+            font-size: 0.72rem;
+            color: var(--king-gold);
+            font-weight: 700;
+            background: rgba(255, 183, 3, 0.12);
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            margin-top: 0.2rem;
+        }
+
+        .semilla-stats-row {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .semilla-stat-box {
+            text-align: center;
+        }
+
+        .semilla-stat-box .val {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--king-gold);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .semilla-stat-box .lbl {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        /* Hub Arcade de Juegos */
+        .arcade-hub-container {
+            max-width: 720px;
+            margin: 0 auto 2rem;
+            padding: 0 1rem;
+        }
+
+        .arcade-hub-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .arcade-hub-title h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--neon-cyan);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .arcade-games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .game-card-hub {
+            background: var(--card-glass);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card-hub:hover {
+            transform: translateY(-3px);
+            border-color: var(--king-gold);
+            box-shadow: 0 6px 20px rgba(255, 183, 3, 0.2);
+        }
+
+        .game-card-hub.highlight {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 15px rgba(255, 0, 234, 0.25);
+        }
+
+        .game-tag-badge {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 0, 234, 0.2);
+            color: var(--neon-magenta);
+            border: 1px solid var(--neon-magenta);
+        }
+
+        .game-icon-banner {
+            font-size: 2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .game-card-hub h4 {
+            font-size: 0.95rem;
+            margin: 0 0 0.3rem;
+            font-weight: 800;
+        }
+
+        .game-card-hub p {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin: 0 0 0.8rem;
+            line-height: 1.3;
+        }
+
+        .game-card-cta {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--king-gold);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Contenedor del Feed de Comunidad */
+        .comunidad-feed-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Grabador de voz interactivo de vanguardia */
+        .voice-rec-banner {
+            background: rgba(255, 0, 234, 0.08);
+            border: 1px dashed rgba(255, 0, 234, 0.4);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+        }
+
+        .voice-rec-info {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .voice-rec-info i {
+            font-size: 1.6rem;
+            color: var(--neon-magenta);
+        }
+
+        .voice-rec-info p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: #ddd;
+        }
+
+        .voice-rec-info p strong {
+            color: #fff;
+        }
+
+        /* Reproductor de audio visual personalizado */
+        .king-audio-player {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(255, 0, 234, 0.12);
+            border: 1px solid rgba(255, 0, 234, 0.3);
+            border-radius: 30px;
+            padding: 0.4rem 0.8rem;
+            margin-top: 0.5rem;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        .king-audio-play-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--neon-magenta);
+            border: none;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .king-audio-play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .king-audio-waveform {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 20px;
+        }
+
+        .waveform-bar {
+            width: 3px;
+            background: var(--neon-magenta);
+            border-radius: 2px;
+            animation: waveBounce 1.2s ease-in-out infinite alternate;
+        }
+
+        .waveform-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+        .waveform-bar:nth-child(2) { height: 14px; animation-delay: 0.2s; }
+        .waveform-bar:nth-child(3) { height: 18px; animation-delay: 0.3s; }
+        .waveform-bar:nth-child(4) { height: 10px; animation-delay: 0.4s; }
+        .waveform-bar:nth-child(5) { height: 16px; animation-delay: 0.5s; }
+        .waveform-bar:nth-child(6) { height: 8px; animation-delay: 0.6s; }
+
+        @keyframes waveBounce {
+            0% { transform: scaleY(0.4); opacity: 0.5; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .king-audio-duration {
+            font-size: 0.72rem;
+            font-family: 'Orbitron', sans-serif;
+            color: #ddd;
+            margin-left: 0.2rem;
+        }
+
+        /* Footer */
+        .comunidad-footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: #666;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Navegación Superior -->
+    <header class="comunidad-header">
+        <a href="index.html" class="comunidad-brand" title="Ir a The King Burger">
+            <span class="comunidad-logo-icon">👑</span>
+            <div class="comunidad-title">
+                THE KING <br><span>COMUNIDAD</span>
+            </div>
+        </a>
+
+        <div class="comunidad-nav-actions">
+            <a href="index.html" class="nav-pill-btn" title="Ver menú y hacer pedidos">
+                <i class="ri-restaurant-2-line" style="color: var(--king-gold);"></i>
+                <span class="desktop-only">Carta / Pedir</span>
+            </a>
+
+            <div class="user-profile" id="user-profile-btn" style="cursor: pointer;">
+                <div class="nav-pill-btn primary" id="auth-pill-btn">
+                    <i class="ri-google-fill"></i>
+                    <span id="user-name-display">Ingresar</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner Hero Comunidad -->
+    <section class="comunidad-hero">
+        <span class="hero-badge-tag"><i class="ri-broadcast-fill"></i> La Familia The King Burger · Corrientes</span>
+        <h2 class="comunidad-headline">EL MURO DE LA <span>CORONA</span></h2>
+        <p class="comunidad-lead">
+            Compartí tus hamburguesas favoritas, desafiá a tus amigos en los juegos del reino y 
+            <strong style="color: #ff00ea;">comentá con audios reales de voz</strong> grabados al instante. ¡La primera red social de hamburguesería con notas de voz!
+        </p>
+
+        <!-- Tarjeta de Semilla del Usuario -->
+        <div class="semilla-profile-card" id="semilla-profile-card">
+            <div class="semilla-user-info">
+                <div class="semilla-avatar-glow">
+                    <img id="profile-card-avatar" src="img/avatar-default.png" alt="Avatar" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=king';">
+                </div>
+                <div class="semilla-meta" style="text-align: left;">
+                    <h4 id="profile-card-name">Bienvenido, Rey/Reina</h4>
+                    <span class="semilla-badge-rank" id="profile-card-rank">👑 Miembro de la Familia</span>
+                </div>
+            </div>
+
+            <div class="semilla-stats-row">
+                <div class="semilla-stat-box">
+                    <div class="val" id="profile-coronas-count">0</div>
+                    <div class="lbl">Coronas</div>
+                </div>
+                <div class="semilla-stat-box">
+                    <div class="val" id="profile-level-val">1</div>
+                    <div class="lbl">Nivel</div>
+                </div>
+                <div class="semilla-stat-box">
+                    <div class="val" id="profile-audios-count">0</div>
+                    <div class="lbl">Audios</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HUB DE JUEGOS Y RETOS ARCADE -->
+    <section class="arcade-hub-container">
+        <div class="arcade-hub-title">
+            <h3><i class="ri-gamepad-fill"></i> SALÓN DE JUEGOS DE LA CORONA</h3>
+            <span style="font-size: 0.75rem; color: #888;">¡Ganá coronas jugando!</span>
+        </div>
+
+        <div class="arcade-games-grid">
+            <!-- Juego 1: Misión del Rey RPG -->
+            <a href="juego.html" class="game-card-hub">
+                <div>
+                    <div class="game-icon-banner">🛵👑</div>
+                    <h4>Misión del Rey RPG</h4>
+                    <p>Repartí pedidos sorteando el tráfico de Corrientes y sumá Coronas por entrega.</p>
+                </div>
+                <div class="game-card-cta">
+                    <span>Jugar ahora</span> <i class="ri-arrow-right-line"></i>
+                </div>
+            </a>
+
+            <!-- Juego 2: The King Tetrix -->
+            <a href="tetrix.html" class="game-card-hub">
+                <div>
+                    <div class="game-icon-banner">🕹️👾</div>
+                    <h4>The King Tetrix</h4>
+                    <p>El clásico arcade reinventado con estilo Cyberpunk. Completá líneas para subir de nivel.</p>
+                </div>
+                <div class="game-card-cta">
+                    <span>Jugar ahora</span> <i class="ri-arrow-right-line"></i>
+                </div>
+            </a>
+
+            <!-- Juego 3: NUEVO King Burger Stacker -->
+            <a href="stacker.html" class="game-card-hub highlight">
+                <span class="game-tag-badge">🔥 NUEVO</span>
+                <div>
+                    <div class="game-icon-banner">🍔🏗️</div>
+                    <h4>Burger Stacker</h4>
+                    <p>¡Apilá ingredientes sin que caiga la torre! Creá la hamburguesa gigante más alta.</p>
+                </div>
+                <div class="game-card-cta" style="color: var(--neon-magenta);">
+                    <span>Apilar ahora</span> <i class="ri-arrow-right-line"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- MURO SOCIAL DE LA COMUNIDAD (MOTOR semilla-social.js) -->
+    <main class="comunidad-feed-container">
+
+        <!-- Banner Exclusivo: Innovación de Comentarios de Audio -->
+        <div class="voice-rec-banner">
+            <div class="voice-rec-info">
+                <i class="ri-mic-fill"></i>
+                <p><strong>¿Probaste los comentarios de voz?</strong> Tocá el micrófono en cualquier publicación para dejar tu saludo o reseña en audio.</p>
+            </div>
+            <span style="font-size: 0.7rem; color: var(--neon-magenta); font-weight: 800; border: 1px solid var(--neon-magenta); padding: 0.2rem 0.5rem; border-radius: 4px;">ÚNICO 🎙️</span>
+        </div>
+
+        <!-- Sección de Inyección de Semilla Social -->
+        <div id="social-feed-section" style="width: 100%;">
+            <div class="glassmorphism social-section-inner" style="border-radius: 16px; padding: 1.5rem;">
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem;">
+                    <h3 class="social-section-title" style="margin: 0; font-size: 1.25rem;">
+                        <i class="ri-chat-voice-fill" style="color: #ff00ea;"></i>
+                        Muro en Tiempo Real
+                    </h3>
+                    <span style="font-size: 0.75rem; color: #10b981; display: flex; align-items: center; gap: 0.3rem;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                        En vivo
+                    </span>
+                </div>
+
+                <!-- Prompt para usuarios no logueados -->
+                <div class="social-login-prompt" id="social-login-prompt">
+                    <i class="ri-google-fill"></i>
+                    <span>Iniciá sesión con Google para compartir fotos y dejar notas de voz</span>
+                </div>
+
+                <!-- Compositor de publicaciones -->
+                <div class="social-composer" id="social-composer">
+                    <div class="social-composer-header">
+                        <img src="" alt="" class="social-composer-avatar" id="composer-avatar">
+                        <div>
+                            <span class="social-composer-name" id="composer-name">Rey/Reina</span>
+                        </div>
+                    </div>
+                    <textarea
+                        id="social-post-text"
+                        class="social-post-textarea"
+                        placeholder="¿Qué estás comiendo hoy? Compartí tu momento TheKing con la banda... 🍔👑"
+                        maxlength="500"
+                        rows="3"
+                    ></textarea>
+
+                    <!-- Preview foto -->
+                    <div class="social-photo-preview" id="social-photo-preview">
+                        <img src="" alt="Preview" id="social-photo-preview-img">
+                        <button class="remove-photo" onclick="document.getElementById('social-photo-preview').style.display='none'; document.getElementById('social-photo-preview-img').src='';">
+                            <i class="ri-close-line"></i>
+                        </button>
+                    </div>
+
+                    <input type="file" id="social-photo-input" accept="image/*" style="display:none;">
+
+                    <div class="social-composer-actions">
+                        <div class="social-composer-tools">
+                            <button class="social-tool-btn" id="social-photo-btn" title="Adjuntar foto">
+                                <i class="ri-image-add-line"></i> Foto
+                            </button>
+                        </div>
+                        <button class="social-publish-btn" id="social-publish-btn">
+                            <i class="ri-send-plane-fill"></i> Publicar en el Muro
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FEED de publicaciones con soporte de AUDIO -->
+                <div class="social-feed" id="social-feed">
+                    <div class="social-empty-state">
+                        <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">⚡</div>
+                        <p>Cargando publicaciones de la familia TheKing...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="comunidad-footer">
+        <p>👑 <strong>THE KING BURGER</strong> · Av. Río Chico 5410, Corrientes · WhatsApp 3794-29-9964</p>
+        <p style="font-size: 0.72rem; color: #555; margin-top: 0.3rem;">
+            Plataforma Soberana impulsada por el Orbe Santuario · r1ch0n & Verix 2026
+        </p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Scripts del Ecosistema -->
+    <script src="js/admin-db-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script defer src="js/semilla-social.js"></script>
+
+    <!-- Script de enlace de perfil en comunidad.html -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sincronizar tarjeta de perfil con auth
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                firebase.auth().onAuthStateChanged((user) => {
+                    const nameEl = document.getElementById('profile-card-name');
+                    const rankEl = document.getElementById('profile-card-rank');
+                    const avatarEl = document.getElementById('profile-card-avatar');
+                    const coronasEl = document.getElementById('profile-coronas-count');
+                    const authBtnText = document.getElementById('user-name-display');
+
+                    if (user) {
+                        const shortName = user.displayName ? user.displayName.split(' ')[0] : 'Rey';
+                        if (nameEl) nameEl.textContent = user.displayName || 'Rey/Reina TheKing';
+                        if (rankEl) rankEl.textContent = '👑 Miembro Verificado';
+                        if (avatarEl && user.photoURL) avatarEl.src = user.photoURL;
+                        if (authBtnText) authBtnText.textContent = shortName;
+
+                        // Cargar coronas desde Firestore o LocalStorage
+                        try {
+                            firebase.firestore().collection('semillas').doc(user.uid).get().then(doc => {
+                                if (doc.exists && doc.data().coronas) {
+                                    if (coronasEl) coronasEl.textContent = doc.data().coronas;
+                                } else {
+                                    const localCoronas = localStorage.getItem('king_coronas') || '15';
+                                    if (coronasEl) coronasEl.textContent = localCoronas;
+                                }
+                            });
+                        } catch (e) {
+                            console.warn(e);
+                        }
+                    } else {
+                        if (nameEl) nameEl.textContent = 'Visitante de la Corona';
+                        if (rankEl) rankEl.textContent = '👋 Iniciá sesión para publicar';
+                        if (authBtnText) authBtnText.textContent = 'Ingresar';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
