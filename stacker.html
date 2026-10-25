@@ -16,6 +16,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
+    <!-- Firebase SDKs & Arcade Rankings -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/arcade-rankings.js"></script>
+
     <style>
         :root {
             --king-gold: #ffb703;
@@ -486,10 +492,14 @@
             gameOverOverlay.style.display = 'flex';
             finalStatsText.innerHTML = `Construiste una torre de <strong>${score} pisos</strong> y ganaste <strong style="color:var(--king-gold);">+${coronasWon} Coronas Reales</strong> 👑`;
 
-            // Guardar coronas ganadas
-            let totalCoronas = parseInt(localStorage.getItem('king_coronas') || '0');
-            totalCoronas += coronasWon;
-            localStorage.setItem('king_coronas', totalCoronas.toString());
+            // Guardar coronas ganadas y subir al Ranking de la Comunidad
+            if (window.KingRankings) {
+                window.KingRankings.submitScore('stacker', score, coronasWon);
+            } else {
+                let totalCoronas = parseInt(localStorage.getItem('king_coronas') || '0');
+                totalCoronas += coronasWon;
+                localStorage.setItem('king_coronas', totalCoronas.toString());
+            }
 
             // Actualizar link de compartir en comunidad
             shareCommunityBtn.href = `comunidad.html?record=${score}&coronas=${coronasWon}`;

@@ -281,6 +281,12 @@ function playerReset() {
         document.getElementById('game-over-overlay').classList.remove('hidden');
         document.getElementById('final-score').innerText = player.score;
         isGameOver = true;
+
+        // Registrar puntaje y coronas en el Ranking de la Comunidad
+        const coronasEarned = Math.max(1, Math.floor(player.score / 50));
+        if (window.KingRankings) {
+            window.KingRankings.submitScore('tetrix', player.score, coronasEarned);
+        }
     }
 }
 

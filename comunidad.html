@@ -571,6 +571,27 @@
                 </div>
             </a>
         </div>
+
+        <!-- 🏆 TABLA DE CAMPEONES ARCADE (TIEMPO REAL) -->
+        <div class="arcade-leaderboard-card" style="margin-top: 1.5rem; background: rgba(18, 22, 34, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 183, 3, 0.25); border-radius: 16px; padding: 1.2rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.6rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.4rem;">🏆</span>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1.05rem; font-family: 'Orbitron', sans-serif; color: #fff;">PODIO DE LA CORONA</h4>
+                        <span style="font-size: 0.72rem; color: #888;">Rankings mundiales en vivo de la comunidad</span>
+                    </div>
+                </div>
+                <div class="leaderboard-tabs" style="display: flex; gap: 0.4rem;">
+                    <button class="rank-tab-btn active" data-game="stacker" style="padding: 0.4rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--king-gold); background: rgba(255,183,3,0.2); color: #fff; cursor: pointer; transition: all 0.2s;">🍔 Stacker</button>
+                    <button class="rank-tab-btn" data-game="tetrix" style="padding: 0.4rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #ccc; cursor: pointer; transition: all 0.2s;">👾 Tetrix</button>
+                </div>
+            </div>
+
+            <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 0.5rem; min-height: 100px;">
+                <div style="text-align: center; color: #888; font-size: 0.85rem; padding: 1.5rem;">Cargando campeones en tiempo real...</div>
+            </div>
+        </div>
     </section>
 
     <!-- MURO SOCIAL DE LA COMUNIDAD (MOTOR semilla-social.js) -->
@@ -675,6 +696,7 @@
     <script src="js/admin-db-config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/fcm-manager.js"></script>
+    <script src="js/arcade-rankings.js"></script>
     <script defer src="js/semilla-social.js"></script>
 
     <!-- Script de enlace de perfil en comunidad.html -->
@@ -748,6 +770,65 @@
                             authPillBtn.title = 'Ingresar con Google';
                         }
                     }
+                });
+            }
+
+            // Integración de la Tabla de Campeones Arcade en Vivo
+            if (window.KingRankings) {
+                let currentGameTab = 'stacker';
+                let unsubRankings = null;
+
+                function renderLeaderboard(scores) {
+                    const listEl = document.getElementById('leaderboard-list');
+                    if (!listEl) return;
+
+                    if (!scores || scores.length === 0) {
+                        listEl.innerHTML = `
+                            <div style="text-align: center; color: #888; font-size: 0.85rem; padding: 1.2rem;">
+                                ¡Sé el primero en jugar y subirte al podio de la Corona! 👑
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    const medals = ['🥇', '🥈', '🥉', '4°', '5°'];
+                    listEl.innerHTML = scores.map((item, idx) => `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.9rem; background: rgba(255,255,255,0.04); border-radius: 10px; border-left: 3px solid ${idx === 0 ? '#ffb703' : idx === 1 ? '#c0c0c0' : idx === 2 ? '#cd7f32' : 'rgba(255,255,255,0.1)'};">
+                            <div style="display: flex; align-items: center; gap: 0.7rem;">
+                                <span style="font-size: 1.15rem; width: 24px; text-align: center;">${medals[idx] || (idx + 1) + '°'}</span>
+                                <img src="${item.photoURL || 'img/avatar-default.png'}" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=${item.uid || 'king'}';" style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(255,183,3,0.4);" alt="Avatar">
+                                <span style="font-weight: 700; font-size: 0.88rem; color: #fff;">${item.playerName || 'Rey Anónimo'}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.9rem;">
+                                <span style="font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--king-gold);">${item.score} <small style="font-size: 0.65rem; color: #aaa;">${currentGameTab === 'stacker' ? 'pisos' : 'pts'}</small></span>
+                                <span style="font-size: 0.78rem; color: #ff00ea; font-weight: 800;">+${item.coronas || 0} 👑</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                function loadLeaderboard(gameId) {
+                    currentGameTab = gameId;
+                    if (unsubRankings) unsubRankings();
+                    unsubRankings = window.KingRankings.listenLeaderboard(gameId, 5, renderLeaderboard);
+                }
+
+                // Carga inicial
+                loadLeaderboard('stacker');
+
+                // Tabs de juego
+                document.querySelectorAll('.rank-tab-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.rank-tab-btn').forEach(b => {
+                            b.style.background = 'rgba(255,255,255,0.05)';
+                            b.style.borderColor = 'rgba(255,255,255,0.15)';
+                            b.style.color = '#ccc';
+                        });
+                        btn.style.background = 'rgba(255,183,3,0.2)';
+                        btn.style.borderColor = 'var(--king-gold)';
+                        btn.style.color = '#fff';
+                        loadLeaderboard(btn.getAttribute('data-game'));
+                    });
                 });
             }
         });
