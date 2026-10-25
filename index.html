@@ -73,6 +73,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/social.css">
@@ -137,7 +138,7 @@
     </header>
 
     <!-- Hero Banner Section -->
-    <section class="hero" id="hero">
+    <section class="hero hero-compact" id="hero">
         <div class="hero-glow"></div>
         <div class="hero-embers">
             <span></span><span></span><span></span><span></span>
@@ -146,58 +147,58 @@
         <div class="hero-content">
             <div class="crown-icon">👑</div>
             <h2 class="hero-title">THE KING <span class="hero-accent">BURGER</span></h2>
-            <div class="hero-divider"><span></span></div>
             <p class="hero-tagline">El Sabor de la Corona</p>
-            <p class="hero-sub">Hamburguesas Artesanales · Pizzas · Delivery Propio</p>
             <div class="hero-info">
                 <span><i class="ri-phone-line"></i> 3794-29-9964</span>
                 <span><i class="ri-instagram-line"></i> @theking.ctes</span>
             </div>
-            <a href="#menu" class="hero-cta">
-                <i class="ri-restaurant-2-line"></i> Ver Menú
-            </a>
 
-            <!-- BOTÓN DESTACADO: LA COMUNIDAD THEKING -->
-            <a href="comunidad.html" class="hero-rpg-btn" id="open-comunidad-hub" aria-label="Entrar a la Comunidad TheKing" style="border-color: #ff00ea; box-shadow: 0 0 15px rgba(255, 0, 234, 0.4); margin-bottom: 0.5rem;">
-                <span class="rpg-btn-badge" style="background: linear-gradient(90deg, #ff00ea, #ffb703); color: #000; font-weight: 800;">🎙️ RED SOCIAL CON AUDIOS</span>
-                <span class="rpg-btn-icon">👑💬</span>
-                <span class="rpg-btn-text" style="color: #fff;">LA COMUNIDAD THEKING</span>
-                <span class="rpg-btn-sub">Muro social, fotos y comentarios con notas de voz</span>
-            </a>
-
-            <!-- BOTÓN DELIVERY RADAR — Rey en la Moto -->
-            <button class="delivery-radar-btn" id="open-delivery-radar" aria-label="Consultar precios de delivery">
-                <span class="moto-scene">
+            <!-- FILA CTA PRINCIPAL: Ver Menú + Delivery -->
+            <div class="hero-cta-row">
+                <a href="#menu" class="hero-cta">
+                    <i class="ri-restaurant-2-line"></i> Ver Menú
+                </a>
+                <button class="delivery-radar-btn delivery-radar-compact" id="open-delivery-radar" aria-label="Consultar precios de delivery">
                     <span class="moto-king">👑🏍️</span>
-                    <span class="moto-dust">💨</span>
+                    <span class="moto-btn-text">¿Delivery?</span>
+                </button>
+            </div>
+
+            <!-- COMUNIDAD — BOTÓN DESTACADO ANCHO -->
+            <a href="comunidad.html" class="hero-rpg-btn hero-community-btn" id="open-comunidad-hub" aria-label="Entrar a la Comunidad TheKing">
+                <span class="rpg-btn-badge" style="background: linear-gradient(90deg, #ff00ea, #ffb703); color: #000; font-weight: 800;">🎙️ RED SOCIAL</span>
+                <span style="display:flex; align-items:center; gap:0.5rem;">
+                    <span class="rpg-btn-icon" style="font-size:1.4rem;">👑💬</span>
+                    <span>
+                        <span class="rpg-btn-text" style="color: #fff; font-size:0.95rem;">LA COMUNIDAD THEKING</span>
+                        <span class="rpg-btn-sub" style="display:block;">Muro, fotos y audios de voz</span>
+                    </span>
                 </span>
-                <span class="moto-btn-text">¿A cuánto sale el delivery?</span>
-                <span class="moto-btn-sub">Consultá zonas y precios aquí</span>
-            </button>
-
-            <!-- BOTÓN JUEGO DEL REY RPG & RADAR -->
-            <a href="juego.html" class="hero-rpg-btn" id="open-rpg-game" aria-label="Jugar a la Misión del Rey RPG">
-                <span class="rpg-btn-badge">⚔️ JUEGO RPG</span>
-                <span class="rpg-btn-icon">👑🎮</span>
-                <span class="rpg-btn-text">Misión del Rey: Juego & Mapa RPG</span>
-                <span class="rpg-btn-sub">Repartí por Corrientes y ganá Coronas</span>
             </a>
 
-            <!-- BOTÓN TETRIX ZONE -->
-            <a href="tetrix.html" class="hero-rpg-btn" id="open-tetrix-game" aria-label="Jugar a The King Tetrix" style="margin-top: 10px; border-color: #ff00ea; box-shadow: 0 0 10px rgba(255, 0, 234, 0.3);">
-                <span class="rpg-btn-badge" style="background: #ff00ea; color: #fff;">👾 ZONA ARCADE</span>
-                <span class="rpg-btn-icon">🕹️</span>
-                <span class="rpg-btn-text" style="color: #00f3ff;">THE KING TETRIX</span>
-                <span class="rpg-btn-sub">Jugá offline para practicar. ¡Multijugador pronto!</span>
-            </a>
-
-            <!-- BOTÓN BURGER STACKER (NUEVO) -->
-            <a href="stacker.html" class="hero-rpg-btn" id="open-stacker-game" aria-label="Jugar a Burger Stacker" style="margin-top: 10px; border-color: #ffb703; box-shadow: 0 0 10px rgba(255, 183, 3, 0.3);">
-                <span class="rpg-btn-badge" style="background: var(--accent-color); color: #000; font-weight: 800;">🔥 NUEVO JUEGO</span>
-                <span class="rpg-btn-icon">🍔🏗️</span>
-                <span class="rpg-btn-text" style="color: var(--accent-color);">BURGER STACKER</span>
-                <span class="rpg-btn-sub">¡Apilá ingredientes sin tirar la torre y ganá Coronas!</span>
-            </a>
+            <!-- ZONA ARCADE — GRID 2×2 COMPACTO -->
+            <div class="hero-games-grid">
+                <a href="juego.html" class="hero-game-pill" id="open-rpg-game" aria-label="Misión del Rey RPG">
+                    <span class="game-pill-badge" style="background: #ef233c;">⚔️ RPG</span>
+                    <span class="game-pill-icon">👑🎮</span>
+                    <span class="game-pill-name">Misión del Rey</span>
+                </a>
+                <a href="tetrix.html" class="hero-game-pill" id="open-tetrix-game" aria-label="The King Tetrix" style="border-color: #ff00ea;">
+                    <span class="game-pill-badge" style="background: #ff00ea;">👾 ARCADE</span>
+                    <span class="game-pill-icon" style="color:#00f3ff;">🕹️</span>
+                    <span class="game-pill-name" style="color:#00f3ff;">Tetrix</span>
+                </a>
+                <a href="stacker.html" class="hero-game-pill" id="open-stacker-game" aria-label="Burger Stacker" style="border-color: #ffb703;">
+                    <span class="game-pill-badge" style="background: #ffb703; color:#000;">🔥 NUEVO</span>
+                    <span class="game-pill-icon">🍔🏗️</span>
+                    <span class="game-pill-name">Stacker</span>
+                </a>
+                <a href="comunidad.html" class="hero-game-pill" id="open-comunidad-pill" aria-label="Comunidad" style="border-color: #ff00ea;">
+                    <span class="game-pill-badge" style="background: linear-gradient(90deg,#ff00ea,#ffb703); color:#000;">👑 SOCIAL</span>
+                    <span class="game-pill-icon">🎙️</span>
+                    <span class="game-pill-name">Comunidad</span>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -706,6 +707,7 @@
 
     <script defer src="js/admin-db-config.js"></script>
     <script defer src="js/auth.js"></script>
+    <script defer src="js/fcm-manager.js"></script>
     <script defer src="js/products.js"></script>
     <script defer src="js/app.js"></script>
     <script defer src="js/semilla-social.js"></script>

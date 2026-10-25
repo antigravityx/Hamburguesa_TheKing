@@ -1929,3 +1929,226 @@ iframe[src*="netlify"] {
     border: 1px dashed rgba(255, 183, 3, 0.2);
     line-height: 1.5;
 }
+
+/* =========================================================
+   HERO COMPACTO — REFACTOR v2
+   ========================================================= */
+
+/* Versión compacta del hero: menos altura */
+.hero.hero-compact {
+    min-height: auto;
+    padding: 2rem 1.2rem 1.5rem;
+}
+
+.hero.hero-compact .crown-icon {
+    font-size: 2.8rem;
+    margin-bottom: 0.4rem;
+    animation: crownFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(255, 183, 3, 0.5));
+}
+
+.hero.hero-compact .hero-title {
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+    margin-bottom: 0.2rem;
+}
+
+.hero.hero-compact .hero-tagline {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.6rem;
+}
+
+.hero.hero-compact .hero-info {
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+/* Fila CTA: Ver Menú + Delivery en la misma fila */
+.hero-cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-bottom: 0.8rem;
+    flex-wrap: wrap;
+}
+
+/* Botón delivery compacto para usar en la fila */
+.delivery-radar-compact {
+    margin-top: 0 !important;
+    padding: 0.75rem 1.2rem !important;
+    flex-direction: row !important;
+    gap: 0.4rem !important;
+    border-radius: 50px !important;
+}
+
+.delivery-radar-compact .moto-king {
+    font-size: 1.2rem;
+}
+
+.delivery-radar-compact .moto-btn-text {
+    font-size: 0.88rem;
+}
+
+/* Botón comunidad: ancho completo, horizontal */
+.hero-community-btn {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100%;
+    max-width: 380px;
+    padding: 0.8rem 1.4rem !important;
+    gap: 0.5rem;
+    border-color: #ff00ea !important;
+    box-shadow: 0 0 15px rgba(255, 0, 234, 0.3) !important;
+    margin: 0 auto 0.8rem auto;
+}
+
+/* Grid 2x2 de juegos compactos */
+.hero-games-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+/* Pill/tarjeta de juego mini */
+.hero-game-pill {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.65rem 0.5rem 0.6rem;
+    background: linear-gradient(135deg, rgba(239, 35, 60, 0.1), rgba(255, 183, 3, 0.12));
+    border: 1.5px solid var(--accent-color);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.hero-game-pill:hover {
+    background: linear-gradient(135deg, rgba(239, 35, 60, 0.2), rgba(255, 183, 3, 0.25));
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 20px rgba(255, 183, 3, 0.3);
+}
+
+.game-pill-badge {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    font-size: 0.55rem;
+    font-weight: 800;
+    padding: 2px 5px;
+    border-radius: 999px;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+
+.game-pill-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 8px rgba(255, 183, 3, 0.6));
+}
+
+.game-pill-name {
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+
+/* =========================================================
+   FIX BOTÓN "+ AGREGAR" EN MOBILE 2 COLUMNAS
+   ========================================================= */
+
+@media (max-width: 480px) {
+    .product-action {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .add-to-cart {
+        width: 100%;
+        justify-content: center;
+        padding: 0.45rem 0.5rem;
+        font-size: 0.78rem;
+    }
+
+    /* En cards muy angostas (2 col), texto reducido */
+    .add-to-cart .btn-cart-text {
+        display: none;
+    }
+
+    .add-to-cart .btn-cart-icon {
+        display: inline-flex;
+    }
+}
+
+@media (min-width: 481px) {
+    .add-to-cart .btn-cart-text {
+        display: inline;
+    }
+    .add-to-cart .btn-cart-icon {
+        display: none;
+    }
+}
+
+/* Precio y botón en mobile pequeño */
+@media (max-width: 400px) {
+    .products-grid {
+        gap: 0.6rem !important;
+    }
+
+    .product-info {
+        padding: 0.6rem !important;
+    }
+
+    .product-info h3 {
+        font-size: 0.85rem !important;
+    }
+
+    .product-info p {
+        font-size: 0.72rem !important;
+        margin-bottom: 0.5rem !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+/* =========================================================
+   ARREGLO RESPONSIVE HERO DESKTOP
+   ========================================================= */
+
+@media (min-width: 769px) {
+    .hero.hero-compact {
+        padding: 3rem 2rem 2.5rem;
+    }
+
+    .hero.hero-compact .crown-icon {
+        font-size: 3.5rem;
+    }
+
+    .hero.hero-compact .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-games-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 560px;
+    }
+
+    .hero-community-btn {
+        max-width: 480px;
+    }
+}

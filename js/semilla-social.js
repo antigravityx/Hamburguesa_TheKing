@@ -115,9 +115,46 @@
         const photoBtn = document.getElementById('social-photo-btn');
         if (photoBtn) photoBtn.addEventListener('click', () => photoInput && photoInput.click());
 
+        // 🔑 Login desde el prompt del muro
+        const loginPrompt = document.getElementById('social-login-prompt');
+        if (loginPrompt) {
+            loginPrompt.style.cursor = 'pointer';
+            loginPrompt.addEventListener('click', triggerGoogleLogin);
+        }
+
+        // 🔑 Login desde botón "Ingresar" del header de comunidad
+        const authPillBtn = document.getElementById('auth-pill-btn');
+        if (authPillBtn) {
+            authPillBtn.addEventListener('click', () => {
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    // Cerrar sesión si ya está logueado
+                    if (confirm('¿Cerrar sesión, ' + (user.displayName ? user.displayName.split(' ')[0] : 'Rey') + '?')) {
+                        firebase.auth().signOut();
+                    }
+                } else {
+                    triggerGoogleLogin();
+                }
+            });
+        }
+
         // Botón de micrófono (grabar audio para comentar)
         // Se vincula dinámicamente al abrir comentarios de un post
     }
+
+    // 🔑 Login con Google (popup → redirect fallback)
+    function triggerGoogleLogin() {
+        if (typeof firebase === 'undefined' || !firebase.auth) return;
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider).catch((err) => {
+            if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
+                firebase.auth().signInWithRedirect(provider);
+            } else {
+                console.error('[Social] Error login:', err.code);
+            }
+        });
+    }
+
 
     // ═══════════════════════════════════════════════════
     // 6. PUBLICAR POST (texto + foto opcional)

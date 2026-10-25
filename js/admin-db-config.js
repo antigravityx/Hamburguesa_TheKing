@@ -79,21 +79,6 @@ class KingDatabaseEngine {
             } catch (e) {
                 console.warn('[Verix Engine] initialLoadProducts: usando datos estáticos como fallback', e);
             }
-        }
-                if (typeof PRODUCTS !== 'undefined') {
-                    // Reemplazar categoría por categoría
-                    Object.keys(data).forEach(key => { PRODUCTS[key] = data[key]; });
-                    // Eliminar categorías que ya no existen en Firebase
-                    Object.keys(PRODUCTS).forEach(key => {
-                        if (!(key in data)) delete PRODUCTS[key];
-                    });
-                }
-                localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(data));
-                return data;
-            }
-        } catch (e) {
-            console.warn('[Verix Engine] initialLoadProducts: usando datos estáticos como fallback', e);
-        }
 
         // Intentar desde localStorage como segundo fallback
         try {

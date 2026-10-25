@@ -469,6 +469,11 @@
         </a>
 
         <div class="comunidad-nav-actions">
+            <button id="btn-fcm-toggle" class="nav-pill-btn" title="Activar Notificaciones Push" style="background: rgba(255,183,3,0.12); border-color: rgba(255,183,3,0.3); color: #fff;">
+                <i class="ri-notification-3-line" id="fcm-bell-icon" style="color: var(--king-gold);"></i>
+                <span class="desktop-only" id="fcm-bell-text">Alertas</span>
+            </button>
+
             <a href="index.html" class="nav-pill-btn" title="Ver menú y hacer pedidos">
                 <i class="ri-restaurant-2-line" style="color: var(--king-gold);"></i>
                 <span class="desktop-only">Carta / Pedir</span>
@@ -664,15 +669,38 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 
     <!-- Scripts del Ecosistema -->
     <script src="js/admin-db-config.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/fcm-manager.js"></script>
     <script defer src="js/semilla-social.js"></script>
 
     <!-- Script de enlace de perfil en comunidad.html -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Manejador del botón de notificaciones FCM
+            const fcmBtn = document.getElementById('btn-fcm-toggle');
+            if (fcmBtn && window.KingFCM) {
+                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                    const icon = document.getElementById('fcm-bell-icon');
+                    if (icon) icon.className = 'ri-notification-3-fill';
+                }
+                fcmBtn.addEventListener('click', async () => {
+                    const token = await window.KingFCM.requestPermission();
+                    if (token) {
+                        const icon = document.getElementById('fcm-bell-icon');
+                        if (icon) icon.className = 'ri-notification-3-fill';
+                        alert('👑 ¡Notificaciones de la Corona activadas con éxito!');
+                    }
+                });
+            }
+            // Capturar resultado de redirect (mobile login)
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                firebase.auth().getRedirectResult().catch(e => console.warn('[ComunidadAuth] redirect:', e.code));
+            }
+
             // Sincronizar tarjeta de perfil con auth
             if (typeof firebase !== 'undefined' && firebase.auth) {
                 firebase.auth().onAuthStateChanged((user) => {
@@ -681,6 +709,7 @@
                     const avatarEl = document.getElementById('profile-card-avatar');
                     const coronasEl = document.getElementById('profile-coronas-count');
                     const authBtnText = document.getElementById('user-name-display');
+                    const authPillBtn = document.getElementById('auth-pill-btn');
 
                     if (user) {
                         const shortName = user.displayName ? user.displayName.split(' ')[0] : 'Rey';
@@ -689,13 +718,21 @@
                         if (avatarEl && user.photoURL) avatarEl.src = user.photoURL;
                         if (authBtnText) authBtnText.textContent = shortName;
 
+                        // Actualizar header pill con foto
+                        if (authPillBtn) {
+                            authPillBtn.innerHTML = user.photoURL
+                                ? `<img src="${user.photoURL}" style="width:22px;height:22px;border-radius:50%;border:1.5px solid #ffb703;" onerror="this.style.display='none'"> <span>${shortName}</span>`
+                                : `<i class="ri-user-fill"></i> <span>${shortName}</span>`;
+                            authPillBtn.title = 'Clic para cerrar sesión';
+                        }
+
                         // Cargar coronas desde Firestore o LocalStorage
                         try {
                             firebase.firestore().collection('semillas').doc(user.uid).get().then(doc => {
                                 if (doc.exists && doc.data().coronas) {
                                     if (coronasEl) coronasEl.textContent = doc.data().coronas;
                                 } else {
-                                    const localCoronas = localStorage.getItem('king_coronas') || '15';
+                                    const localCoronas = localStorage.getItem('king_coronas') || '0';
                                     if (coronasEl) coronasEl.textContent = localCoronas;
                                 }
                             });
@@ -706,6 +743,10 @@
                         if (nameEl) nameEl.textContent = 'Visitante de la Corona';
                         if (rankEl) rankEl.textContent = '👋 Iniciá sesión para publicar';
                         if (authBtnText) authBtnText.textContent = 'Ingresar';
+                        if (authPillBtn) {
+                            authPillBtn.innerHTML = '<i class="ri-google-fill"></i> <span id="user-name-display">Ingresar</span>';
+                            authPillBtn.title = 'Ingresar con Google';
+                        }
                     }
                 });
             }

@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 data-id="${product.id}" 
                                 data-name="${product.name}" 
                                 data-price="${initialPrice}">
-                            <i class="ri-add-line"></i> Agregar
+                            <i class="ri-add-line"></i><span class="btn-cart-text"> Agregar</span>
                         </button>
                     </div>
                 </div>
