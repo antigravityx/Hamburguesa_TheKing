@@ -120,6 +120,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapPreviewContainer = document.getElementById('map-preview-container');
     const mapPreviewIframe = document.getElementById('map-preview-iframe');
     const mapPreviewLink = document.getElementById('map-preview-link');
+    const formGpsBtn = document.getElementById('form-gps-btn');
+    let currentLat = null;
+    let currentLon = null;
 
     // Elementos del sistema de envío (Cascada: GPS → OSM → Zona manual)
     const zoneSelectorContainer = document.getElementById('zone-selector-container');
@@ -161,54 +164,121 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Actualiza la vista previa del mapa con OpenStreetMap y enlace directo a Google Maps
+    function updateMapPreview(lat, lon, labelText) {
+        if (!lat || !lon) return;
+        currentLat = lat;
+        currentLon = lon;
+        mapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+
+        if (mapPreviewLink) {
+            mapPreviewLink.href = mapsUrl;
+        }
+        if (mapPreviewIframe) {
+            const delta = 0.005;
+            const bbox = `${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}`;
+            mapPreviewIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
+        }
+        if (mapPreviewContainer) {
+            mapPreviewContainer.style.display = 'block';
+        }
+        const titleSpan = document.getElementById('map-preview-title');
+        if (titleSpan && labelText) {
+            titleSpan.innerHTML = `<i class="ri-map-pin-2-fill" style="color: var(--accent-color);"></i> ${labelText}`;
+        }
+    }
+
     // GPS: Método 1 de cálculo de envío (máxima prioridad)
-    menuGpsBtn.addEventListener('click', () => {
-        appMenuDropdown.classList.remove('show');
+    function requestGpsLocation(isFromForm = false) {
         if (!navigator.geolocation) {
             showToast("Por favor, activá el GPS de tu celular para sincronizar 📍");
             return;
         }
-        showToast("📍 Solicitando permiso GPS...");
+        showToast("📍 Obteniendo ubicación GPS precisa...");
+
+        const gpsBtn = document.getElementById('form-gps-btn');
+        if (gpsBtn) {
+            gpsBtn.disabled = true;
+            gpsBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i><span>...</span>';
+        }
+
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            async (position) => {
+                if (gpsBtn) {
+                    gpsBtn.disabled = false;
+                    gpsBtn.innerHTML = '<i class="ri-check-line"></i><span>Listo</span>';
+                    setTimeout(() => {
+                        gpsBtn.innerHTML = '<i class="ri-crosshair-2-fill" style="font-size: 1.15rem;"></i><span>GPS</span>';
+                    }, 3000);
+                }
+
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                mapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+                currentLat = lat;
+                currentLon = lon;
+                mapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
 
-                // Calcular distancia y costo de envío via GPS (Método 1 - Haversine)
+                // Calcular distancia y costo de envío via GPS (Haversine)
                 const km = haversineKm(lat, lon, LOCAL_LAT, LOCAL_LON);
                 setDeliveryCost(priceByKm(km), 'gps', `📡 GPS · ${km.toFixed(1)} km desde el local`);
 
-                if (customerAddress.value.trim() === '' || customerAddress.value === 'Ubicación GPS sincronizada') {
-                    customerAddress.value = 'Ubicación GPS sincronizada';
-                    if (mapPreviewIframe) {
-                        mapPreviewIframe.src = `https://maps.google.com/maps?q=${lat},${lon}&output=embed&hl=es`;
-                        mapPreviewLink.href = mapsUrl;
-                        mapPreviewContainer.style.display = 'block';
+                // Intentar geocodificación inversa para nombre de calle
+                let friendlyAddr = `Ubicación GPS (${lat.toFixed(5)}, ${lon.toFixed(5)})`;
+                try {
+                    const revRes = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+                        { headers: { 'Accept-Language': 'es' } }
+                    );
+                    if (revRes.ok) {
+                        const revData = await revRes.json();
+                        if (revData && revData.address) {
+                            const road = revData.address.road || revData.address.pedestrian || '';
+                            const num = revData.address.house_number || '';
+                            const sub = revData.address.neighbourhood || revData.address.suburb || revData.address.city_district || '';
+                            if (road) {
+                                friendlyAddr = `${road}${num ? ' ' + num : ''}${sub ? ' (' + sub + ')' : ''} [GPS Detectado]`;
+                            }
+                        }
                     }
+                } catch (err) {
+                    console.warn('Reverse geocode error:', err);
                 }
+
+                customerAddress.value = friendlyAddr;
+                updateMapPreview(lat, lon, `GPS Sincronizado (${km.toFixed(1)} km)`);
                 showToast(`✅ GPS sincronizado · Envío: $${priceByKm(km).toLocaleString('es-AR')}`);
             },
             (error) => {
+                if (gpsBtn) {
+                    gpsBtn.disabled = false;
+                    gpsBtn.innerHTML = '<i class="ri-crosshair-2-fill" style="font-size: 1.15rem;"></i><span>GPS</span>';
+                }
                 console.error('Error GPS code:', error.code, error.message);
-                // Mensajes claros según el tipo de error
                 if (error.code === 1) {
-                    // PERMISSION_DENIED
-                    showToast('⚠️ Permiso de GPS denegado. Andá a Ajustes › Chrome › Permisos › Ubicación y activalo.');
+                    showToast('⚠️ Permiso de GPS denegado. Permití la ubicación en los ajustes del navegador.');
                 } else if (error.code === 2) {
-                    // POSITION_UNAVAILABLE
-                    showToast('📡 GPS no disponible ahora. Activá el GPS de tu celu en los ajustes rápidos.');
+                    showToast('📡 GPS no disponible ahora. Activá la ubicación de tu celular.');
                 } else if (error.code === 3) {
-                    // TIMEOUT
-                    showToast('⏱️ Tiempo agotado buscando GPS. Asegurate de estar al aire libre e intentá de nuevo.');
+                    showToast('⏱️ Tiempo agotado buscando GPS. Probá de nuevo o escribí tu dirección.');
                 } else {
-                    showToast('❌ No pudimos obtener tu ubicación. Activá el GPS e intentá de nuevo.');
+                    showToast('❌ No pudimos obtener tu ubicación. Escribí tu dirección manualmente.');
                 }
                 if (!deliveryMethod) showZoneSelector(true);
             },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
         );
+    }
+
+    menuGpsBtn.addEventListener('click', () => {
+        appMenuDropdown.classList.remove('show');
+        requestGpsLocation(false);
     });
+
+    if (formGpsBtn) {
+        formGpsBtn.addEventListener('click', () => {
+            requestGpsLocation(true);
+        });
+    }
 
     menuInstallBtn.addEventListener('click', () => {
         appMenuDropdown.classList.remove('show');
@@ -334,19 +404,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (direccion.length < 4) {
             mapPreviewContainer.style.display = 'none';
             mapsUrl = '';
+            currentLat = null;
+            currentLon = null;
             if (deliveryMethod !== 'gps') resetDeliveryCost();
             return;
         }
 
         mapDebounceTimer = setTimeout(async () => {
             const query = encodeURIComponent(`${direccion}, ${CIUDAD}`);
-            mapsUrl = `https://maps.google.com/maps?q=${query}`;
-            mapPreviewLink.href = mapsUrl;
-            mapPreviewIframe.src = `https://maps.google.com/maps?q=${query}&output=embed&hl=es`;
-            mapPreviewContainer.style.display = 'block';
+            mapsUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
+            if (mapPreviewLink) mapPreviewLink.href = mapsUrl;
 
-            // Método 2: OpenStreetMap geocoding para calcular envío
+            // Método 2: OpenStreetMap geocoding para calcular envío y ubicar mapa
             await tryOsmGeocoding(direccion);
+
+            // Si OSM no obtuvo coordenadas exactas pero hay texto, mostrar mapa general de Corrientes
+            if (!currentLat && mapPreviewContainer) {
+                mapPreviewContainer.style.display = 'block';
+                if (mapPreviewIframe && !mapPreviewIframe.src) {
+                    mapPreviewIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=-58.85%2C-27.52%2C-58.75%2C-27.44&layer=mapnik`;
+                }
+            }
         }, 800);
     });
 
@@ -380,6 +458,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderProductCards(items);
     }
 
+    function sanitizeProductImage(value) {
+        if (!value) return null;
+        const source = String(value).trim();
+        if (source.length > 300) return null;
+
+        try {
+            const imageUrl = new URL(source, window.location.origin);
+            return imageUrl.origin === window.location.origin || imageUrl.protocol === 'https:'
+                ? source
+                : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
     function renderProductCards(items) {
         productsGrid.innerHTML = '';
         items.forEach((product, index) => {
@@ -387,44 +480,71 @@ document.addEventListener('DOMContentLoaded', async () => {
             card.classList.add('product-card', 'glassmorphism');
             card.style.setProperty('--card-delay', `${index * 0.06}s`);
 
-            let sizeSelectorHTML = '';
-            let initialPrice = product.price;
+            const sizes = product.sizes && typeof product.sizes === 'object' ? product.sizes : null;
+            const initialPrice = Number(sizes ? sizes.doble : product.price) || 0;
+            const imageUrl = sanitizeProductImage(product.img);
 
-            if (product.sizes) {
-                initialPrice = product.sizes.doble;
-                sizeSelectorHTML = `
-                    <div class="size-selector">
-                        <button class="size-btn active" data-size="doble" data-price="${product.sizes.doble}">Doble</button>
-                        <button class="size-btn" data-size="triple" data-price="${product.sizes.triple}">Triple</button>
-                    </div>
-                `;
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = imageUrl
+                ? 'product-img-wrapper has-image'
+                : 'product-img-wrapper';
+            if (product.includesFries) {
+                const badge = document.createElement('div');
+                badge.className = 'product-badge';
+                badge.textContent = '🍟 ¡Incluye Papas!';
+                imageWrapper.appendChild(badge);
+            }
+            if (imageUrl) {
+                const image = document.createElement('img');
+                image.src = imageUrl;
+                image.alt = String(product.name || '');
+                image.loading = 'lazy';
+                imageWrapper.appendChild(image);
             }
 
-            const isRealImg = product.img && !product.img.startsWith('data:');
-            const imgWrapperClass = isRealImg ? 'product-img-wrapper has-image' : 'product-img-wrapper';
-            const badgeHTML = product.includesFries ? `<div class="product-badge">🍟 ¡Incluye Papas!</div>` : '';
-            const imgHTML = `<div class="${imgWrapperClass}">
-                    ${badgeHTML}
-                    ${isRealImg ? `<img src="${product.img}" alt="${product.name}" loading="lazy">` : ''}
-                   </div>`;
+            const info = document.createElement('div');
+            info.className = 'product-info';
+            const title = document.createElement('h3');
+            title.textContent = String(product.name || '');
+            const description = document.createElement('p');
+            description.textContent = String(product.desc || '');
+            info.append(title, description);
 
-            card.innerHTML = `
-                ${imgHTML}
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <p>${product.desc}</p>
-                    ${sizeSelectorHTML}
-                    <div class="product-action">
-                        <span class="price">$${initialPrice.toLocaleString('es-AR')}</span>
-                        <button class="add-to-cart-btn add-to-cart" 
-                                data-id="${product.id}" 
-                                data-name="${product.name}" 
-                                data-price="${initialPrice}">
-                            <i class="ri-add-line"></i><span class="btn-cart-text"> Agregar</span>
-                        </button>
-                    </div>
-                </div>
-            `;
+            if (sizes) {
+                const sizeSelector = document.createElement('div');
+                sizeSelector.className = 'size-selector';
+                ['doble', 'triple'].forEach((size, sizeIndex) => {
+                    const sizeButton = document.createElement('button');
+                    sizeButton.type = 'button';
+                    sizeButton.className = sizeIndex === 0 ? 'size-btn active' : 'size-btn';
+                    sizeButton.dataset.size = size;
+                    sizeButton.dataset.price = String(Number(sizes[size]) || 0);
+                    sizeButton.textContent = size === 'doble' ? 'Doble' : 'Triple';
+                    sizeSelector.appendChild(sizeButton);
+                });
+                info.appendChild(sizeSelector);
+            }
+
+            const action = document.createElement('div');
+            action.className = 'product-action';
+            const price = document.createElement('span');
+            price.className = 'price';
+            price.textContent = `$${initialPrice.toLocaleString('es-AR')}`;
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.className = 'add-to-cart-btn add-to-cart';
+            addButton.dataset.id = String(product.id || '');
+            addButton.dataset.name = String(product.name || '');
+            addButton.dataset.price = String(initialPrice);
+            const addIcon = document.createElement('i');
+            addIcon.className = 'ri-add-line';
+            const addText = document.createElement('span');
+            addText.className = 'btn-cart-text';
+            addText.textContent = ' Agregar';
+            addButton.append(addIcon, addText);
+            action.append(price, addButton);
+            info.appendChild(action);
+            card.append(imageWrapper, info);
 
             productsGrid.appendChild(card);
 
@@ -459,7 +579,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const rawItems = PRODUCTS[category] || [];
             const matches = rawItems.filter(p =>
                 p.available !== false &&
-                (p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query))
+                (String(p.name || '').toLowerCase().includes(query)
+                    || String(p.desc || '').toLowerCase().includes(query))
             );
             allMatches = allMatches.concat(matches);
         }
@@ -625,17 +746,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             subtotal += item.price * item.quantity;
             const itemEl = document.createElement('div');
             itemEl.classList.add('cart-item');
-            itemEl.innerHTML = `
-                <div class="item-info">
-                    <h4>${item.name}</h4>
-                    <span class="item-price">$${item.price.toLocaleString('es-AR')}</span>
-                </div>
-                <div class="item-controls">
-                    <button class="item-btn minus-btn" data-id="${item.id}">-</button>
-                    <span>${item.quantity}</span>
-                    <button class="item-btn plus-btn" data-id="${item.id}">+</button>
-                </div>
-            `;
+            const info = document.createElement('div');
+            info.className = 'item-info';
+            const name = document.createElement('h4');
+            name.textContent = String(item.name || '');
+            const price = document.createElement('span');
+            price.className = 'item-price';
+            price.textContent = `$${Number(item.price || 0).toLocaleString('es-AR')}`;
+            info.append(name, price);
+
+            const controls = document.createElement('div');
+            controls.className = 'item-controls';
+            const minusButton = document.createElement('button');
+            minusButton.type = 'button';
+            minusButton.className = 'item-btn minus-btn';
+            minusButton.dataset.id = String(item.id || '');
+            minusButton.textContent = '-';
+            const quantity = document.createElement('span');
+            quantity.textContent = String(item.quantity);
+            const plusButton = document.createElement('button');
+            plusButton.type = 'button';
+            plusButton.className = 'item-btn plus-btn';
+            plusButton.dataset.id = String(item.id || '');
+            plusButton.textContent = '+';
+            controls.append(minusButton, quantity, plusButton);
+
+            itemEl.append(info, controls);
             cartItemsContainer.appendChild(itemEl);
         });
 
@@ -741,7 +877,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // 2. Si no coincide por texto, consultar OpenStreetMap por GPS aproximado
+        // 2. Consultar OpenStreetMap por GPS aproximado
         try {
             const query = encodeURIComponent(`${direccion}, Corrientes, Argentina`);
             const res = await fetch(
@@ -751,11 +887,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!res.ok) throw new Error('OSM falló');
             const data = await res.json();
             if (data && data.length > 0) {
-                const km = haversineKm(
-                    parseFloat(data[0].lat), parseFloat(data[0].lon),
-                    LOCAL_LAT, LOCAL_LON
-                );
-                setDeliveryCost(priceByKm(km), 'osm', `📍 Automático · ${km.toFixed(1)} km`);
+                const lat = parseFloat(data[0].lat);
+                const lon = parseFloat(data[0].lon);
+                updateMapPreview(lat, lon, 'Destino localizado');
+                const km = haversineKm(lat, lon, LOCAL_LAT, LOCAL_LON);
+                if (deliveryMethod !== 'zone_auto' && deliveryMethod !== 'zone') {
+                    setDeliveryCost(priceByKm(km), 'osm', `📍 Automático · ${km.toFixed(1)} km`);
+                }
             } else {
                 // Dirección no encontrada → activar selector manual (Método 3)
                 if (!deliveryMethod) showZoneSelector(true);
@@ -792,7 +930,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (deliveryType === 'Delivery') {
             message += `📍 *Dirección:* ${address}\n`;
-            if (mapsUrl) message += `🗺️ *Ver en mapa:* ${mapsUrl}\n`;
+
+            // ASEGURAR LINK DE MAPA Y COORDENADAS SIEMPRE
+            let finalMapLink = mapsUrl;
+            if (!finalMapLink && address) {
+                finalMapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address + ', Corrientes, Argentina')}`;
+            }
+            if (finalMapLink) {
+                message += `🗺️ *Ver en mapa / GPS:* ${finalMapLink}\n`;
+            }
+            if (currentLat && currentLon) {
+                message += `📡 *Coordenadas GPS:* ${currentLat.toFixed(6)}, ${currentLon.toFixed(6)}\n`;
+            }
+
             message += `🛵 *Costo de envío:* $${deliveryCost.toLocaleString('es-AR')}\n`;
             if (payment === 'Efectivo') {
                 const totalConEnvio = cart.reduce((a, i) => a + i.price * i.quantity, 0) + deliveryCost;
@@ -906,16 +1056,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         const instaSpan = document.querySelector('.hero-info span:last-child');
 
         if (heroTitle && banners.heroTitle) {
-            heroTitle.innerHTML = banners.heroTitle.replace('BURGER', '<span class="hero-accent">BURGER</span>');
+            const title = String(banners.heroTitle);
+            const burgerIndex = title.indexOf('BURGER');
+            if (burgerIndex === -1) {
+                heroTitle.textContent = title;
+            } else {
+                const accent = document.createElement('span');
+                accent.className = 'hero-accent';
+                accent.textContent = 'BURGER';
+                heroTitle.replaceChildren(
+                    document.createTextNode(title.slice(0, burgerIndex)),
+                    accent,
+                    document.createTextNode(title.slice(burgerIndex + 'BURGER'.length))
+                );
+            }
         }
         if (heroTagline && banners.heroSubtitle) heroTagline.textContent = banners.heroSubtitle;
         if (heroSub && banners.heroSub) heroSub.textContent = banners.heroSub;
-        if (phoneSpan && banners.phone) phoneSpan.innerHTML = `<i class="ri-phone-line"></i> ${banners.phone}`;
-        if (instaSpan && banners.instagram) instaSpan.innerHTML = `<i class="ri-instagram-line"></i> ${banners.instagram}`;
+        if (phoneSpan && banners.phone) {
+            const icon = document.createElement('i');
+            icon.className = 'ri-phone-line';
+            phoneSpan.replaceChildren(icon, document.createTextNode(` ${String(banners.phone)}`));
+        }
+        if (instaSpan && banners.instagram) {
+            const icon = document.createElement('i');
+            icon.className = 'ri-instagram-line';
+            instaSpan.replaceChildren(icon, document.createTextNode(` ${String(banners.instagram)}`));
+        }
         // Actualizar phoneWhatsApp dinámicamente para que los pedidos usen el número correcto
         if (banners.phoneWhatsApp) {
-            phoneWhatsApp = banners.phoneWhatsApp;
-            if (window.kingDB) window.kingDB._phoneWhatsApp = banners.phoneWhatsApp;
+            const whatsappNumber = String(banners.phoneWhatsApp).replace(/\D/g, '');
+            if (/^\d{8,15}$/.test(whatsappNumber)) {
+                phoneWhatsApp = whatsappNumber;
+                if (window.kingDB) window.kingDB._phoneWhatsApp = whatsappNumber;
+            }
         }
     }
 
@@ -965,9 +1139,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
-            window.kingDB.listenSorteoParticipantes((participantes) => {
+            window.kingDB.listenSorteoCount((count) => {
                 if (sorteoPublicCount) {
-                    sorteoPublicCount.textContent = participantes.length;
+                    sorteoPublicCount.textContent = count;
                 }
             });
 
@@ -989,11 +1163,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                     btn.disabled = true;
 
                     try {
-                        await window.kingDB.db.collection('sorteo_participantes').add({
+                        const database = window.kingDB.db;
+                        if (!database) throw new Error('Firestore no está disponible.');
+
+                        const privateContact = database.collection('sorteo_contactos').doc();
+                        const publicCount = database.collection('sorteo_publico').doc('estado');
+                        const batch = database.batch();
+                        batch.set(privateContact, {
                             nombre: name,
                             telefono: tel,
                             fecha: firebase.firestore.FieldValue.serverTimestamp()
                         });
+                        batch.set(publicCount, {
+                            total: firebase.firestore.FieldValue.increment(1),
+                            lastParticipantId: privateContact.id,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                        await batch.commit();
 
                         showToast('🎉 ¡Genial! Ya estás participando del sorteo.');
                         localStorage.setItem('king_sorteo_participado_v1', 'true');
@@ -1119,11 +1305,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             document.body.appendChild(toastSorteo);
         }
-        toastSorteo.innerHTML = `
-            <div style="font-size: 1.4rem; font-weight: 800; color: #f59e0b; margin-bottom: 4px;">🎉 ¡TENEMOS GANADOR EN VIVO! 🎉</div>
-            <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">🏆 ${ganador.nombre || 'Participante'} (${ganador.telefono || '***'})</div>
-            <div style="font-size: 0.9rem; color: #9ca3af; margin-top: 4px;">Premio: <strong>${premio}</strong></div>
-        `;
+        const headline = document.createElement('div');
+        headline.style.cssText = 'font-size:1.4rem; font-weight:800; color:#f59e0b; margin-bottom:4px;';
+        headline.textContent = '🎉 ¡TENEMOS GANADOR EN VIVO! 🎉';
+        const winnerLine = document.createElement('div');
+        winnerLine.style.cssText = 'font-size:1.1rem; font-weight:700; color:#fff;';
+        winnerLine.textContent = `🏆 ${String(ganador.nombre || 'Participante')}`;
+        const prizeLine = document.createElement('div');
+        prizeLine.style.cssText = 'font-size:0.9rem; color:#9ca3af; margin-top:4px;';
+        const prizeLabel = document.createElement('strong');
+        prizeLabel.textContent = String(premio || '');
+        prizeLine.append(document.createTextNode('Premio: '), prizeLabel);
+        toastSorteo.replaceChildren(headline, winnerLine, prizeLine);
         toastSorteo.style.display = 'block';
     }
 

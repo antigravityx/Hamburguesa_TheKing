@@ -224,9 +224,11 @@
 
                     <form id="sorteo-form"
                         style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto 1.5rem auto;">
-                        <input type="text" id="sorteo-nombre" placeholder="Tu Nombre o Apodo" required
+                        <input type="text" id="sorteo-nombre" placeholder="Tu Nombre o Apodo" required minlength="2"
+                            maxlength="80"
                             style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
                         <input type="tel" id="sorteo-tel" placeholder="Tu WhatsApp (para avisarte si ganás)" required
+                            minlength="8" maxlength="24"
                             style="padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-family: inherit;">
                         <button type="submit" class="btn-primary"
                             style="background: linear-gradient(135deg, #ef233c, #d90429); font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(239,35,60,0.4);">
@@ -427,23 +429,32 @@
                 </div>
 
                 <div id="delivery-details-container">
-                    <input type="text" id="customer-address" placeholder="Ej: Av. Costanera 1234" required
-                        autocomplete="street-address">
-                    <!-- Vista previa del mapa: aparece al escribir la dirección -->
+                    <div style="display: flex; gap: 0.5rem; align-items: stretch; margin-bottom: 0.6rem;">
+                        <input type="text" id="customer-address" placeholder="Ej: Av. Costanera 1234 o tu barrio" required
+                            autocomplete="street-address" style="margin-bottom: 0; flex: 1;">
+                        <button type="button" id="form-gps-btn"
+                            style="background: linear-gradient(135deg, #ffb703, #fb8500); color: #000; border: none; border-radius: 8px; padding: 0 0.9rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.85rem; white-space: nowrap; box-shadow: 0 2px 8px rgba(251,133,0,0.3); flex-shrink: 0;"
+                            title="Obtener mi ubicación actual por GPS">
+                            <i class="ri-crosshair-2-fill" style="font-size: 1.15rem;"></i>
+                            <span>GPS</span>
+                        </button>
+                    </div>
+                    <!-- Vista previa del mapa: aparece con GPS o al escribir dirección -->
                     <div id="map-preview-container"
-                        style="display:none; margin-top: 0.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent-color);">
+                        style="display:none; margin-top: 0.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent-color); background: rgba(0,0,0,0.4);">
                         <div
-                            style="background: rgba(255,183,3,0.08); padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                            <span style="font-size: 0.78rem; color: #ccc;"><i class="ri-map-pin-2-fill"
-                                    style="color: var(--accent-color);"></i> Vista previa del destino:</span>
+                            style="background: rgba(255,183,3,0.12); padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                            <span id="map-preview-title" style="font-size: 0.78rem; color: #fff; font-weight: 600;">
+                                <i class="ri-map-pin-2-fill" style="color: var(--accent-color);"></i> Ubicación en mapa:
+                            </span>
                             <a id="map-preview-link" href="#" target="_blank" rel="noopener noreferrer"
-                                style="font-size: 0.78rem; font-weight: 700; color: var(--accent-color); text-decoration: none; background: rgba(255,183,3,0.15); padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--accent-color);">
+                                style="font-size: 0.78rem; font-weight: 700; color: #000; text-decoration: none; background: var(--accent-color); padding: 0.35rem 0.75rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.3rem;">
                                 <i class="ri-external-link-fill"></i> Ver en Google Maps
                             </a>
                         </div>
-                        <iframe id="map-preview-iframe" src="" width="100%" height="160"
-                            style="border:none; display:block;" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade" allowfullscreen>
+                        <iframe id="map-preview-iframe" src="" width="100%" height="170"
+                            style="border:none; display:block; background:#1a1a1a;" loading="lazy"
+                            referrerpolicy="no-referrer" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
