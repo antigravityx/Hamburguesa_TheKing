@@ -96,6 +96,9 @@
             </div>
             <!-- Dropdown del menú -->
             <div class="app-menu-dropdown glassmorphism" id="app-menu-dropdown">
+                <div class="app-menu-item" id="menu-auth-btn" style="border-left: 3px solid var(--accent-color); font-weight: 700; color: #fff;">
+                    <i class="ri-user-star-fill" style="color: var(--accent-color);"></i> <span id="menu-auth-label">👑 Mi Cuenta / Registrarme</span>
+                </div>
                 <div class="app-menu-item" id="menu-gps-btn">
                     <i class="ri-map-pin-user-fill"></i> Activar y Sincronizar GPS
                 </div>
@@ -125,10 +128,10 @@
             <h1 class="brand-title">THE KING <span class="accent">BURGER</span></h1>
             <p class="brand-subtitle">El Sabor de la Corona</p>
         </div>
-        <div class="header-actions" style="display: flex; gap: 15px; align-items: center;">
-            <div class="user-profile" id="user-profile-btn" style="cursor: pointer; display: flex; align-items: center; gap: 5px; color: #fff;">
-                <i class="ri-google-fill" style="font-size: 1.5rem; color: var(--accent-color);"></i>
-                <span id="user-name-display" style="font-size: 0.9rem; display: none;" class="desktop-only">Entrar</span>
+        <div class="header-actions" style="display: flex; gap: 10px; align-items: center;">
+            <div class="user-profile" id="user-profile-btn" style="cursor: pointer; display: flex; align-items: center; gap: 6px; color: #fff; background: rgba(255, 183, 3, 0.12); border: 1px solid rgba(255, 183, 3, 0.35); padding: 5px 11px; border-radius: 20px; transition: all 0.2s;" title="Mi Cuenta / Registrarme">
+                <i class="ri-user-star-fill" style="font-size: 1.15rem; color: var(--accent-color);"></i>
+                <span id="user-name-display" style="font-size: 0.8rem; font-weight: 700; color: #fff;">Mi Cuenta</span>
             </div>
             <div class="cart-icon" id="cart-toggle">
                 <i class="ri-shopping-cart-2-fill"></i>
@@ -828,6 +831,85 @@
         }
     })();
     </script>
+
+    <!-- ===== MODAL REGISTRO / MI CUENTA HÍBRIDO REY/REINA ===== -->
+    <div id="king-auth-modal" style="display:none; position:fixed; inset:0; z-index:10000; align-items:center; justify-content:center; padding:1rem;">
+        <div class="delivery-radar-overlay" id="close-auth-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.78); backdrop-filter:blur(6px);"></div>
+        <div class="glassmorphism" style="position:relative; z-index:10001; max-width:440px; width:100%; padding:1.5rem; border-radius:18px; border:1px solid rgba(255,183,3,0.35); background:#0c101d; box-shadow:0 15px 50px rgba(0,0,0,0.85); animation:fadeIn 0.25s ease-out;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.6rem;">👑</span>
+                    <div>
+                        <h3 style="font-size:1.15rem; font-weight:800; color:#fff; margin:0;">Club The King Burger</h3>
+                        <p style="font-size:0.75rem; color:var(--accent-color); margin:0;">Acumulá Coronas y participá en sorteos</p>
+                    </div>
+                </div>
+                <button type="button" id="close-auth-modal-btn" style="background:transparent; border:none; color:#888; font-size:1.5rem; cursor:pointer; line-height:1;">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <!-- Aviso especial si está dentro de Instagram WebView -->
+            <div id="instagram-webview-notice" style="display:none; background:rgba(255,0,234,0.1); border:1px solid #ff00ea; border-radius:10px; padding:0.6rem 0.8rem; margin-bottom:1rem; font-size:0.75rem; color:#fbcfe8; line-height:1.4;">
+                <i class="ri-instagram-fill" style="color:#ff00ea;"></i> <strong>Estás navegando desde Instagram:</strong><br>
+                Usá el <em>Registro Rápido con WhatsApp</em> para evitar el bloqueo de Google en Instagram.
+            </div>
+
+            <!-- SELECTOR DE MÉTODO -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:1.2rem; background:rgba(255,255,255,0.04); padding:4px; border-radius:10px;">
+                <button type="button" id="tab-auth-whatsapp" style="padding:0.55rem; font-size:0.78rem; font-weight:700; border:none; border-radius:8px; cursor:pointer; background:var(--accent-color); color:#000;">
+                    📱 WhatsApp Rápido
+                </button>
+                <button type="button" id="tab-auth-google" style="padding:0.55rem; font-size:0.78rem; font-weight:700; border:1px solid var(--glass-border); border-radius:8px; cursor:pointer; background:transparent; color:#fff;">
+                    ⚡ Con Google
+                </button>
+            </div>
+
+            <!-- VISTA 1: REGISTRO CON WHATSAPP (UNIVERSAL) -->
+            <div id="auth-view-whatsapp">
+                <form id="form-quick-register" style="display:flex; flex-direction:column; gap:0.8rem;">
+                    <div>
+                        <label style="font-size:0.75rem; color:#bbb; display:block; margin-bottom:4px;">Tu Nombre y Apellido:</label>
+                        <input type="text" id="quick-auth-name" placeholder="Ej: Ricardo Céspedez" required minlength="2" maxlength="60"
+                            style="width:100%; padding:0.75rem; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.4); color:#fff; font-family:inherit; font-size:0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.75rem; color:#bbb; display:block; margin-bottom:4px;">Tu WhatsApp (para Coronas y Pedidos):</label>
+                        <input type="tel" id="quick-auth-phone" placeholder="Ej: 3794123456" required minlength="8" maxlength="20"
+                            style="width:100%; padding:0.75rem; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.4); color:#fff; font-family:inherit; font-size:0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.75rem; color:#bbb; display:block; margin-bottom:4px;">Barrio / Dirección habitual (opcional):</label>
+                        <input type="text" id="quick-auth-address" placeholder="Ej: Molina Punta o Av. Costanera 1200"
+                            style="width:100%; padding:0.75rem; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.4); color:#fff; font-family:inherit; font-size:0.9rem;">
+                    </div>
+
+                    <button type="submit" id="btn-submit-quick-auth"
+                        style="width:100%; margin-top:0.4rem; padding:0.85rem; font-weight:800; font-size:0.95rem; background:linear-gradient(135deg, #ffb703, #fb8500); color:#000; border:none; border-radius:10px; cursor:pointer; box-shadow:0 4px 15px rgba(251,133,0,0.4); display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <span>👑 Activar Mi Cuenta (+10 Coronas)</span>
+                    </button>
+                </form>
+                <p style="font-size:0.7rem; color:#888; text-align:center; margin-top:0.8rem; margin-bottom:0;">
+                    🔒 Registro 100% libre. Sin contraseñas complicadas.
+                </p>
+            </div>
+
+            <!-- VISTA 2: GOOGLE SIGN-IN -->
+            <div id="auth-view-google" style="display:none; text-align:center; padding:0.5rem 0;">
+                <p style="font-size:0.82rem; color:#ccc; line-height:1.5; margin-bottom:1.2rem;">
+                    Conectá tu cuenta de Google en 1 segundo para sincronizar tu foto de perfil, acumular Coronas y comentar en el muro de la comunidad.
+                </p>
+                <button type="button" id="btn-google-login-action"
+                    style="width:100%; padding:0.85rem; border-radius:10px; border:1px solid rgba(255,255,255,0.2); background:#fff; color:#1f2937; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 15px rgba(0,0,0,0.3);">
+                    <i class="ri-google-fill" style="color:#ea4335; font-size:1.3rem;"></i>
+                    <span>Continuar con Google</span>
+                </button>
+                <div id="google-auth-status" style="font-size:0.75rem; color:#ffb703; margin-top:0.8rem; display:none;"></div>
+            </div>
+
+        </div>
+    </div>
 
     <!-- ===== MODAL RADAR DE DELIVERY ===== -->
     <div id="delivery-radar-modal" class="delivery-radar-modal" role="dialog" aria-modal="true"

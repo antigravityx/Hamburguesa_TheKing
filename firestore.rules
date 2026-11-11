@@ -1,20 +1,148 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Menú: lectura pública, escritura solo desde el admin (no requiere auth Firebase)
+    function staffPath(uid) {
+      return /databases/$(database)/documents/adminUsers/$(uid);
+    }
+
+    function isActiveStaff() {
+      return request.auth != null
+        && exists(staffPath(request.auth.uid))
+        && get(staffPath(request.auth.uid)).data.active == true
+        && get(staffPath(request.auth.uid)).data.role in ['owner', 'secretary'];
+    }
+
+    function validContact(data) {
+      return data.keys().hasOnly(['nombre', 'telefono', 'fecha'])
+        && data.keys().hasAll(['nombre', 'telefono', 'fecha'])
+        && data.nombre is string
+        && data.nombre.size() >= 2
+        && data.nombre.size() <= 80
+        && data.telefono is string
+        && data.telefono.size() >= 8
+        && data.telefono.size() <= 24
+        && data.fecha is timestamp;
+    }
+
+    function validPublicWinner(winner) {
+      return winner == null
+        || (winner is map
+          && winner.keys().hasOnly(['nombre'])
+          && winner.keys().hasAll(['nombre'])
+          && winner.nombre is string
+          && winner.nombre.size() >= 2
+          && winner.nombre.size() <= 80);
+    }
+
+    function validSorteoConfig(data) {
+      return data.keys().hasOnly(['active', 'premio', 'ganador'])
+        && data.keys().hasAll(['active', 'premio'])
+        && data.active is bool
+        && data.premio is string
+        && data.premio.size() <= 160
+        && (!('ganador' in data) || validPublicWinner(data.ganador));
+    }
+
+    function validPublicCounter(data) {
+      return data.keys().hasOnly(['total', 'lastParticipantId', 'updatedAt'])
+        && data.keys().hasAll(['total', 'lastParticipantId', 'updatedAt'])
+        && data.total is int
+        && data.total >= 0
+        && data.lastParticipantId is string
+        && data.updatedAt is timestamp;
+    }
+
+    function hasNewContact(participantId) {
+      let contactPath = /databases/$(database)/documents/sorteo_contactos/$(participantId);
+      return existsAfter(contactPath)
+        && !exists(contactPath)
+        && validContact(getAfter(contactPath).data);
+    }
+
+    function hasCounterForContact(participantId) {
+      let counterPath = /databases/$(database)/documents/sorteo_publico/estado;
+      return existsAfter(counterPath)
+        && validPublicCounter(getAfter(counterPath).data)
+        && getAfter(counterPath).data.lastParticipantId == participantId;
+    }
+
+    match /adminUsers/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
     match /menu/{document=**} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isActiveStaff();
     }
-    // Configuración (banners, sorteo): lectura y escritura pública
+
     match /config/{document=**} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isActiveStaff()
+        && (document != 'sorteo' || validSorteoConfig(request.resource.data));
     }
-    // Participantes del sorteo: lectura y escritura pública
-    match /sorteo_participantes/{document=**} {
+
+    match /sorteo_participantes/{participantId} {
+      allow read, write: if isActiveStaff();
+    }
+
+    match /sorteo_contactos/{participantId} {
+      allow read, update, delete: if isActiveStaff();
+      allow create: if isActiveStaff()
+        || (validContact(request.resource.data) && hasCounterForContact(participantId));
+    }
+
+    match /sorteo_publico/{documentId} {
+      allow read: if isActiveStaff() || documentId == 'estado';
+      allow create: if documentId == 'estado'
+        && validPublicCounter(request.resource.data)
+        && (isActiveStaff()
+          || (request.resource.data.total == 1
+            && hasNewContact(request.resource.data.lastParticipantId)));
+      allow update: if documentId == 'estado'
+        && validPublicCounter(request.resource.data)
+        && (isActiveStaff()
+          || (request.resource.data.total == resource.data.total + 1
+            && hasNewContact(request.resource.data.lastParticipantId)));
+      allow delete: if isActiveStaff();
+    }
+
+    match /stats_orders/{dateId} {
+      allow read: if isActiveStaff();
+      allow write: if false;
+    }
+
+    match /stats_ratings/{ratingId} {
+      allow read: if isActiveStaff();
+      allow write: if false;
+    }
+
+    match /admin_fcm_tokens/{tokenId} {
+      allow read, write: if isActiveStaff();
+    }
+
+    // Perfiles de clientes y coronas
+    match /users/{userId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Semilla social y comunidad
+    match /semillas/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /social_posts/{postId} {
+      allow read: if true;
+      allow create, update: if request.auth != null;
+      allow delete: if isActiveStaff();
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if request.auth != null;
+        allow delete: if isActiveStaff();
+      }
     }
   }
 }

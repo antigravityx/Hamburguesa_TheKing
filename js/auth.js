@@ -1,88 +1,415 @@
 /**
- * 👑 THE KING BURGER - AUTENTICACIÓN v3
- * Firebase Auth (Google Sign-In) — Con diagnóstico de errores
+ * 👑 THE KING BURGER - SISTEMA DE AUTENTICACIÓN HÍBRIDO REY/REINA v4
+ * Trinidad R1CH0N · VERIX · ARKH
+ * 
+ * Permite registro universal:
+ * 1. WhatsApp Rápido (100% compatible con WebViews de Instagram, Facebook y celulares)
+ * 2. Google Sign-In (con detección de WebView y fallback a redirect)
+ * Sincronización automática con Carrito/Checkout y Firestore users/{uid}.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     const userProfileBtn = document.getElementById('user-profile-btn');
+    const menuAuthBtn = document.getElementById('menu-auth-btn');
+    const menuAuthLabel = document.getElementById('menu-auth-label');
+    
+    // Elementos del Modal
+    const authModal = document.getElementById('king-auth-modal');
+    const closeAuthModalBtn = document.getElementById('close-auth-modal-btn');
+    const closeAuthOverlay = document.getElementById('close-auth-overlay');
+    const tabWhatsapp = document.getElementById('tab-auth-whatsapp');
+    const tabGoogle = document.getElementById('tab-auth-google');
+    const viewWhatsapp = document.getElementById('auth-view-whatsapp');
+    const viewGoogle = document.getElementById('auth-view-google');
+    const formQuickRegister = document.getElementById('form-quick-register');
+    const btnGoogleLoginAction = document.getElementById('btn-google-login-action');
+    const googleAuthStatus = document.getElementById('google-auth-status');
+    const instagramNotice = document.getElementById('instagram-webview-notice');
 
-    // Verificar que Firebase Auth esté cargado
-    if (typeof firebase === 'undefined' || !firebase.auth) {
-        console.warn('[Auth] Firebase Auth SDK no cargado');
-        return;
+    // Detección de WebView de Instagram / Facebook
+    const isSocialWebView = /Instagram|FBAN|FBAV|TikTok/i.test(navigator.userAgent);
+    if (isSocialWebView && instagramNotice) {
+        instagramNotice.style.display = 'block';
     }
 
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    // === 1. Capturar resultado del redirect (si vuelve de Google) ===
-    firebase.auth().getRedirectResult().then((result) => {
-        if (result.user) {
-            console.log('[Auth] ✅ Login exitoso:', result.user.displayName);
+    // === GESTIÓN DE SESIÓN LOCAL Y ESTADO ===
+    function getClientSession() {
+        try {
+            const raw = localStorage.getItem('king_client_session');
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
         }
-    }).catch((error) => {
-        console.error('[Auth] Error en redirect:', error.code, error.message);
-        // No mostramos alert aquí — solo log
-    });
+    }
 
-    // === 2. Escuchar estado de autenticación ===
-    firebase.auth().onAuthStateChanged((user) => {
-        if (!userProfileBtn) return;
+    function setClientSession(data) {
+        try {
+            localStorage.setItem('king_client_session', JSON.stringify(data));
+        } catch (e) {
+            console.warn('[Auth] No se pudo guardar sesión local:', e);
+        }
+    }
+
+    function clearClientSession() {
+        try {
+            localStorage.removeItem('king_client_session');
+        } catch (e) {}
+    }
+
+    // Obtener usuario unificado (Firebase o Local WhatsApp)
+    function getCurrentKingUser() {
+        if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+            const fbUser = firebase.auth().currentUser;
+            const local = getClientSession() || {};
+            return {
+                uid: fbUser.uid,
+                name: fbUser.displayName || local.name || 'Rey/Reina',
+                email: fbUser.email || '',
+                phone: local.phone || '',
+                address: local.address || '',
+                photo: fbUser.photoURL || '',
+                coronas: local.coronas || 10,
+                isFirebase: true
+            };
+        }
+        const local = getClientSession();
+        if (local && local.name) {
+            return {
+                uid: local.uid || 'local_' + Date.now(),
+                name: local.name,
+                email: '',
+                phone: local.phone || '',
+                address: local.address || '',
+                photo: '',
+                coronas: local.coronas || 10,
+                isFirebase: false
+            };
+        }
+        return null;
+    }
+
+    // Actualizar campos de checkout automáticamente
+    function syncCheckoutFields(user) {
+        if (!user) return;
+        const nameInput = document.getElementById('customer-name');
+        const addressInput = document.getElementById('customer-address');
+        if (nameInput && !nameInput.value && user.name) {
+            nameInput.value = user.name;
+        }
+        if (addressInput && !addressInput.value && user.address) {
+            addressInput.value = user.address;
+        }
+    }
+
+    // Actualizar visualización del botón de perfil y menú
+    function updateAuthUI() {
+        const user = getCurrentKingUser();
 
         if (user) {
-            console.log('[Auth] ✅ Usuario:', user.displayName);
-            userProfileBtn.innerHTML = `
-                <img src="${user.photoURL || ''}" alt="${user.displayName || ''}" 
-                     style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--accent-color);"
-                     onerror="this.style.display='none'">
-                <span style="font-size: 0.85rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.displayName ? user.displayName.split(' ')[0] : 'Usuario'}</span>
-            `;
-
-            // Guardar perfil en Firestore
-            try {
-                firebase.firestore().collection('users').doc(user.uid).set({
-                    uid: user.uid,
-                    name: user.displayName || 'Sin nombre',
-                    email: user.email || '',
-                    photo: user.photoURL || '',
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-            } catch (e) {
-                console.warn('[Auth] Error guardando perfil:', e);
+            const firstName = user.name ? user.name.split(' ')[0] : 'Rey/Reina';
+            
+            if (userProfileBtn) {
+                if (user.photo) {
+                    userProfileBtn.innerHTML = `
+                        <img src="${user.photo}" alt="${user.name}" 
+                             style="width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--accent-color);"
+                             onerror="this.style.display='none'">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: #fff; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">👑 ${firstName}</span>
+                    `;
+                } else {
+                    userProfileBtn.innerHTML = `
+                        <span style="font-size: 1.1rem; line-height: 1;">👑</span>
+                        <span style="font-size: 0.8rem; font-weight: 700; color: #fff; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${firstName}</span>
+                    `;
+                }
+                userProfileBtn.title = `${user.name} (${user.coronas || 10} Coronas)`;
             }
 
+            if (menuAuthLabel) {
+                menuAuthLabel.textContent = `👑 Mi Cuenta (${firstName} · ${user.coronas || 10} 👑)`;
+            }
+
+            syncCheckoutFields(user);
         } else {
-            userProfileBtn.innerHTML = `
-                <i class="ri-google-fill" style="font-size: 1.5rem; color: var(--accent-color);"></i>
-                <span style="font-size: 0.85rem;">Entrar</span>
-            `;
+            if (userProfileBtn) {
+                userProfileBtn.innerHTML = `
+                    <i class="ri-user-star-fill" style="font-size: 1.15rem; color: var(--accent-color);"></i>
+                    <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">Mi Cuenta</span>
+                `;
+                userProfileBtn.title = "Mi Cuenta / Registrarme";
+            }
+
+            if (menuAuthLabel) {
+                menuAuthLabel.textContent = "👑 Mi Cuenta / Registrarme";
+            }
+        }
+    }
+
+    // === CONTROL DEL MODAL DE AUTENTICACIÓN ===
+    function openAuthModal(defaultTab = 'whatsapp') {
+        if (!authModal) return;
+        switchTab(defaultTab);
+        authModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Pre-llenar datos si ya existían
+        const existing = getClientSession();
+        if (existing) {
+            const nameInput = document.getElementById('quick-auth-name');
+            const phoneInput = document.getElementById('quick-auth-phone');
+            const addressInput = document.getElementById('quick-auth-address');
+            if (nameInput && existing.name) nameInput.value = existing.name;
+            if (phoneInput && existing.phone) phoneInput.value = existing.phone;
+            if (addressInput && existing.address) addressInput.value = existing.address;
+        }
+    }
+
+    function closeAuthModal() {
+        if (!authModal) return;
+        authModal.style.display = 'none';
+        document.body.style.overflow = '';
+        if (googleAuthStatus) googleAuthStatus.style.display = 'none';
+    }
+
+    function switchTab(tab) {
+        if (tab === 'whatsapp') {
+            if (tabWhatsapp) {
+                tabWhatsapp.style.background = 'var(--accent-color)';
+                tabWhatsapp.style.color = '#000';
+            }
+            if (tabGoogle) {
+                tabGoogle.style.background = 'transparent';
+                tabGoogle.style.color = '#fff';
+            }
+            if (viewWhatsapp) viewWhatsapp.style.display = 'block';
+            if (viewGoogle) viewGoogle.style.display = 'none';
+        } else {
+            if (tabGoogle) {
+                tabGoogle.style.background = 'var(--accent-color)';
+                tabGoogle.style.color = '#000';
+            }
+            if (tabWhatsapp) {
+                tabWhatsapp.style.background = 'transparent';
+                tabWhatsapp.style.color = '#fff';
+            }
+            if (viewGoogle) viewGoogle.style.display = 'block';
+            if (viewWhatsapp) viewWhatsapp.style.display = 'none';
+        }
+    }
+
+    if (tabWhatsapp) tabWhatsapp.addEventListener('click', () => switchTab('whatsapp'));
+    if (tabGoogle) tabGoogle.addEventListener('click', () => switchTab('google'));
+
+    if (closeAuthModalBtn) closeAuthModalBtn.addEventListener('click', closeAuthModal);
+    if (closeAuthOverlay) closeAuthOverlay.addEventListener('click', closeAuthModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && authModal && authModal.style.display === 'flex') {
+            closeAuthModal();
         }
     });
 
-    // === 3. Click en botón de perfil ===
-    if (userProfileBtn) {
-        userProfileBtn.addEventListener('click', () => {
-            const currentUser = firebase.auth().currentUser;
+    // Clicks en Botones de Perfil / Menú
+    function handleProfileClick() {
+        const user = getCurrentKingUser();
+        if (user) {
+            showUserMenu(user);
+        } else {
+            openAuthModal(isSocialWebView ? 'whatsapp' : 'whatsapp');
+        }
+    }
 
-            if (currentUser) {
-                showUserMenu(currentUser);
+    if (userProfileBtn) {
+        userProfileBtn.addEventListener('click', handleProfileClick);
+    }
+
+    if (menuAuthBtn) {
+        menuAuthBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dropdown = document.getElementById('app-menu-dropdown');
+            if (dropdown) dropdown.classList.remove('active');
+            handleProfileClick();
+        });
+    }
+
+    // === REGISTRO RÁPIDO CON WHATSAPP ===
+    if (formQuickRegister) {
+        formQuickRegister.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('quick-auth-name')?.value.trim();
+            const phone = document.getElementById('quick-auth-phone')?.value.trim();
+            const address = document.getElementById('quick-auth-address')?.value.trim() || '';
+
+            if (!name || !phone) {
+                alert('Por favor completá tu nombre y número de WhatsApp.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('btn-submit-quick-auth');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>⏳ Guardando cuenta...</span>';
+            }
+
+            const cleanPhone = phone.replace(/\D/g, '');
+            const uid = 'wa_' + (cleanPhone || Date.now());
+            const sessionData = {
+                uid: uid,
+                name: name,
+                phone: phone,
+                address: address,
+                coronas: 10,
+                authMethod: 'whatsapp',
+                registeredAt: new Date().toISOString()
+            };
+
+            setClientSession(sessionData);
+
+            // Intentar sincronizar con Firebase Anonymous si está disponible
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                try {
+                    if (!firebase.auth().currentUser) {
+                        await firebase.auth().signInAnonymously().catch(() => {});
+                    }
+                    if (firebase.auth().currentUser) {
+                        await firebase.auth().currentUser.updateProfile({ displayName: name }).catch(() => {});
+                    }
+                } catch (authErr) {
+                    console.log('[Auth] Anónimo opcional:', authErr);
+                }
+            }
+
+            // Sincronizar en Firestore si está disponible
+            if (typeof firebase !== 'undefined' && firebase.firestore) {
+                try {
+                    const docId = (firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser.uid : uid;
+                    await firebase.firestore().collection('users').doc(docId).set({
+                        uid: docId,
+                        name: name,
+                        phone: phone,
+                        address: address,
+                        coronas: 10,
+                        authMethod: 'whatsapp',
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                    console.log('[Auth] ✅ Perfil sincronizado en Firestore:', docId);
+                } catch (fsErr) {
+                    console.warn('[Auth] Firestore no disponible temporalmente:', fsErr);
+                }
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>👑 Activar Mi Cuenta (+10 Coronas)</span>';
+            }
+
+            closeAuthModal();
+            updateAuthUI();
+
+            // Notificación amigable
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+                background: linear-gradient(135deg, #ffb703, #fb8500); color: #000;
+                padding: 12px 22px; border-radius: 25px; font-weight: 800; font-size: 0.9rem;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.6); z-index: 10005; text-align: center;
+                animation: fadeIn 0.3s ease-out;
+            `;
+            toast.innerHTML = `👑 ¡Bienvenido/a, ${name.split(' ')[0]}! Cuenta activada con 10 Coronas.`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        });
+    }
+
+    // === GOOGLE SIGN-IN ===
+    let provider = null;
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        try {
+            provider = new firebase.auth.GoogleAuthProvider();
+        } catch (e) {}
+
+        // Capturar redirect
+        firebase.auth().getRedirectResult().then((result) => {
+            if (result && result.user) {
+                console.log('[Auth] ✅ Login redirect exitoso:', result.user.displayName);
+                handleGoogleUserSuccess(result.user);
+            }
+        }).catch((error) => {
+            console.error('[Auth] Error en redirect:', error);
+        });
+
+        // Escuchar cambios de estado
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.log('[Auth] ✅ Sesión Firebase activa:', user.displayName);
+                handleGoogleUserSuccess(user);
             } else {
-                // Intentar login — primero popup, fallback a redirect
-                loginWithGoogle();
+                updateAuthUI();
             }
         });
     }
 
-    // === Login inteligente: intenta popup primero, si falla usa redirect ===
+    async function handleGoogleUserSuccess(user) {
+        if (!user) return;
+        const local = getClientSession() || {};
+        const merged = {
+            ...local,
+            uid: user.uid,
+            name: user.displayName || local.name || 'Cliente Rey',
+            email: user.email || '',
+            photo: user.photoURL || '',
+            coronas: (local.coronas || 10),
+            authMethod: 'google'
+        };
+        setClientSession(merged);
+
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+            try {
+                await firebase.firestore().collection('users').doc(user.uid).set({
+                    uid: user.uid,
+                    name: merged.name,
+                    email: merged.email,
+                    photo: merged.photo,
+                    coronas: merged.coronas,
+                    authMethod: 'google',
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            } catch (fsErr) {
+                console.warn('[Auth] Error guardando perfil en Firestore:', fsErr);
+            }
+        }
+
+        closeAuthModal();
+        updateAuthUI();
+    }
+
     function loginWithGoogle() {
-        // Intentar con popup primero (más rápido)
+        if (!provider || typeof firebase === 'undefined' || !firebase.auth) {
+            alert('Firebase Auth no está inicializado.');
+            return;
+        }
+
+        if (googleAuthStatus) {
+            googleAuthStatus.style.display = 'block';
+            googleAuthStatus.textContent = '⏳ Conectando con Google...';
+        }
+
+        // Si es WebView de Instagram o similar, avisar primero
+        if (isSocialWebView) {
+            alert('⚠️ Estás navegando dentro de Instagram o Facebook.\nGoogle suele bloquear el inicio de sesión aquí.\n\nTe sugerimos usar el "Registro Rápido con WhatsApp" en la otra pestaña.');
+        }
+
         firebase.auth().signInWithPopup(provider).then((result) => {
-            if (result.user) {
-                console.log('[Auth] ✅ Popup login OK:', result.user.displayName);
+            if (result && result.user) {
+                handleGoogleUserSuccess(result.user);
             }
         }).catch((error) => {
-            console.warn('[Auth] Popup falló:', error.code);
+            console.warn('[Auth] Popup falló:', error.code, error.message);
 
-            // Errores que indican que el popup fue bloqueado → usar redirect
+            if (googleAuthStatus) {
+                googleAuthStatus.style.display = 'none';
+            }
+
             if (error.code === 'auth/popup-blocked' || 
                 error.code === 'auth/popup-closed-by-user' ||
                 error.code === 'auth/cancelled-popup-request') {
@@ -91,23 +418,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Error de configuración → mostrar mensaje claro al usuario
             if (error.code === 'auth/operation-not-allowed') {
-                alert('⚠️ El inicio de sesión con Google aún no está activado.\n\nEl administrador debe habilitarlo desde Firebase Console:\n→ Authentication → Sign-in method → Google → Habilitar');
+                alert('⚠️ El inicio de sesión con Google aún no está habilitado en Firebase Console.\nPodés registrarte al instante con tu WhatsApp en la pestaña anterior.');
+                switchTab('whatsapp');
                 return;
             }
 
             if (error.code === 'auth/unauthorized-domain') {
-                alert('⚠️ Este dominio no está autorizado en Firebase.\n\nEl administrador debe agregar "theking.sbs" en:\n→ Firebase Console → Authentication → Settings → Authorized domains');
+                alert('⚠️ Dominio theking.sbs pendiente de autorizar en Firebase Console.\nPodés registrarte al instante con tu WhatsApp en la pestaña anterior.');
+                switchTab('whatsapp');
                 return;
             }
 
-            // Otro error → mostrar código para diagnóstico
-            alert(`⚠️ Error de autenticación:\n${error.code}\n${error.message}\n\nContactá al administrador.`);
+            alert(`⚠️ No se pudo completar el login con Google (${error.code}). Te recomendamos usar el Registro con WhatsApp.`);
+            switchTab('whatsapp');
         });
     }
 
-    // === Mini-menú de usuario logueado ===
+    if (btnGoogleLoginAction) {
+        btnGoogleLoginAction.addEventListener('click', loginWithGoogle);
+    }
+
+    // === MENÚ DE USUARIO AUTENTICADO ===
     function showUserMenu(user) {
         const existing = document.getElementById('king-user-menu');
         if (existing) { existing.remove(); return; }
@@ -115,52 +447,69 @@ document.addEventListener('DOMContentLoaded', () => {
         const menu = document.createElement('div');
         menu.id = 'king-user-menu';
         menu.style.cssText = `
-            position: fixed; top: 60px; right: 15px; z-index: 9999;
-            background: rgba(20, 22, 35, 0.97); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 183, 3, 0.3); border-radius: 16px;
-            padding: 1.2rem; min-width: 240px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            position: fixed; top: 60px; right: 15px; z-index: 10000;
+            background: rgba(20, 22, 35, 0.98); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 183, 3, 0.35); border-radius: 16px;
+            padding: 1.2rem; min-width: 250px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.75);
             animation: fadeInMenu 0.2s ease-out;
         `;
 
         menu.innerHTML = `
             <style>
                 @keyframes fadeInMenu { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-                .king-menu-item { display: flex; align-items: center; gap: 10px; padding: 0.7rem 0.5rem; border-radius: 10px; cursor: pointer; transition: background 0.2s; color: #fff; font-size: 0.9rem; }
+                .king-menu-item { display: flex; align-items: center; gap: 10px; padding: 0.7rem 0.5rem; border-radius: 10px; cursor: pointer; transition: background 0.2s; color: #fff; font-size: 0.88rem; }
                 .king-menu-item:hover { background: rgba(255,255,255,0.08); }
             </style>
             <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 0.5rem;">
-                <img src="${user.photoURL || ''}" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #FFB703;" onerror="this.style.display='none'">
-                <div>
-                    <div style="font-weight: 700; font-size: 0.95rem;">${user.displayName || 'Usuario'}</div>
-                    <div style="font-size: 0.75rem; color: #888;">${user.email || ''}</div>
+                ${user.photo ? `<img src="${user.photo}" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #FFB703;" onerror="this.style.display='none'">` : `<div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,183,3,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">👑</div>`}
+                <div style="overflow: hidden;">
+                    <div style="font-weight: 800; font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</div>
+                    <div style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700;">🪙 ${user.coronas || 10} Coronas acumuladas</div>
+                    ${user.phone ? `<div style="font-size: 0.72rem; color: #888;">📱 ${user.phone}</div>` : ''}
                 </div>
             </div>
-            <div class="king-menu-item" id="king-menu-arcade">
-                <span>🕹️</span> <span>Zona Arcade</span>
+            <div class="king-menu-item" id="king-menu-edit">
+                <span>✏️</span> <span>Modificar mis datos</span>
             </div>
-            <div class="king-menu-item" id="king-menu-logout" style="color: #ef233c;">
+            <div class="king-menu-item" id="king-menu-arcade">
+                <span>🕹️</span> <span>Zona Arcade Tetrix</span>
+            </div>
+            <div class="king-menu-item" id="king-menu-logout" style="color: #ef233c; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.8rem;">
                 <span>🚪</span> <span>Cerrar Sesión</span>
             </div>
         `;
 
         document.body.appendChild(menu);
 
+        document.getElementById('king-menu-edit').addEventListener('click', () => {
+            menu.remove();
+            openAuthModal('whatsapp');
+        });
+
         document.getElementById('king-menu-arcade').addEventListener('click', () => {
             window.location.href = 'tetrix.html';
         });
 
         document.getElementById('king-menu-logout').addEventListener('click', () => {
-            firebase.auth().signOut().then(() => { menu.remove(); });
+            clearClientSession();
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                firebase.auth().signOut().catch(() => {});
+            }
+            menu.remove();
+            updateAuthUI();
         });
 
         setTimeout(() => {
             document.addEventListener('click', function closeMenu(e) {
-                if (!menu.contains(e.target) && !userProfileBtn.contains(e.target)) {
+                if (!menu.contains(e.target) && (!userProfileBtn || !userProfileBtn.contains(e.target)) && (!menuAuthBtn || !menuAuthBtn.contains(e.target))) {
                     menu.remove();
                     document.removeEventListener('click', closeMenu);
                 }
             });
         }, 100);
     }
+
+    // Inicializar UI al cargar
+    updateAuthUI();
 });
