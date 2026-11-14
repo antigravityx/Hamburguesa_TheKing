@@ -1,4 +1,8 @@
 # Reglas de Redirección Netlify para The King Burger
+/reino       /reino.html       200
+/reino/      /reino.html       200
+/juego       /juego.html       200
+/juego/      /juego.html       200
 /admin       /admin.html       200
 /admin/      /admin.html       200
 /sorteo      /#sorteo-section  200

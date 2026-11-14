@@ -175,24 +175,26 @@
                 const clientCastilloIcon = L.divIcon({
                     className: 'marker-cliente-castillo-container',
                     html: `
-                        <div style="position:relative; width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.9); border:2px solid #38bdf8; border-radius:50%; box-shadow:0 0 10px rgba(56,189,248,0.6); cursor:pointer;">
-                            <span style="font-size:14px;">🏰</span>
-                            <div style="position:absolute; bottom:-14px; left:50%; transform:translateX(-50%); white-space:nowrap; background:rgba(0,0,0,0.85); border:1px solid #38bdf8; color:#38bdf8; font-size:9px; font-weight:bold; padding:0 4px; border-radius:4px; pointer-events:none;">
-                                ${c.barrio}
-                            </div>
+                        <div style="position:relative; width:26px; height:26px; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.85); border:2px solid #38bdf8; border-radius:50%; box-shadow:0 0 8px rgba(56,189,248,0.5); cursor:pointer;">
+                            <span style="font-size:13px;">🏰</span>
                         </div>
                     `,
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15],
-                    popupAnchor: [0, -16]
+                    iconSize: [26, 26],
+                    iconAnchor: [13, 13],
+                    popupAnchor: [0, -14]
                 });
 
                 L.marker([c.lat, c.lon], { icon: clientCastilloIcon })
                     .addTo(map)
+                    .bindTooltip(`🏰 <strong>${c.nombre}</strong><br><span style="color:#ffd700;">${c.soberano}</span>`, {
+                        direction: 'top',
+                        offset: [0, -12]
+                    })
                     .bindPopup(`
                         <div style="text-align:center; padding: 6px; font-family:'Segoe UI',sans-serif; min-width:180px; color:#fff;">
                             <strong style="color:#38bdf8; font-size:0.95rem;">🏰 ${c.nombre}</strong><br>
                             <span style="font-size:0.8rem; color:#fff;">📍 ${c.direccion}</span><br>
+                            <span style="font-size:0.75rem; color:#ffd700;">👑 Soberano: ${c.soberano}</span><br>
                             <span style="font-size:0.75rem; color:#aaa;">Barrio ${c.barrio}</span><br>
                             <div style="margin-top:6px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); border-radius:6px; padding:4px; font-size:0.75rem; color:#ffd700;">
                                 👑 <strong>${c.coronas}</strong> Coronas • ⭐ Nivel ${c.nivel}

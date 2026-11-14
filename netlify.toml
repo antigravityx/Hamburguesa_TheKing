@@ -1,4 +1,24 @@
 [[redirects]]
+  from = "/reino"
+  to = "/reino.html"
+  status = 200
+
+[[redirects]]
+  from = "/reino/"
+  to = "/reino.html"
+  status = 200
+
+[[redirects]]
+  from = "/juego"
+  to = "/juego.html"
+  status = 200
+
+[[redirects]]
+  from = "/juego/"
+  to = "/juego.html"
+  status = 200
+
+[[redirects]]
   from = "/admin"
   to = "/admin.html"
   status = 200

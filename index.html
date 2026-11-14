@@ -103,9 +103,9 @@
                 <div class="app-menu-item" id="menu-auth-btn" style="border-left: 3px solid var(--accent-color); font-weight: 700; color: #fff;">
                     <i class="ri-user-star-fill" style="color: var(--accent-color);"></i> <span id="menu-auth-label">👑 Mi Cuenta / Registrarme</span>
                 </div>
-                <div class="app-menu-item" id="menu-reino-mapa-btn" style="border-left: 3px solid #ffd700; color: #ffd700; font-weight: 700; cursor: pointer;">
+                <a href="reino.html" class="app-menu-item" id="menu-reino-mapa-btn" style="border-left: 3px solid #ffd700; color: #ffd700; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px;">
                     <i class="ri-shield-flash-fill" style="color: #ffd700;"></i> 🏰 Mapa del Reino & Castillos
-                </div>
+                </a>
                 <div class="app-menu-item" id="menu-gps-btn">
                     <i class="ri-map-pin-user-fill"></i> Activar y Sincronizar GPS
                 </div>
@@ -136,10 +136,10 @@
             <p class="brand-subtitle">El Sabor de la Corona</p>
         </div>
         <div class="header-actions" style="display: flex; gap: 8px; align-items: center;">
-            <button type="button" class="header-reino-btn" id="header-reino-btn" title="🏰 Mapa del Reino & Castillos de Corrientes">
+            <a href="reino.html" class="header-reino-btn" id="header-reino-btn" title="🏰 Mapa del Reino & Castillos de Corrientes" style="text-decoration: none;">
                 <span style="font-size: 1.05rem; filter: drop-shadow(0 0 5px #ffd700); line-height: 1;">🏰</span>
                 <span class="header-reino-text">Reino</span>
-            </button>
+            </a>
             <div class="user-profile" id="user-profile-btn" style="cursor: pointer; display: flex; align-items: center; gap: 6px; color: #fff; background: rgba(255, 183, 3, 0.12); border: 1px solid rgba(255, 183, 3, 0.35); padding: 5px 11px; border-radius: 20px; transition: all 0.2s;" title="Mi Cuenta / Registrarme">
                 <i class="ri-user-star-fill" style="font-size: 1.15rem; color: var(--accent-color);"></i>
                 <span id="user-name-display" style="font-size: 0.8rem; font-weight: 700; color: #fff;">Mi Cuenta</span>
@@ -179,8 +179,8 @@
             </div>
 
             <!-- BOTÓN DESTACADO: MAPA DEL REINO & CASTILLOS -->
-            <button type="button" class="hero-rpg-btn" id="hero-btn-mapa-reino" onclick="if(window.ReinoCastillos) window.ReinoCastillos.openReinoModal('mapa')" style="background: linear-gradient(135deg, rgba(255,183,3,0.22), rgba(20,22,35,0.95)); border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.35); margin-bottom: 0.75rem; cursor: pointer; width: 100%; text-align: left;">
-                <span class="rpg-btn-badge" style="background: #ffd700; color: #000; font-weight: 900;">👑 270 CASTILLOS ACTIVOS</span>
+            <a href="reino.html" class="hero-rpg-btn" id="hero-btn-mapa-reino" style="background: linear-gradient(135deg, rgba(255,183,3,0.22), rgba(20,22,35,0.95)); border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.35); margin-bottom: 0.75rem; cursor: pointer; width: 100%; text-align: left; text-decoration: none; display: block;">
+                <span class="rpg-btn-badge" style="background: #ffd700; color: #000; font-weight: 900;">👑 283 CASTILLOS ACTIVOS</span>
                 <span style="display:flex; align-items:center; gap:0.6rem;">
                     <span class="rpg-btn-icon" style="font-size:1.6rem; filter: drop-shadow(0 0 8px #ffd700);">🏰</span>
                     <span>
@@ -188,7 +188,7 @@
                         <span class="rpg-btn-sub" style="display:block; color:#e2e8f0;">Castillos soberanos, rankings y tu palacio real</span>
                     </span>
                 </span>
-            </button>
+            </a>
 
             <!-- COMUNIDAD — BOTÓN DESTACADO ANCHO -->
             <a href="comunidad.html" class="hero-rpg-btn hero-community-btn" id="open-comunidad-hub" aria-label="Entrar a la Comunidad TheKing">

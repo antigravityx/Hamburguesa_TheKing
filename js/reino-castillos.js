@@ -891,26 +891,29 @@
             : [];
 
         castillosClientes.forEach((c) => {
-            const svgIconHtml = getCastilloSVG(c.nivel, { size: 28, animated: false });
+            const svgIconHtml = getCastilloSVG(c.nivel, { size: 24, animated: false });
             const customIcon = L.divIcon({
                 className: 'reino-div-icon reino-cliente-icon',
                 html: `
-                    <div class="reino-marker-container">
+                    <div class="reino-marker-container" style="filter: drop-shadow(0 0 6px rgba(56,189,248,0.6));">
                         ${svgIconHtml}
-                        <div class="reino-marker-label" style="border-color:#38bdf8; background:rgba(15,23,42,0.9); font-size:0.62rem; padding:1px 5px; color:#bae6fd;">
-                            🏰 ${c.barrio}
-                        </div>
                     </div>
                 `,
-                iconSize: [44, 44],
-                iconAnchor: [22, 34],
-                popupAnchor: [0, -34]
+                iconSize: [26, 26],
+                iconAnchor: [13, 13],
+                popupAnchor: [0, -14]
             });
 
             const marker = L.marker([c.lat, c.lon], { icon: customIcon });
 
+            marker.bindTooltip(`🏰 <strong>${c.nombre}</strong><br><span style="color:#ffd700;">${c.soberano}</span>`, {
+                direction: 'top',
+                className: 'reino-clean-tooltip',
+                offset: [0, -12]
+            });
+
             const popupContent = `
-                <div style="font-family:'Outfit',sans-serif; color:#fff; min-width:200px; padding:4px;">
+                <div style="font-family:'Outfit',sans-serif; color:#fff; min-width:210px; padding:4px;">
                     <div style="display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:6px; margin-bottom:8px;">
                         ${getCastilloSVG(c.nivel, { size: 30, animated: false })}
                         <div>
@@ -925,9 +928,14 @@
                         <span>👑 <strong>${c.coronas}</strong> Coronas</span>
                         <span>⭐ Nivel <strong>${c.nivel}</strong></span>
                     </div>
-                    <button type="button" onclick="window.ReinoCastillos.pedirDesdeCastillo('${c.barrio}')" style="background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; border:none; border-radius:10px; padding:5px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; width:100%;">
-                        🍔 ¡Pedir en esta Zona!
-                    </button>
+                    <div style="display:flex; gap:6px;">
+                        <button type="button" onclick="window.ColiseoRey ? window.ColiseoRey.abrirColiseo() : alert('Coliseo')" style="flex:1; background:linear-gradient(135deg, #ef233c, #b5179e); color:#fff; border:none; border-radius:8px; padding:6px; font-size:0.72rem; font-weight:800; cursor:pointer;">
+                            ⚔️ Desafiar
+                        </button>
+                        <button type="button" onclick="window.ReinoCastillos.pedirDesdeCastillo('${c.barrio}')" style="flex:1; background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; border:none; border-radius:8px; padding:6px; font-size:0.72rem; font-weight:800; cursor:pointer;">
+                            🍔 Pedir
+                        </button>
+                    </div>
                 </div>
             `;
 
