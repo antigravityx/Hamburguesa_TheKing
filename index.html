@@ -178,6 +178,18 @@
                 </button>
             </div>
 
+            <!-- BOTÓN DESTACADO: MAPA DEL REINO & CASTILLOS -->
+            <button type="button" class="hero-rpg-btn" id="hero-btn-mapa-reino" onclick="if(window.ReinoCastillos) window.ReinoCastillos.openReinoModal('mapa')" style="background: linear-gradient(135deg, rgba(255,183,3,0.22), rgba(20,22,35,0.95)); border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.35); margin-bottom: 0.75rem; cursor: pointer; width: 100%; text-align: left;">
+                <span class="rpg-btn-badge" style="background: #ffd700; color: #000; font-weight: 900;">👑 270 CASTILLOS ACTIVOS</span>
+                <span style="display:flex; align-items:center; gap:0.6rem;">
+                    <span class="rpg-btn-icon" style="font-size:1.6rem; filter: drop-shadow(0 0 8px #ffd700);">🏰</span>
+                    <span>
+                        <span class="rpg-btn-text" style="color: #ffd700; font-size:1rem; font-weight:800; letter-spacing:0.5px;">MAPA DEL REINO DE CORRIENTES</span>
+                        <span class="rpg-btn-sub" style="display:block; color:#e2e8f0;">Castillos soberanos, rankings y tu palacio real</span>
+                    </span>
+                </span>
+            </button>
+
             <!-- COMUNIDAD — BOTÓN DESTACADO ANCHO -->
             <a href="comunidad.html" class="hero-rpg-btn hero-community-btn" id="open-comunidad-hub" aria-label="Entrar a la Comunidad TheKing">
                 <span class="rpg-btn-badge" style="background: linear-gradient(90deg, #ff00ea, #ffb703); color: #000; font-weight: 800;">🎙️ RED SOCIAL</span>
@@ -1099,6 +1111,19 @@
             overlay.addEventListener('click', closeRadar);
             document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRadar(); });
         })();
+
+        // Auto-abrir modal del reino si la URL contiene #reino o ?mapa
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash || '';
+            const query = window.location.search || '';
+            if (hash.includes('reino') || hash.includes('mapa') || query.includes('mapa')) {
+                setTimeout(() => {
+                    if (window.ReinoCastillos && typeof window.ReinoCastillos.openReinoModal === 'function') {
+                        window.ReinoCastillos.openReinoModal('mapa');
+                    }
+                }, 600);
+            }
+        });
     </script>
 </body>
 
