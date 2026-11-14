@@ -1,0 +1,3242 @@
+[
+  {
+    "id": "cliente_tg_1",
+    "direccion": "Colombia 1143",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "18.02.2026 20:51:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_2",
+    "direccion": "9 de julio 2220 1e 1 magno",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "18.02.2026 22:21:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_3",
+    "direccion": "Los Cocos 5447",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "18.02.2026 22:51:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_4",
+    "direccion": "Sheridan 219",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "18.02.2026 23:39:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_5",
+    "direccion": "l caps 10 Molina punta",
+    "barrio": "Molina Punta",
+    "coords": {
+      "lat": -27.43295,
+      "lng": -58.79535
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "19.02.2026 00:12:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_6",
+    "direccion": "1 marco 12.000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "19.02.2026 00:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_7",
+    "direccion": "Jose ingenieros 377",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "19.02.2026 22:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_8",
+    "direccion": "Esnaola 5280",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "21.02.2026 00:32:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_9",
+    "direccion": "Super seri 11300 con el envío",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "21.02.2026 22:59:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_10",
+    "direccion": "Ok a Avenida Laprida 742 podría ser. Cuánto es con el envío?",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "21.02.2026 23:32:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_11",
+    "direccion": "Dr Cabral 2381",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "22.02.2026 21:16:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_12",
+    "direccion": "Avenida Libertad 5607",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47538,
+      "lng": -58.83073
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "22.02.2026 21:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_13",
+    "direccion": "Rio chico 5810",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "24.02.2026 21:38:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_14",
+    "direccion": "Unne 487",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "24.02.2026 22:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_15",
+    "direccion": "José ingenieros 453",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "24.02.2026 23:22:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_16",
+    "direccion": "Colombia 1143 mostrar comprobante",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "26.02.2026 22:11:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_17",
+    "direccion": "Hungría 4435 barrio popular",
+    "barrio": "Popular",
+    "coords": {
+      "lat": -27.46013,
+      "lng": -58.80731
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "27.02.2026 21:02:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_18",
+    "direccion": "Avenida libertad 5467(mater dei)",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47731,
+      "lng": -58.8333
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 3,
+    "fecha_registro": "27.02.2026 21:26:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_19",
+    "direccion": "armenia 4731 timbre 2/6",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "28.02.2026 00:00:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_20",
+    "direccion": "Paul Groussac 2830, Corrientes, W3400, CN, AR",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "28.02.2026 21:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_21",
+    "direccion": "Paul Groussac 2830",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "28.02.2026 21:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_22",
+    "direccion": "1 muzza 9300",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "28.02.2026 21:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_23",
+    "direccion": "envío a av libertad 5467",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47401,
+      "lng": -58.83378
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "28.02.2026 22:09:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_24",
+    "direccion": "Hola buenas noches quisiera encargar una Ragnar triple por favor.. con envío a las violetas 372",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "01.03.2026 20:51:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_25",
+    "direccion": "Av. Libertad 5607",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47624,
+      "lng": -58.8339
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "01.03.2026 22:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_26",
+    "direccion": "Pedro de esnaola 5471",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "02.03.2026 00:04:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_27",
+    "direccion": "Avenida Libertad 5215",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47711,
+      "lng": -58.83293
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "02.03.2026 00:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_28",
+    "direccion": "hola! te puedo pedir hamburguesa comun para Artigas 1354",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "04.03.2026 22:32:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_29",
+    "direccion": "Buenas noches, la promo de 2 Cleopatra simple por favor, pago por transferencia, Marcos Sastre 245",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "05.03.2026 20:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_30",
+    "direccion": "Pje torrent 945",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "05.03.2026 21:38:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_31",
+    "direccion": "Las violetas 520",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "06.03.2026 22:33:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_32",
+    "direccion": "Pasaje rocha 447",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "06.03.2026 22:47:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_33",
+    "direccion": "Vélez Sarfield 1chesse 10.000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "06.03.2026 23:17:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_34",
+    "direccion": "Hola buenas noches quiero encargar 2 ragnar dobles por favor con envío a las violetas 372...",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "07.03.2026 22:23:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_35",
+    "direccion": "Tiene que entrar en Lamarque es una casa enfrende de la casa pintada de river rojo y blanco",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 4,
+    "fecha_registro": "07.03.2026 23:14:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_36",
+    "direccion": "Las teresitas 5528",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "08.03.2026 00:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_37",
+    "direccion": "Las azaleas 671",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "08.03.2026 21:43:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_38",
+    "direccion": "Carlos pelligrini 2154",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "08.03.2026 22:28:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_39",
+    "direccion": "2 cheese simple 10500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "08.03.2026 22:51:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_40",
+    "direccion": "Esnaola 5248",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "08.03.2026 23:21:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_41",
+    "direccion": "José Ingenieros 377",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "08.03.2026 23:22:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_42",
+    "direccion": "Moreno 854",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "10.03.2026 21:35:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_43",
+    "direccion": "Junin 620",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "10.03.2026 22:32:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_44",
+    "direccion": "Sisi Benavidez 390",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "13.03.2026 21:44:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_45",
+    "direccion": "Me mandas 4 de esas por favor . Las margaritas 737",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "13.03.2026 22:12:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_46",
+    "direccion": "Leopoldo marechal 5153",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "13.03.2026 22:37:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_47",
+    "direccion": "José Ingenieros 60 Barrio Industrial",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "13.03.2026 23:35:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_48",
+    "direccion": "Cuanto saldría un delivery hasta San Martin 2053??",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "14.03.2026 00:26:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_49",
+    "direccion": "Envíame a moreno 854",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "15.03.2026 22:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_50",
+    "direccion": "Magno triple 14000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "15.03.2026 22:53:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_51",
+    "direccion": "Muzza cala 19500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "15.03.2026 23:36:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_52",
+    "direccion": "envío a libertad 5407",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47283,
+      "lng": -58.83064
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 3,
+    "fecha_registro": "15.03.2026 23:36:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_53",
+    "direccion": "Hola buenas noches, quiero encargar una ragnar doble y una coca por favor con envío a las violetas 372..",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "17.03.2026 21:01:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_54",
+    "direccion": "te pido una Cleopatra para avenida libertad 5215",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47683,
+      "lng": -58.82971
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "17.03.2026 21:01:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_55",
+    "direccion": "Avenida Libertad 5467, Corrientes, W3400, CN, AR",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47359,
+      "lng": -58.83191
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "18.03.2026 23:01:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_56",
+    "direccion": "1 lagh 1500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "18.03.2026 23:32:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_57",
+    "direccion": "Juan José castelli 1515",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "20.03.2026 21:44:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_58",
+    "direccion": "Juan Ramón Fernández 130",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "20.03.2026 22:09:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_59",
+    "direccion": "Calle unne 462",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "20.03.2026 23:35:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_60",
+    "direccion": "1 magno 11500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "21.03.2026 22:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_61",
+    "direccion": "1 magno triple 13500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "21.03.2026 23:10:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_62",
+    "direccion": "Primo ese me paga con 20 y si le podes pasar el cambio por mp",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "22.03.2026 21:22:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_63",
+    "direccion": "Av libertad 5315",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47472,
+      "lng": -58.83205
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "22.03.2026 21:47:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_64",
+    "direccion": "Las azucenas 6722",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "22.03.2026 21:47:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_65",
+    "direccion": "las amapolas 3400",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 4,
+    "fecha_registro": "24.03.2026 22:10:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_66",
+    "direccion": "Río chico 5646",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "24.03.2026 23:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_67",
+    "direccion": "Padel 19000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "25.03.2026 00:06:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_68",
+    "direccion": "2 especiales 14500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "25.03.2026 22:33:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_69",
+    "direccion": "2 cheese 10500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "27.03.2026 22:00:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_70",
+    "direccion": "Castelli 1515",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "27.03.2026 23:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_71",
+    "direccion": "Sisi justo salio con 20 pero hay te tranfiere",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "27.03.2026 23:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_72",
+    "direccion": "Con envío a San Martin 2053",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "28.03.2026 21:10:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_73",
+    "direccion": "Envío, avenida libertad 5251",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47389,
+      "lng": -58.83414
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "28.03.2026 22:21:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_74",
+    "direccion": "con envío a Uruguay 342",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "28.03.2026 22:36:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_75",
+    "direccion": "Cuanto me sale asta avenida centenario y ruta 12",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "28.03.2026 23:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_76",
+    "direccion": "Sería 12mil sería todo con el envío",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "28.03.2026 23:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_77",
+    "direccion": "enviar a Murcia 643",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "29.03.2026 00:18:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_78",
+    "direccion": "Hola buenas noches quisiera encargar una ragnar doble por favor con envío a las violetas 372",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "29.03.2026 21:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_79",
+    "direccion": "Pasionaria sur 565",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "29.03.2026 23:00:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_80",
+    "direccion": "Sería venis por rio chico hasta tulipanes y a tu derecha son 20 metros",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "31.03.2026 21:02:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_81",
+    "direccion": "1 lagh 11.000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "02.04.2026 21:05:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_82",
+    "direccion": "La dirección es benavidez 329",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "03.04.2026 21:25:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_83",
+    "direccion": "Con envío a Trento 2450 entre Rubeda y Cerdeña",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "03.04.2026 22:19:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_84",
+    "direccion": "Mi dirección es Hungría 4435",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "05.04.2026 20:56:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_85",
+    "direccion": "av libertad 5251",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.4742,
+      "lng": -58.83438
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "07.04.2026 23:08:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_86",
+    "direccion": "Lavalle 1928",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "08.04.2026 22:56:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_87",
+    "direccion": "Es por av libertad alado de clauver",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47281,
+      "lng": -58.8321
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "09.04.2026 21:10:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_88",
+    "direccion": "Me podrian mandar una a Colombia 1143?",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "09.04.2026 21:10:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_89",
+    "direccion": "Holaa, buenas noches! Quería consultar para saber cuánto saldría el envío hasta Mendoza 544?",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "09.04.2026 22:03:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_90",
+    "direccion": "Perfecto, te puedo hacer un pedido de una Lathgertha y una Marcus Aurelius? Si puede ser para las 22:30 aproximadamente por favor",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "09.04.2026 22:03:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_91",
+    "direccion": "Guadalajara 361",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "10.04.2026 21:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_92",
+    "direccion": "Hola buenas noches, quiero encargar una ragnar doble por favor y una coca cola!! Con envío a las violetas 372..",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "10.04.2026 21:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_93",
+    "direccion": "libertad 5407🙏🏼",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47335,
+      "lng": -58.83411
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "10.04.2026 23:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_94",
+    "direccion": "Calle Turín entre Rubeda y Cerdeña",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "11.04.2026 00:49:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_95",
+    "direccion": "9 de julio 1781",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "11.04.2026 23:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_96",
+    "direccion": "Las amapolas 195",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "12.04.2026 00:03:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_97",
+    "direccion": "9 de julio 1879",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "12.04.2026 00:18:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_98",
+    "direccion": "Por la entrada de ruta 12",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "12.04.2026 21:58:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_99",
+    "direccion": "José negro 63",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "12.04.2026 22:25:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_100",
+    "direccion": "Calle Málaga 4883",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "12.04.2026 23:14:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_101",
+    "direccion": "Te consulto cuánto saldría el envío hasta las azucenas 6722",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "15.04.2026 23:57:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_102",
+    "direccion": "Libertad 5251",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.4774,
+      "lng": -58.83017
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "16.04.2026 22:29:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_103",
+    "direccion": "1 magno 12.000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "17.04.2026 21:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_104",
+    "direccion": "Pirovano 1449",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 3,
+    "fecha_registro": "18.04.2026 00:09:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_105",
+    "direccion": "Avenida libertad 5255 (justo en el semáforo es",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47365,
+      "lng": -58.83037
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "18.04.2026 22:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_106",
+    "direccion": "Marcos Sastre 245",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "19.04.2026 21:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_107",
+    "direccion": "Hola buenas noches, te pido esas, la dirección es avenida libertad 5467",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47653,
+      "lng": -58.83442
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "19.04.2026 22:53:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_108",
+    "direccion": "Rio chico 6565",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "21.04.2026 22:02:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_109",
+    "direccion": "Envío, a Monteagudo 316",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "21.04.2026 23:02:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_110",
+    "direccion": "A Murcia 295",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "21.04.2026 23:34:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_111",
+    "direccion": "Eduardo madero 559",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "22.04.2026 23:03:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_112",
+    "direccion": "Dupuy 4832",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "23.04.2026 00:15:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_113",
+    "direccion": "Las violetas 372 14200",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "23.04.2026 20:57:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_114",
+    "direccion": "Lisandro Segovia 1825",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "23.04.2026 20:57:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_115",
+    "direccion": "Sería para las Teresitas 5630",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 3,
+    "fecha_registro": "23.04.2026 22:29:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_116",
+    "direccion": "guay 580",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "23.04.2026 23:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_117",
+    "direccion": "Sauce 730",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "25.04.2026 22:47:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_118",
+    "direccion": "Benavidez 650",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "25.04.2026 22:47:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_119",
+    "direccion": "Tulipanes 204",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "27.04.2026 00:14:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_120",
+    "direccion": "Violetas 372",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "29.04.2026 20:37:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_121",
+    "direccion": "esta dirección: avenida libertad 5467",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.4761,
+      "lng": -58.83285
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "30.04.2026 21:52:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_122",
+    "direccion": "A Facundo 429",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "30.04.2026 22:48:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_123",
+    "direccion": "Primo para las 21 llego te aviso por las dudas",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "01.05.2026 19:54:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_124",
+    "direccion": "1 magno 10500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "01.05.2026 23:09:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_125",
+    "direccion": "Santa fe 834",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "01.05.2026 23:10:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_126",
+    "direccion": "Pedro de Esnaola 5479",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "01.05.2026 23:39:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_127",
+    "direccion": "Av Raúl alfonsin 3658",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "01.05.2026 23:47:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_128",
+    "direccion": "Rioja 482",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "03.05.2026 20:41:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_129",
+    "direccion": "Sargento cabral 2291 entre roca y Perú",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "03.05.2026 22:33:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_130",
+    "direccion": "Quiero encargar una ragnar doble y una coca cola por favor... com envío a las violetas 372",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "08.05.2026 20:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_131",
+    "direccion": "Buenas, te pido una ragnar doble para envio a las violetas 520",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "08.05.2026 22:24:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_132",
+    "direccion": "Ferretti",
+    "barrio": "Ferre",
+    "coords": {
+      "lat": -27.46118,
+      "lng": -58.82181
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "08.05.2026 22:28:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_133",
+    "direccion": "Hasta sicilia 4879",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "08.05.2026 22:29:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_134",
+    "direccion": "Las alelies 5726 es pero sale con otro número",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "08.05.2026 22:58:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_135",
+    "direccion": "envío a Santa fe 834",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "08.05.2026 22:59:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_136",
+    "direccion": "Con envio a Río Juramento 1261",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "09.05.2026 21:53:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_137",
+    "direccion": "Benavidez 390",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 3,
+    "fecha_registro": "09.05.2026 22:57:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_138",
+    "direccion": "Con envío a pedro esnola 5464",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "09.05.2026 23:15:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_139",
+    "direccion": "Sería 11500 con el envío",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "09.05.2026 23:44:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_140",
+    "direccion": "A bolivar 1033 entre Rioja y San Juan",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "10.05.2026 00:01:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_141",
+    "direccion": "Hola buenas noches quiero encargar una ragnar doble por favor con envío a las violetas 372",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "12.05.2026 21:29:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_142",
+    "direccion": "Con envío Guadalajara 361",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 4,
+    "fecha_registro": "14.05.2026 20:49:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_143",
+    "direccion": "Te puedo pedir una Marcus Aurelius triple para Eduardo Madero 559 entre Pedro Esnaola y Remedios de Escalada?",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "14.05.2026 21:45:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_144",
+    "direccion": "Velez Sarsfield 1454, es la central de Telefonica",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "15.05.2026 22:20:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_145",
+    "direccion": "Libertad 5321",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47302,
+      "lng": -58.83151
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "15.05.2026 23:29:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_146",
+    "direccion": "Eduardo Maderos 559 entre Remedios de Escalada y Pedro Esnaola",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "16.05.2026 00:14:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_147",
+    "direccion": "Rio chico 5770",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "16.05.2026 21:33:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_148",
+    "direccion": "calle unne 378, tengo transferencia",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "17.05.2026 21:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_149",
+    "direccion": "Quinquela Martín 988",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "17.05.2026 22:09:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_150",
+    "direccion": "Madrid 447",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "17.05.2026 22:29:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_151",
+    "direccion": "Hola buenas. Me podría enviar una hambur especial a av libertad 5407?",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47261,
+      "lng": -58.83076
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "17.05.2026 23:48:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_152",
+    "direccion": "Con envío a las violetas 372",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "20.05.2026 21:16:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_153",
+    "direccion": "Es sicilia 4879 en frente de la comisaria n 9 portón verde con balcón arriba y un árbol al lado",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "20.05.2026 21:26:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_154",
+    "direccion": "Calle Shridan 350",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 4,
+    "fecha_registro": "20.05.2026 23:24:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_155",
+    "direccion": "avenida libertad 5251",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47259,
+      "lng": -58.83412
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "22.05.2026 22:50:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_156",
+    "direccion": "enviar a laferrere 5063 casi laprida",
+    "barrio": "Ferre",
+    "coords": {
+      "lat": -27.46538,
+      "lng": -58.8223
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "22.05.2026 23:28:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_157",
+    "direccion": "General Paz 1921",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "22.05.2026 23:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_158",
+    "direccion": "2 magno 22.000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "23.05.2026 21:35:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_159",
+    "direccion": "Te pasa 55",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "23.05.2026 22:17:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_160",
+    "direccion": "Primo 21:30 llego por que estoy haciendo un tramite te aviso por las dudas",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "27.05.2026 20:46:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_161",
+    "direccion": "Av. Libertad 5377 bien frente al campus",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47685,
+      "lng": -58.83047
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "28.05.2026 20:49:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_162",
+    "direccion": "Moreno 854, entre salta y bs as",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "28.05.2026 21:08:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_163",
+    "direccion": "Pérez bulnes 4250 es la dirección",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "28.05.2026 22:15:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_164",
+    "direccion": "1 magno simple 1 Arturo simple 15.000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "28.05.2026 22:16:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_165",
+    "direccion": "San Martin 2053",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "28.05.2026 22:16:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_166",
+    "direccion": "1 magno 9500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "28.05.2026 23:22:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_167",
+    "direccion": "Y el centro primo el último",
+    "barrio": "Centro",
+    "coords": {
+      "lat": -27.46656,
+      "lng": -58.83317
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "28.05.2026 23:23:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_168",
+    "direccion": "badajoz 285 entre sicilia y argerich",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "28.05.2026 23:41:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_169",
+    "direccion": "Hungría 4435",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "29.05.2026 21:11:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_170",
+    "direccion": "Av libertad 5215",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47645,
+      "lng": -58.83119
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "29.05.2026 21:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_171",
+    "direccion": "Buenas noches, ¿me podrías enviar dos hamburguesas \"Arturo\" doble al  Mater Dei, Av. Libertad 5467 (frente al campus)?",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47312,
+      "lng": -58.82951
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "29.05.2026 22:18:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_172",
+    "direccion": "Mi dirección es Jujuy 1267; Primer piso; depto C",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "01.06.2026 00:02:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_173",
+    "direccion": "Hola buenas noches quiero encargar una ragnar doble por favor con Envio a las violetas 372 por favor ...",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "02.06.2026 21:56:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_174",
+    "direccion": "Buenas noches, te puedo pedir una Marcus Aurelius triple para Eduardo Madero 559 entre Remedios de Escalada y Pedro Esnaola?",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "02.06.2026 21:57:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_175",
+    "direccion": "Ferreti",
+    "barrio": "Ferre",
+    "coords": {
+      "lat": -27.46514,
+      "lng": -58.82476
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "05.06.2026 21:42:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_176",
+    "direccion": "Por calle Las Azaleas",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "05.06.2026 21:54:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_177",
+    "direccion": "A unne 487",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "05.06.2026 22:04:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_178",
+    "direccion": "Gabriel barrio ponse",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "05.06.2026 22:29:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_179",
+    "direccion": "Madrid 449",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "06.06.2026 23:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_180",
+    "direccion": "av libertad 5407",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47306,
+      "lng": -58.83085
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "07.06.2026 23:01:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_181",
+    "direccion": "LULA ESCUELA 14",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "09.06.2026 21:49:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_182",
+    "direccion": "Pasaje los cocos 5463",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "10.06.2026 23:15:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_183",
+    "direccion": "Ayma 2 especiales efectivo 16k",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 4,
+    "fecha_registro": "12.06.2026 22:36:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_184",
+    "direccion": "Jujuy 767 es",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "13.06.2026 22:26:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_185",
+    "direccion": "Sofia .. efectivo 22.500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "13.06.2026 23:20:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_186",
+    "direccion": "Faltaba 10 pizza más ,, pero dice q vengas nomás",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "19.06.2026 22:19:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_187",
+    "direccion": "Perú 1370",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "19.06.2026 22:32:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_188",
+    "direccion": "Av libertad 5467 residencia universitaria mater dei dpto 5 PB torre II",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47646,
+      "lng": -58.83197
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "20.06.2026 22:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_189",
+    "direccion": "Cande 1 magno, 1 Arturo EFECTIVO 20500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "21.06.2026 00:06:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_190",
+    "direccion": "av libertad 5467 (mater dei)",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.4748,
+      "lng": -58.83431
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "24.06.2026 22:44:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_191",
+    "direccion": "Lisandro Segovia 1825, Corrientes, W3400, CN, AR",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "27.06.2026 22:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_192",
+    "direccion": "https://www.city7inmobiliaria.com/properties-2/205-Departamento-Lisandro-Segovia-1825-Barrio-Corrientes-3400-2-Habitaciones-1-Dormitorio-1-Ba%C3%B1o-USD56-700/",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 4,
+    "fecha_registro": "27.06.2026 22:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_193",
+    "direccion": "Efectivo 2500 TE PAGA",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "29.06.2026 22:16:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_194",
+    "direccion": "Sisi Sofi 12500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "29.06.2026 23:31:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_195",
+    "direccion": "Es x José ingenieros como dice el GPS .. nada mas q tira a la otra calle xq vivo en el fondo",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "03.07.2026 22:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_196",
+    "direccion": "La calle es Zaragoza 61 la casa tiene la dirección x la casa",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "03.07.2026 22:07:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_197",
+    "direccion": "Los tulipanes 543",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "04.07.2026 22:25:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_198",
+    "direccion": "Pasaje los cocos entre Nariño y calle unne",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "06.07.2026 22:35:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_199",
+    "direccion": "Estoy por las violetas 367 a 20 metros de av libertad",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47499,
+      "lng": -58.83097
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "07.07.2026 22:33:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_200",
+    "direccion": "EFECTIVO 20.500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "24.07.2026 21:15:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_201",
+    "direccion": "Jrfernsndez 351 tercer piso dpto 2",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "24.07.2026 22:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_202",
+    "direccion": "https://maps.google.com/maps?q=Av.%20libertad%205321%2C%20Corrientes%2C%20Argentina",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47666,
+      "lng": -58.83384
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "24.07.2026 23:21:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_203",
+    "direccion": "Detras de la escuela 371 ahi un puentecito en una cortada a mitad de cuadra",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "27.07.2026 00:17:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_204",
+    "direccion": "Los lirios 5730 casa blanca hay 2 autos afuera un rojo y un gris",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "27.07.2026 22:09:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_205",
+    "direccion": "Es por.sheridan 350",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "27.07.2026 22:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_206",
+    "direccion": "Amapolas 3400",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "27.07.2026 23:55:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_207",
+    "direccion": "EFECTIVO 11K",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "29.07.2026 23:54:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_208",
+    "direccion": "📍 *Dirección:* Félix de Azara 600",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "01.08.2026 23:49:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_209",
+    "direccion": "Pedro Araoz 1150",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "02.08.2026 00:24:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_210",
+    "direccion": "Av. Libertad 5467, Corrientes, W3404, CN, AR",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47323,
+      "lng": -58.83011
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "02.08.2026 23:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_211",
+    "direccion": "https://maps.google.com/maps?q=Calle%20M%C3%A1laga%204883%2C%20Corrientes%2C%20Argentina",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "07.08.2026 22:51:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_212",
+    "direccion": "Aldana bet",
+    "barrio": "Aldana",
+    "coords": {
+      "lat": -27.45658,
+      "lng": -58.82407
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "07.08.2026 23:00:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_213",
+    "direccion": "Tati Santillan , 1 pro Arturo efectivo 13500 <Se editó este mensaje.>",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "09.08.2026 23:23:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_214",
+    "direccion": "Daiana Maricel Quiñones 10k Efectivo paga",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "10.08.2026 21:06:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_215",
+    "direccion": "Valenzuela 1 pro magno EFECTIVO 14.500 <Se editó este mensaje.>",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "10.08.2026 22:00:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_216",
+    "direccion": "Las violetas 372",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "13.08.2026 22:36:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_217",
+    "direccion": "1 Marcus 15500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "13.08.2026 23:50:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_218",
+    "direccion": "Remedios de escalada 5441",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 1,
+    "fecha_registro": "14.08.2026 22:15:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_219",
+    "direccion": "1 pro prov 11500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "14.08.2026 23:41:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_220",
+    "direccion": "Hola te consulto Cuanto saldría el envío hasta remedios de escalada 5291",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "16.08.2026 22:09:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_221",
+    "direccion": "Con envío por favor, avenida libertad 5251",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.47502,
+      "lng": -58.83247
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "16.08.2026 23:01:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_222",
+    "direccion": "https://maps.google.com/maps?q=Av.%20Libertad%205467%2C%20Corrientes%2C%20Argentina",
+    "barrio": "Libertad",
+    "coords": {
+      "lat": -27.4742,
+      "lng": -58.8339
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 2,
+    "fecha_registro": "16.08.2026 23:08:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_223",
+    "direccion": "Dice si le podes transferir el cambio me paga con 20",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "16.08.2026 23:13:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_224",
+    "direccion": "2 especiales 14.000",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "17.08.2026 00:25:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_225",
+    "direccion": "En el 24siete es",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "16.09.2026 23:43:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_226",
+    "direccion": "Bruno barrios 3 especiales",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "18.09.2026 22:19:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_227",
+    "direccion": "las 21 voy perreke vine a tomar unos matecitos",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "20.09.2026 20:18:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_228",
+    "direccion": "Mary Enrique, 3 Muzzas efectivo 27500 <Se editó este mensaje.>",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "20.09.2026 21:44:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_229",
+    "direccion": "paraguay 775 3b",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "22.09.2026 23:12:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_230",
+    "direccion": "Nico Miloslabich, 1 pro Provolone simple , COBRAR EFECTIVO 12K",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "24.09.2026 23:48:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_231",
+    "direccion": "el tema es q la ubicación tira hacia la otra calle",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "25.09.2026 21:24:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_232",
+    "direccion": "el número dd mi casa es 19 y es una de dos pisos verde",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "25.09.2026 21:24:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_233",
+    "direccion": "Es por calle Vizcaya , asfalto",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "25.09.2026 23:19:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_234",
+    "direccion": "Me dio 10",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "26.09.2026 23:39:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_235",
+    "direccion": "Nico Barrios, 1 pro Arturo Cobrar $12.k Efectivo",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 3,
+    "fecha_registro": "27.09.2026 21:28:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_236",
+    "direccion": "su total es 14.800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "27.09.2026 23:16:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_237",
+    "direccion": "Pao Gomez, 1 laguerta Efectivo Cobrar 11800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "27.09.2026 23:36:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_238",
+    "direccion": "Ezequiel, 2 especiales Efectivo Cobrar 14800 <Se editó este mensaje.>",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "28.09.2026 21:35:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_239",
+    "direccion": "Murcia 473",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 2,
+    "fecha_registro": "28.09.2026 23:51:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_240",
+    "direccion": "silguero ludovica , efectivo 34800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "30.09.2026 21:45:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_241",
+    "direccion": "Mauro E. Obregón Efectivo 14800 <Se editó este mensaje.>",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "30.09.2026 23:36:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_242",
+    "direccion": "calle saragoza",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 4,
+    "fecha_registro": "30.09.2026 23:39:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_243",
+    "direccion": "Benavidez 329",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "01.10.2026 21:52:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_244",
+    "direccion": "Nahuel David 1 Magno 1 ragnar EFECTIVO COBRAR 21300 <Se editó este mensaje.>",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 4,
+    "fecha_registro": "01.10.2026 21:52:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_245",
+    "direccion": "Con envio Hipolito Irigoyen 2344",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 2,
+    "fecha_registro": "01.10.2026 23:03:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_246",
+    "direccion": "Bruno 2 arturo triple 25800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "01.10.2026 23:22:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_247",
+    "direccion": "ESA BOLSA NO ES , LLEVASTE LA BOLSA DE LA CHICA DEL CENTRO",
+    "barrio": "Centro",
+    "coords": {
+      "lat": -27.46858,
+      "lng": -58.8339
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "01.10.2026 23:24:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_248",
+    "direccion": "Oleg , 2 pizzas , Cobrar efectivo 20800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 2,
+    "fecha_registro": "02.10.2026 22:01:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_249",
+    "direccion": "Hasta santa fe 834",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "07.10.2026 00:28:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_250",
+    "direccion": "Málaga 4763",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "11.10.2026 00:27:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_251",
+    "direccion": "Esteban Fernández, 2 laguerta , EFECTIVO 20 K",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "11.10.2026 23:06:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_252",
+    "direccion": "Celina Axcel Ferreti, 1 laguerta",
+    "barrio": "Ferre",
+    "coords": {
+      "lat": -27.46598,
+      "lng": -58.82382
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "12.10.2026 22:56:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_253",
+    "direccion": "EFECTIVO COBRALE 8800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "18.10.2026 22:35:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_254",
+    "direccion": "Nahuel 3 especiales, EFECTIVO COBRAR 20.800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 1,
+    "fecha_registro": "18.10.2026 23:54:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_255",
+    "direccion": "25 de mayo 1835",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "20.10.2026 20:52:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_256",
+    "direccion": "Junin 2055",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.490000000000002,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 1,
+    "fecha_registro": "20.10.2026 22:40:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_257",
+    "direccion": "roca 842",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.487000000000002,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 2,
+    "fecha_registro": "21.10.2026 21:42:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_258",
+    "direccion": "Bruno barrios, 1 pro Cleo",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.484,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 4,
+    "fecha_registro": "23.10.2026 23:47:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_259",
+    "direccion": "Ramiro Giménez, unne 417",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.481,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "25.10.2026 00:14:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_260",
+    "direccion": "Hipólito yrigoyen 1853",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.478,
+      "lng": -58.831
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "26.10.2026 21:04:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_261",
+    "direccion": "Ulises, cobrar efectivo 13800",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.475,
+      "lng": -58.828
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "31.10.2026 23:12:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_262",
+    "direccion": "Airi , 1 laguerta ft 12k cobrar <Se editó este mensaje.>",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.472,
+      "lng": -58.825
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "01.11.2026 22:44:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_263",
+    "direccion": "woki 12k COBRAR EFECTIVO",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.469,
+      "lng": -58.822
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 1,
+    "fecha_registro": "06.11.2026 23:25:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_264",
+    "direccion": "Javier 4 Especiales , COBRAR EFECTIVO 28500",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.466,
+      "lng": -58.819
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "07.11.2026 21:11:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_265",
+    "direccion": "25 de Mayo 1917",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.463,
+      "lng": -58.849000000000004
+    },
+    "pedidos_estimados": 5,
+    "nivel_castillo": 3,
+    "fecha_registro": "07.11.2026 22:11:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_266",
+    "direccion": "lu 3 especiales 21k cobrar efectivo",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.46,
+      "lng": -58.846000000000004
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 4,
+    "fecha_registro": "07.11.2026 22:59:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_267",
+    "direccion": "Y si me podés mandar Pedro de Esnaola 5270",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.457,
+      "lng": -58.843
+    },
+    "pedidos_estimados": 1,
+    "nivel_castillo": 3,
+    "fecha_registro": "09.11.2026 21:48:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_268",
+    "direccion": "Florencita 23500 efectivo",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.454,
+      "lng": -58.84
+    },
+    "pedidos_estimados": 2,
+    "nivel_castillo": 3,
+    "fecha_registro": "09.11.2026 22:44:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_269",
+    "direccion": "Ángel gallardo 4955",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.451,
+      "lng": -58.837
+    },
+    "pedidos_estimados": 3,
+    "nivel_castillo": 1,
+    "fecha_registro": "10.11.2026 22:52:00 GMT-03:00"
+  },
+  {
+    "id": "cliente_tg_270",
+    "direccion": "Bruno Barrios 1 pro Cleo",
+    "barrio": "Corrientes Capital",
+    "coords": {
+      "lat": -27.448,
+      "lng": -58.834
+    },
+    "pedidos_estimados": 4,
+    "nivel_castillo": 4,
+    "fecha_registro": "10.11.2026 23:59:00 GMT-03:00"
+  }
+]

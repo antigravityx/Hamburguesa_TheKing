@@ -885,6 +885,60 @@
             markersLayerGroup.addLayer(marker);
         });
 
+        // 1.b. 🏰 Castillos Reales de Clientes Auténticos en Barrios de Corrientes
+        const castillosClientes = (window.CASTILLOS_CLIENTES_CORRIENTES && Array.isArray(window.CASTILLOS_CLIENTES_CORRIENTES))
+            ? window.CASTILLOS_CLIENTES_CORRIENTES
+            : [];
+
+        castillosClientes.forEach((c) => {
+            const svgIconHtml = getCastilloSVG(c.nivel, { size: 28, animated: false });
+            const customIcon = L.divIcon({
+                className: 'reino-div-icon reino-cliente-icon',
+                html: `
+                    <div class="reino-marker-container">
+                        ${svgIconHtml}
+                        <div class="reino-marker-label" style="border-color:#38bdf8; background:rgba(15,23,42,0.9); font-size:0.62rem; padding:1px 5px; color:#bae6fd;">
+                            🏰 ${c.barrio}
+                        </div>
+                    </div>
+                `,
+                iconSize: [44, 44],
+                iconAnchor: [22, 34],
+                popupAnchor: [0, -34]
+            });
+
+            const marker = L.marker([c.lat, c.lon], { icon: customIcon });
+
+            const popupContent = `
+                <div style="font-family:'Outfit',sans-serif; color:#fff; min-width:200px; padding:4px;">
+                    <div style="display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:6px; margin-bottom:8px;">
+                        ${getCastilloSVG(c.nivel, { size: 30, animated: false })}
+                        <div>
+                            <strong style="color:#38bdf8; font-size:0.88rem; display:block;">${c.nombre}</strong>
+                            <span style="font-size:0.72rem; color:#aaa;">📍 ${c.direccion}</span>
+                        </div>
+                    </div>
+                    <div style="font-size:0.75rem; color:#e2e8f0; margin-bottom:6px;">
+                        🛡️ <strong>Soberano:</strong> ${c.soberano}
+                    </div>
+                    <div style="background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.25); border-radius:8px; padding:5px 8px; font-size:0.72rem; display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span>👑 <strong>${c.coronas}</strong> Coronas</span>
+                        <span>⭐ Nivel <strong>${c.nivel}</strong></span>
+                    </div>
+                    <button type="button" onclick="window.ReinoCastillos.pedirDesdeCastillo('${c.barrio}')" style="background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; border:none; border-radius:10px; padding:5px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; width:100%;">
+                        🍔 ¡Pedir en esta Zona!
+                    </button>
+                </div>
+            `;
+
+            marker.bindPopup(popupContent, {
+                className: 'reino-dark-popup',
+                maxWidth: 260
+            });
+
+            markersLayerGroup.addLayer(marker);
+        });
+
         // 2. Castillo / Palacio Real del Usuario Logueado (Si existe)
         const currentUser = (typeof window.KingAuth !== 'undefined' && window.KingAuth.getCurrentKingUser) 
             ? window.KingAuth.getCurrentKingUser() 
@@ -1127,8 +1181,14 @@
         const bar = document.getElementById('reino-map-stats-bar');
         if (!bar) return;
 
-        const totalCastillos = BANCO_CASTILLOS_CORRIENTES.length;
-        const totalCoronas = BANCO_CASTILLOS_CORRIENTES.reduce((acc, c) => acc + c.coronas, 0);
+        const castillosClientes = (window.CASTILLOS_CLIENTES_CORRIENTES && Array.isArray(window.CASTILLOS_CLIENTES_CORRIENTES))
+            ? window.CASTILLOS_CLIENTES_CORRIENTES
+            : [];
+
+        const totalCastillos = BANCO_CASTILLOS_CORRIENTES.length + castillosClientes.length;
+        const totalCoronasBase = BANCO_CASTILLOS_CORRIENTES.reduce((acc, c) => acc + c.coronas, 0);
+        const totalCoronasClientes = castillosClientes.reduce((acc, c) => acc + c.coronas, 0);
+        const totalCoronas = totalCoronasBase + totalCoronasClientes;
 
         bar.innerHTML = `
             <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:6px 12px; font-size:0.75rem; white-space:nowrap; display:flex; align-items:center; gap:6px;">
@@ -1367,7 +1427,10 @@
         syncUserGpsPalacio,
         pedirDesdeCastillo,
         getRankingsBarrios,
-        getCastillos: () => BANCO_CASTILLOS_CORRIENTES
+        getCastillos: () => [
+            ...BANCO_CASTILLOS_CORRIENTES,
+            ...((window.CASTILLOS_CLIENTES_CORRIENTES && Array.isArray(window.CASTILLOS_CLIENTES_CORRIENTES)) ? window.CASTILLOS_CLIENTES_CORRIENTES : [])
+        ]
     };
 
 })(window, document);

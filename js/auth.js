@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     }
 
-    // Distintivo visual sutil y amigable de Palacio Real
+    // Distintivo visual sutil y amigable de Palacio Real con reconocimiento automático de Soberanos
     function renderPalacioRealBadge(address) {
         let badge = document.getElementById('palacio-real-badge');
         if (!badge) {
@@ -101,10 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 badge = document.createElement('div');
                 badge.id = 'palacio-real-badge';
                 badge.style.cssText = `
-                    display: none; align-items: center; gap: 6px; font-size: 0.78rem;
+                    display: none; align-items: center; gap: 8px; font-size: 0.78rem;
                     color: #ffb703; background: rgba(255, 183, 3, 0.08);
                     border: 1px dashed rgba(255, 183, 3, 0.35); border-radius: 8px;
-                    padding: 6px 10px; margin-bottom: 0.6rem; animation: fadeIn 0.3s ease-out;
+                    padding: 8px 12px; margin-bottom: 0.6rem; animation: fadeIn 0.3s ease-out;
                 `;
                 const addressRow = document.getElementById('customer-address')?.parentElement;
                 if (addressRow && addressRow.nextSibling) {
@@ -117,7 +117,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!badge) return;
 
         if (address && String(address).trim().length >= 3) {
-            badge.innerHTML = `<span>🏰</span> <span>Tu Palacio Real guardado <span style="color: #bbb; font-weight: normal;">(podés cambiarlo si estás en otra dirección)</span></span>`;
+            // Reconocimiento inteligente de cliente real de Corrientes
+            let clienteReconocido = null;
+            if (window.CASTILLOS_CLIENTES_CORRIENTES && Array.isArray(window.CASTILLOS_CLIENTES_CORRIENTES)) {
+                const addrNorm = String(address).toLowerCase().replace(/[^a-z0-9]/g, ' ');
+                const words = addrNorm.split(' ').filter(w => w.length >= 3);
+                if (words.length > 0) {
+                    clienteReconocido = window.CASTILLOS_CLIENTES_CORRIENTES.find(c => {
+                        const cNorm = (c.direccion || '').toLowerCase();
+                        return words.every(w => cNorm.includes(w)) || 
+                               (words.some(w => /^\d{2,5}$/.test(w) && cNorm.includes(w)) && 
+                                words.some(w => !/^\d+$/.test(w) && cNorm.includes(w)));
+                    });
+                }
+            }
+
+            if (clienteReconocido) {
+                badge.style.background = 'linear-gradient(135deg, rgba(255, 183, 3, 0.18), rgba(56, 189, 248, 0.12))';
+                badge.style.border = '1px solid #ffd700';
+                badge.innerHTML = `
+                    <span style="font-size: 1.25rem;">👑</span>
+                    <div>
+                        <strong style="color: #ffd700; display:block;">¡Bienvenido de vuelta, Soberano de ${clienteReconocido.barrio}!</strong>
+                        <span style="color: #e2e8f0; font-size: 0.74rem;">Tu castillo inicia en <strong>Nivel ${clienteReconocido.nivel}</strong> con <strong>+${clienteReconocido.coronas} Coronas Reales</strong>.</span>
+                    </div>
+                `;
+
+                // Acreditar bono de coronas de bienvenida
+                try {
+                    const bonoKey = 'king_bono_soberano_' + clienteReconocido.id;
+                    if (!localStorage.getItem(bonoKey)) {
+                        const cur = parseInt(localStorage.getItem('king_coronas') || '0');
+                        localStorage.setItem('king_coronas', (cur + clienteReconocido.coronas).toString());
+                        localStorage.setItem(bonoKey, 'true');
+                    }
+                } catch (e) {}
+            } else {
+                badge.style.background = 'rgba(255, 183, 3, 0.08)';
+                badge.style.border = '1px dashed rgba(255, 183, 3, 0.35)';
+                badge.innerHTML = `<span>🏰</span> <span>Tu Palacio Real guardado <span style="color: #bbb; font-weight: normal;">(podés cambiarlo si estás en otra dirección)</span></span>`;
+            }
             badge.style.display = 'flex';
         } else {
             badge.style.display = 'none';
