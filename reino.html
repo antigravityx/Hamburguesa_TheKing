@@ -59,6 +59,11 @@
             background: #06040a;
         }
 
+        /* Filtro Dark Cyber/Medieval para los tiles de mapa (idéntico al juego de la moto) */
+        .leaflet-tile-pane {
+            filter: brightness(0.68) invert(1) contrast(3.2) hue-rotate(200deg) saturate(0.35);
+        }
+
         /* 🛡️ HUD SUPERIOR */
         .reino-hud-top {
             position: absolute;
@@ -334,10 +339,9 @@
             // Controles de zoom abajo a la derecha
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-            // Capa de Mapa Oscura Silky Smooth
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; The King Burger &copy; OpenStreetMap',
-                subdomains: 'abcd',
+            // Capa de Mapa Esri World Street con Filtro Dark Cyber (100% Gratuita, Sin API Key, Sólida)
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; The King Burger &copy; Esri & OpenStreetMap',
                 maxZoom: 19
             }).addTo(map);
 
