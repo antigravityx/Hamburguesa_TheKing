@@ -169,6 +169,39 @@
                 </div>
             `);
 
+        // 1.b. Marcadores de los 270 Castillos de Clientes en el Mapa del Juego RPG
+        if (window.CASTILLOS_CLIENTES_CORRIENTES && Array.isArray(window.CASTILLOS_CLIENTES_CORRIENTES)) {
+            window.CASTILLOS_CLIENTES_CORRIENTES.forEach((c) => {
+                const clientCastilloIcon = L.divIcon({
+                    className: 'marker-cliente-castillo-container',
+                    html: `
+                        <div style="position:relative; width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.9); border:2px solid #38bdf8; border-radius:50%; box-shadow:0 0 10px rgba(56,189,248,0.6); cursor:pointer;">
+                            <span style="font-size:14px;">🏰</span>
+                            <div style="position:absolute; bottom:-14px; left:50%; transform:translateX(-50%); white-space:nowrap; background:rgba(0,0,0,0.85); border:1px solid #38bdf8; color:#38bdf8; font-size:9px; font-weight:bold; padding:0 4px; border-radius:4px; pointer-events:none;">
+                                ${c.barrio}
+                            </div>
+                        </div>
+                    `,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15],
+                    popupAnchor: [0, -16]
+                });
+
+                L.marker([c.lat, c.lon], { icon: clientCastilloIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="text-align:center; padding: 6px; font-family:'Segoe UI',sans-serif; min-width:180px; color:#fff;">
+                            <strong style="color:#38bdf8; font-size:0.95rem;">🏰 ${c.nombre}</strong><br>
+                            <span style="font-size:0.8rem; color:#fff;">📍 ${c.direccion}</span><br>
+                            <span style="font-size:0.75rem; color:#aaa;">Barrio ${c.barrio}</span><br>
+                            <div style="margin-top:6px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); border-radius:6px; padding:4px; font-size:0.75rem; color:#ffd700;">
+                                👑 <strong>${c.coronas}</strong> Coronas • ⭐ Nivel ${c.nivel}
+                            </div>
+                        </div>
+                    `);
+            });
+        }
+
         // 2. Marcador de Su Majestad el Rey en la Moto
         const kingIcon = L.divIcon({
             className: 'marker-rey-container',
@@ -317,8 +350,20 @@
     function startNewQuest() {
         if (questTimerInterval) clearInterval(questTimerInterval);
 
-        // Elegir un destino al azar
-        const dest = QUEST_DESTINATIONS[Math.floor(Math.random() * QUEST_DESTINATIONS.length)];
+        // Elegir un destino al azar (combinando destinos clásicos y los 270 castillos reales de clientes)
+        let todosLosDestinos = [...QUEST_DESTINATIONS];
+        if (window.CASTILLOS_CLIENTES_CORRIENTES && Array.isArray(window.CASTILLOS_CLIENTES_CORRIENTES)) {
+            const clientesDestinos = window.CASTILLOS_CLIENTES_CORRIENTES.map(c => ({
+                name: c.direccion,
+                client: c.soberano,
+                lat: c.lat,
+                lon: c.lon,
+                barrio: c.barrio,
+                zone: 'Zona Cliente'
+            }));
+            todosLosDestinos = [...QUEST_DESTINATIONS, ...clientesDestinos];
+        }
+        const dest = todosLosDestinos[Math.floor(Math.random() * todosLosDestinos.length)];
 
         // Obtener productos disponibles desde products.js si existe
         let burgerItem = {
