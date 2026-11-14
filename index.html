@@ -75,6 +75,10 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
 
+    <!-- Leaflet CSS & JS para Mapa del Reino -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/social.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
@@ -98,6 +102,9 @@
             <div class="app-menu-dropdown glassmorphism" id="app-menu-dropdown">
                 <div class="app-menu-item" id="menu-auth-btn" style="border-left: 3px solid var(--accent-color); font-weight: 700; color: #fff;">
                     <i class="ri-user-star-fill" style="color: var(--accent-color);"></i> <span id="menu-auth-label">👑 Mi Cuenta / Registrarme</span>
+                </div>
+                <div class="app-menu-item" id="menu-reino-mapa-btn" style="border-left: 3px solid #ffd700; color: #ffd700; font-weight: 700; cursor: pointer;">
+                    <i class="ri-shield-flash-fill" style="color: #ffd700;"></i> 🏰 Mapa del Reino & Castillos
                 </div>
                 <div class="app-menu-item" id="menu-gps-btn">
                     <i class="ri-map-pin-user-fill"></i> Activar y Sincronizar GPS
@@ -128,7 +135,11 @@
             <h1 class="brand-title">THE KING <span class="accent">BURGER</span></h1>
             <p class="brand-subtitle">El Sabor de la Corona</p>
         </div>
-        <div class="header-actions" style="display: flex; gap: 10px; align-items: center;">
+        <div class="header-actions" style="display: flex; gap: 8px; align-items: center;">
+            <button type="button" class="header-reino-btn" id="header-reino-btn" title="🏰 Mapa del Reino & Castillos de Corrientes">
+                <span style="font-size: 1.05rem; filter: drop-shadow(0 0 5px #ffd700); line-height: 1;">🏰</span>
+                <span class="header-reino-text">Reino</span>
+            </button>
             <div class="user-profile" id="user-profile-btn" style="cursor: pointer; display: flex; align-items: center; gap: 6px; color: #fff; background: rgba(255, 183, 3, 0.12); border: 1px solid rgba(255, 183, 3, 0.35); padding: 5px 11px; border-radius: 20px; transition: all 0.2s;" title="Mi Cuenta / Registrarme">
                 <i class="ri-user-star-fill" style="font-size: 1.15rem; color: var(--accent-color);"></i>
                 <span id="user-name-display" style="font-size: 0.8rem; font-weight: 700; color: #fff;">Mi Cuenta</span>
@@ -442,6 +453,10 @@
                             <span>GPS</span>
                         </button>
                     </div>
+                    <div id="palacio-real-badge" style="display: none; align-items: center; gap: 6px; font-size: 0.78rem; color: #ffb703; background: rgba(255, 183, 3, 0.08); border: 1px dashed rgba(255, 183, 3, 0.35); border-radius: 8px; padding: 6px 10px; margin-bottom: 0.6rem;">
+                        <span>🏰</span>
+                        <span>Tu Palacio Real guardado <span style="color: #bbb; font-weight: normal;">(podés cambiarlo si estás en otra dirección)</span></span>
+                    </div>
                     <!-- Vista previa del mapa: aparece con GPS o al escribir dirección -->
                     <div id="map-preview-container"
                         style="display:none; margin-top: 0.5rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent-color); background: rgba(0,0,0,0.4);">
@@ -723,6 +738,8 @@
     <script defer src="js/auth.js"></script>
     <script defer src="js/fcm-manager.js"></script>
     <script defer src="js/products.js"></script>
+    <script defer src="js/reino-castillos.js"></script>
+    <script defer src="js/coliseo-espera.js"></script>
     <script defer src="js/app.js"></script>
     <script defer src="js/semilla-social.js"></script>
 
@@ -908,6 +925,78 @@
                 <div id="google-auth-status" style="font-size:0.75rem; color:#ffb703; margin-top:0.8rem; display:none;"></div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- ===== MODAL DEL REINO Y MAPA DE CASTILLOS CORRIENTES ===== -->
+    <div id="modal-reino-mapa" class="reino-modal-container" role="dialog" aria-modal="true" aria-label="Mapa del Reino The King">
+        <div class="reino-modal-card">
+            <!-- Header -->
+            <div class="reino-modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.8rem; filter: drop-shadow(0 0 8px #ffd700);">🏰</span>
+                    <div>
+                        <h2 style="font-family:'Outfit',sans-serif; font-size:1.15rem; font-weight:900; color:#ffd700; margin:0; line-height:1.2;">
+                            MAPA DEL REINO THE KING
+                        </h2>
+                        <p style="font-size:0.75rem; color:#aaa; margin:0;">
+                            Castillos Soberanos & Rankings de Corrientes Capital
+                        </p>
+                    </div>
+                </div>
+                <button type="button" id="close-reino-modal-btn" style="background:transparent; border:none; color:#888; font-size:1.6rem; cursor:pointer; line-height:1; padding:4px 8px; border-radius:8px; transition:color 0.2s;" aria-label="Cerrar">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Tabs de navegación -->
+            <div class="reino-tabs">
+                <button type="button" class="reino-tab-btn active" data-tab="mapa" id="tab-reino-mapa">
+                    🗺️ Mapa de Castillos
+                </button>
+                <button type="button" class="reino-tab-btn" data-tab="ranking" id="tab-reino-ranking">
+                    🏆 Ranking de Barrios
+                </button>
+                <button type="button" class="reino-tab-btn" data-tab="palacio" id="tab-reino-palacio">
+                    👑 Mi Palacio Real
+                </button>
+            </div>
+
+            <!-- Body dinámico con las vistas -->
+            <div class="reino-modal-body">
+                <!-- Vista 1: Mapa Interactivo Leaflet -->
+                <div id="reino-view-mapa" class="reino-view-pane" style="display: block;">
+                    <div style="margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <span style="font-size: 0.78rem; color: #cbd5e1;">
+                            📍 Explorá los baluartes de Corrientes. ¡Sumá pedidos para elevar tu castillo a Palacio Soberano!
+                        </span>
+                        <button type="button" id="reino-btn-sync-gps" style="background: rgba(255,183,3,0.15); border: 1px solid #ffb703; color: #ffb703; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            📡 Fijar mi Palacio con GPS
+                        </button>
+                    </div>
+                    <div id="reino-leaflet-map"></div>
+                    <div id="reino-map-stats-bar" style="margin-top: 10px; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px;">
+                    </div>
+                </div>
+
+                <!-- Vista 2: Ranking de Barrios -->
+                <div id="reino-view-ranking" class="reino-view-pane" style="display: none;">
+                    <div style="margin-bottom: 1rem; background: rgba(255,183,3,0.08); border-left: 3px solid #ffd700; padding: 8px 12px; border-radius: 6px;">
+                        <strong style="color: #ffd700; font-size: 0.88rem;">🏆 Tabla de Honor Correntina</strong>
+                        <p style="font-size: 0.76rem; color: #ccc; margin: 2px 0 0 0;">
+                            Los barrios con más coronas acumuladas coronan a sus castillos y desbloquean beneficios y sorteos reales.
+                        </p>
+                    </div>
+                    <div id="reino-rankings-container">
+                    </div>
+                </div>
+
+                <!-- Vista 3: Mi Palacio Real -->
+                <div id="reino-view-palacio" class="reino-view-pane" style="display: none;">
+                    <div id="reino-my-castle-details">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

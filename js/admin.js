@@ -4,11 +4,22 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    try {
+        localStorage.removeItem('king_admin_password_hash');
+        sessionStorage.removeItem('king_admin_session');
+    } catch (error) {
+        console.error('[Admin] No se pudieron limpiar credenciales locales antiguas:', error);
+    }
+
     // --- ELEMENTOS DEL DOM ---
     const loginSection = document.getElementById('login-section');
     const dashboardSection = document.getElementById('dashboard-section');
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
+    const loginUserInput = document.getElementById('login-user');
+    const loginPasswordInput = document.getElementById('login-password');
+    const googleLoginBtn = document.getElementById('google-login-btn');
+    const forgotPasswordBtn = document.getElementById('forgot-password-btn');
     const logoutBtn = document.getElementById('logout-btn');
     const headerUserActions = document.getElementById('header-user-actions');
 
@@ -58,44 +69,155 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCategory = 'all';
     let localProductsState = typeof PRODUCTS !== 'undefined' ? PRODUCTS : {};
 
-    // --- 1. VERIFICACIÓN DE SESIÓN INICIAL ---
-    checkAuth();
+    // --- 1. AUTENTICACIÓN Y AUTORIZACIÓN ---
+    let loadedDashboardUserId = null;
 
-    function checkAuth() {
-        const session = window.kingDB.isAuthenticated();
-        if (session) {
-            loginSection.style.display = 'none';
-            dashboardSection.style.display = 'block';
-            headerUserActions.style.display = 'flex';
-            loadDashboardData();
-        } else {
-            loginSection.style.display = 'flex';
-            dashboardSection.style.display = 'none';
-            headerUserActions.style.display = 'none';
+    function showLogin() {
+        loginSection.style.display = 'flex';
+        dashboardSection.style.display = 'none';
+        headerUserActions.style.display = 'none';
+    }
+
+    function showLoginMessage(message, type = 'error') {
+        loginError.textContent = message;
+        loginError.style.color = type === 'success' ? '#2ecc71' : type === 'info' ? '#a0aabf' : '#ef233c';
+        loginError.style.display = 'block';
+    }
+
+    function getAuthErrorMessage(error) {
+        switch (error.code) {
+            case 'auth/invalid-email':
+                return 'Ingresá un correo electrónico válido.';
+            case 'auth/invalid-credential':
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+                return 'Correo o contraseña incorrectos.';
+            case 'auth/too-many-requests':
+                return 'Hubo demasiados intentos. Esperá un momento y volvé a probar.';
+            case 'auth/network-request-failed':
+                return 'No hay conexión. Revisá internet e intentá de nuevo.';
+            case 'auth/unauthorized-domain':
+                return 'Este dominio aún no está autorizado en Firebase Authentication.';
+            case 'auth/popup-blocked':
+                return 'El navegador bloqueó la ventana de Google. Permití ventanas emergentes e intentá de nuevo.';
+            case 'auth/weak-password':
+                return 'La nueva contraseña no cumple los requisitos de seguridad.';
+            default:
+                return 'No se pudo completar la operación. Revisá la conexión e intentá de nuevo.';
         }
     }
 
-    // --- 2. MANEJO DE LOGIN Y LOGOUT ---
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const user = document.getElementById('login-user').value;
-        const pass = document.getElementById('login-password').value;
+    function handleAuthState(user) {
+        if (!user) {
+            loadedDashboardUserId = null;
+            showLogin();
+            return;
+        }
 
-        const res = window.kingDB.login(user, pass);
-        if (res.success) {
+        loginSection.style.display = 'flex';
+        dashboardSection.style.display = 'none';
+        headerUserActions.style.display = 'none';
+        showLoginMessage('Verificando los permisos de esta cuenta...', 'info');
+
+        window.kingDB.isAuthenticated(user).then(async (authorizedUser) => {
+            if (!authorizedUser) {
+                await window.kingDB.logout();
+                showLoginMessage('Esta cuenta no está habilitada para administrar The King Burger.');
+                return;
+            }
+
             loginError.style.display = 'none';
-            showToast('¡Bienvenida al Panel de Control, Secretaría! 👑');
-            checkAuth();
-        } else {
-            loginError.textContent = res.error;
-            loginError.style.display = 'block';
+            loginSection.style.display = 'none';
+            dashboardSection.style.display = 'block';
+            headerUserActions.style.display = 'flex';
+
+            if (loadedDashboardUserId !== user.uid) {
+                loadedDashboardUserId = user.uid;
+                try {
+                    await loadDashboardData();
+                } catch (error) {
+                    console.error('[Admin] No se pudieron cargar los datos del panel:', error);
+                    showToast('No se pudieron cargar todos los datos. Revisá la conexión.');
+                }
+            }
+        }).catch((error) => {
+            console.error('[Admin] No se pudo verificar la autorización:', error);
+            showLogin();
+            showLoginMessage('No se pudo verificar el acceso. Revisá la conexión e intentá de nuevo.');
+        });
+    }
+
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged(handleAuthState);
+    } else {
+        showLogin();
+        showLoginMessage('Firebase Authentication no está disponible.');
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitButton = loginForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        try {
+            await window.kingDB.login(loginUserInput.value, loginPasswordInput.value);
+            loginError.style.display = 'none';
+        } catch (error) {
+            console.error('[Admin] Error de inicio de sesión:', error);
+            showLoginMessage(getAuthErrorMessage(error));
+        } finally {
+            submitButton.disabled = false;
         }
     });
 
-    logoutBtn.addEventListener('click', () => {
-        window.kingDB.logout();
-        showToast('Sesión cerrada correctamente');
-        checkAuth();
+    googleLoginBtn.addEventListener('click', async () => {
+        googleLoginBtn.disabled = true;
+        try {
+            await window.kingDB.loginWithGoogle();
+            loginError.style.display = 'none';
+        } catch (error) {
+            console.error('[Admin] Error de inicio con Google:', error);
+            showLoginMessage(getAuthErrorMessage(error));
+        } finally {
+            googleLoginBtn.disabled = false;
+        }
+    });
+
+    forgotPasswordBtn.addEventListener('click', async () => {
+        if (!loginUserInput.value.trim() || !loginUserInput.checkValidity()) {
+            loginUserInput.reportValidity();
+            return;
+        }
+
+        forgotPasswordBtn.disabled = true;
+        try {
+            await window.kingDB.sendPasswordResetEmail(loginUserInput.value);
+            showLoginMessage(
+                'Si existe una cuenta para ese correo, recibirás instrucciones para restablecer la contraseña.',
+                'success'
+            );
+        } catch (error) {
+            console.error('[Admin] Error al solicitar recuperación de contraseña:', error);
+            if (['auth/user-not-found', 'auth/invalid-email'].includes(error.code)) {
+                showLoginMessage(
+                    'Si existe una cuenta para ese correo, recibirás instrucciones para restablecer la contraseña.',
+                    'success'
+                );
+            } else {
+                showLoginMessage(getAuthErrorMessage(error));
+            }
+        } finally {
+            forgotPasswordBtn.disabled = false;
+        }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await window.kingDB.logout();
+            showToast('Sesión cerrada correctamente');
+        } catch (error) {
+            console.error('[Admin] No se pudo cerrar la sesión:', error);
+            showToast('No se pudo cerrar la sesión. Intentá de nuevo.');
+        }
     });
 
     // --- 3. NAVEGACIÓN POR PESTAÑAS ---
@@ -200,7 +322,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const best = sorted[0];
             
             if (best) {
-                topProductEl.innerHTML = `${best.productName} <br><span style="font-size:0.8rem; color:var(--text-muted);"><i class="ri-star-fill" style="color:var(--accent-color);"></i> ${best.average.toFixed(1)}/5 (${best.totalVotes} votos)</span>`;
+                const productName = document.createElement('span');
+                productName.textContent = best.productName || 'Producto sin nombre';
+
+                const ratingSummary = document.createElement('span');
+                ratingSummary.style.cssText = 'font-size:0.8rem; color:var(--text-muted);';
+                const starIcon = document.createElement('i');
+                starIcon.className = 'ri-star-fill';
+                starIcon.style.color = 'var(--accent-color)';
+                ratingSummary.append(
+                    starIcon,
+                    document.createTextNode(` ${Number(best.average).toFixed(1)}/5 (${Number(best.totalVotes) || 0} votos)`)
+                );
+
+                topProductEl.replaceChildren(productName, document.createElement('br'), ratingSummary);
             }
         });
 
@@ -226,7 +361,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const tags = { ok: 'OK', warn: 'AVISO', error: 'ERROR', info: 'INFO', action: 'ACCIÓN' };
             const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             const line = document.createElement('div');
-            line.innerHTML = `<span style="color:${colors[type]};">[${tags[type]} ${time}]</span> ${msg}`;
+            const label = document.createElement('span');
+            label.style.color = colors[type] || colors.info;
+            label.textContent = `[${tags[type] || tags.info} ${time}]`;
+            line.append(label, document.createTextNode(` ${String(msg)}`));
             logEl.appendChild(line);
             logEl.scrollTop = logEl.scrollHeight;
         }
@@ -369,29 +507,68 @@ document.addEventListener('DOMContentLoaded', () => {
                     priceDisplay = 'Sin precio';
                 }
 
-                card.innerHTML = `
-                    <img src="${sanitizeImgSrc(product.img)}" alt="${product.name}" class="admin-prod-img" onerror="this.src='img/pan-353---.jpg'">
-                    <div class="admin-prod-info">
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <span class="admin-prod-title">${product.name}</span>
-                            <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 6px; text-transform: uppercase;">${catKey}</span>
-                        </div>
-                        <p class="admin-prod-desc">${product.desc}</p>
-                        <div class="admin-prod-price">${priceDisplay}</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.8rem;">
-                        <button class="stock-toggle-btn ${isAvailable ? 'available' : 'out-of-stock'}" data-cat="${catKey}" data-index="${index}">
-                            <i class="${isAvailable ? 'ri-checkbox-circle-fill' : 'ri-close-circle-fill'}"></i>
-                            ${isAvailable ? 'Disponible' : 'AGOTADO'}
-                        </button>
-                        <button class="btn-action-icon edit-prod-btn" data-cat="${catKey}" data-index="${index}" title="Editar">
-                            <i class="ri-pencil-fill"></i>
-                        </button>
-                        <button class="btn-action-icon delete-prod-btn" data-cat="${catKey}" data-index="${index}" title="Eliminar" style="color: #ef233c;">
-                            <i class="ri-delete-bin-line"></i>
-                        </button>
-                    </div>
-                `;
+                const image = document.createElement('img');
+                image.src = sanitizeImgSrc(product.img);
+                image.alt = String(product.name || '');
+                image.className = 'admin-prod-img';
+                image.addEventListener('error', () => {
+                    image.src = 'img/pan-353---.jpg';
+                }, { once: true });
+
+                const info = document.createElement('div');
+                info.className = 'admin-prod-info';
+                const heading = document.createElement('div');
+                heading.style.cssText = 'display:flex; align-items:center; gap:0.5rem;';
+                const title = document.createElement('span');
+                title.className = 'admin-prod-title';
+                title.textContent = String(product.name || '');
+                const category = document.createElement('span');
+                category.style.cssText = 'font-size:0.75rem; background:rgba(255,255,255,0.1); padding:0.1rem 0.5rem; border-radius:6px; text-transform:uppercase;';
+                category.textContent = catKey;
+                heading.append(title, category);
+
+                const description = document.createElement('p');
+                description.className = 'admin-prod-desc';
+                description.textContent = String(product.desc || '');
+                const price = document.createElement('div');
+                price.className = 'admin-prod-price';
+                price.textContent = priceDisplay;
+                info.append(heading, description, price);
+
+                const actions = document.createElement('div');
+                actions.style.cssText = 'display:flex; align-items:center; gap:0.8rem;';
+                const stockButton = document.createElement('button');
+                stockButton.type = 'button';
+                stockButton.className = `stock-toggle-btn ${isAvailable ? 'available' : 'out-of-stock'}`;
+                stockButton.dataset.cat = catKey;
+                stockButton.dataset.index = index;
+                const stockIcon = document.createElement('i');
+                stockIcon.className = isAvailable ? 'ri-checkbox-circle-fill' : 'ri-close-circle-fill';
+                stockButton.append(stockIcon, document.createTextNode(isAvailable ? 'Disponible' : 'AGOTADO'));
+
+                const editButton = document.createElement('button');
+                editButton.type = 'button';
+                editButton.className = 'btn-action-icon edit-prod-btn';
+                editButton.dataset.cat = catKey;
+                editButton.dataset.index = index;
+                editButton.title = 'Editar';
+                const editIcon = document.createElement('i');
+                editIcon.className = 'ri-pencil-fill';
+                editButton.append(editIcon);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'btn-action-icon delete-prod-btn';
+                deleteButton.dataset.cat = catKey;
+                deleteButton.dataset.index = index;
+                deleteButton.title = 'Eliminar';
+                deleteButton.style.color = '#ef233c';
+                const deleteIcon = document.createElement('i');
+                deleteIcon.className = 'ri-delete-bin-line';
+                deleteButton.append(deleteIcon);
+
+                actions.append(stockButton, editButton, deleteButton);
+                card.append(image, info, actions);
                 adminProductsList.appendChild(card);
             });
         }
@@ -549,6 +726,12 @@ document.addEventListener('DOMContentLoaded', () => {
             promoBarText: bannerPromoText.value.trim()
         };
 
+        bannerData.phoneWhatsApp = bannerData.phoneWhatsApp.replace(/\D/g, '');
+        if (!/^\d{8,15}$/.test(bannerData.phoneWhatsApp)) {
+            showToast('Ingresá un número de WhatsApp válido, con código de país.');
+            return;
+        }
+
         const res = await window.kingDB.saveBannersAsync(bannerData);
         if (res.success) {
             showToast('✅ Banners actualizados en theking.sbs');
@@ -558,18 +741,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 8. SEGURIDAD Y RESPALDOS ---
-    changePassForm.addEventListener('submit', (e) => {
+    changePassForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const oldP = passOld.value;
         const newP = passNew.value;
 
-        const res = window.kingDB.changePassword(oldP, newP);
-        if (res.success) {
+        try {
+            await window.kingDB.changePassword(oldP, newP);
             showToast('✅ Contraseña cambiada con éxito');
             passOld.value = '';
             passNew.value = '';
-        } else {
-            showToast('❌ ' + res.error);
+        } catch (error) {
+            console.error('[Admin] No se pudo cambiar la contraseña:', error);
+            const message = ['auth/invalid-credential', 'auth/wrong-password'].includes(error.code)
+                ? 'La contraseña actual no es correcta.'
+                : getAuthErrorMessage(error);
+            showToast('❌ ' + message);
         }
     });
 
@@ -599,12 +786,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sanitiza el src de imagen: si es SVG/base64 o contiene comillas devuelve el fallback seguro
     function sanitizeImgSrc(imgValue) {
         if (!imgValue) return 'img/pan-353---.jpg';
-        const s = String(imgValue);
-        // Si es un data URI (SVG/PNG base64) o contiene comillas (rompería HTML) usar fallback
-        if (s.startsWith('data:') || s.includes('"') || s.includes("'") || s.length > 300) {
+        const s = String(imgValue).trim();
+        if (s.includes('"') || s.includes("'") || s.length > 300) {
             return 'img/pan-353---.jpg';
         }
-        return s;
+
+        try {
+            const imageUrl = new URL(s, window.location.origin);
+            return imageUrl.origin === window.location.origin || imageUrl.protocol === 'https:'
+                ? s
+                : 'img/pan-353---.jpg';
+        } catch (error) {
+            return 'img/pan-353---.jpg';
+        }
     }
 
     async function saveAndUpdateState(message) {
@@ -665,20 +859,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 participantes.forEach(p => {
                     const el = document.createElement('div');
                     el.style = "padding: 1rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;";
-                    el.innerHTML = `
-                        <strong style="color: #fff;">${p.nombre}</strong>
-                        <span style="color: var(--text-muted); font-size: 0.9rem;"><i class="ri-whatsapp-line"></i> ${p.telefono}</span>
-                    `;
+                    const name = document.createElement('strong');
+                    name.style.color = '#fff';
+                    name.textContent = String(p.nombre || 'Sin nombre');
+
+                    const phone = document.createElement('span');
+                    phone.style.cssText = 'color:var(--text-muted); font-size:0.9rem;';
+                    const phoneIcon = document.createElement('i');
+                    phoneIcon.className = 'ri-whatsapp-line';
+                    phone.append(phoneIcon, document.createTextNode(` ${String(p.telefono || '')}`));
+
+                    el.append(name, phone);
                     listParticipantes.appendChild(el);
                 });
             }
         });
 
         btnSaveConfig.addEventListener('click', async () => {
-            await window.kingDB.saveSorteoConfig({
+            const result = await window.kingDB.saveSorteoConfig({
                 active: activeSorteo.checked,
                 premio: premioSorteo.value
             });
+            if (!result.success) {
+                console.error('[Admin] No se pudo guardar la configuración del sorteo:', result.error);
+                showToast('No se pudo guardar la configuración del sorteo.');
+                return;
+            }
             showToast('Configuración del sorteo guardada');
         });
 
@@ -691,11 +897,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const winnerIndex = Math.floor(Math.random() * currentParticipants.length);
                 const winner = currentParticipants[winnerIndex];
                 
-                await window.kingDB.saveSorteoConfig({
-                    ganador: winner,
+                const result = await window.kingDB.saveSorteoConfig({
+                    ganador: { nombre: String(winner.nombre || 'Sin nombre') },
                     active: true,
                     premio: premioSorteo.value
                 });
+                if (!result.success) {
+                    console.error('[Admin] No se pudo guardar el ganador:', result.error);
+                    showToast('No se pudo guardar el ganador.');
+                    return;
+                }
 
                 badgeWinner.style.display = 'block';
                 badgeWinner.textContent = `🏆 Ganador: ${winner.nombre}`;
@@ -707,7 +918,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         btnReset.addEventListener('click', async () => {
             if (confirm('⚠️ Esto ELIMINARÁ todos los participantes actuales para iniciar un nuevo sorteo. ¿Proceder?')) {
-                await window.kingDB.clearSorteoParticipantes();
+                const result = await window.kingDB.clearSorteoParticipantes();
+                if (!result.success) {
+                    console.error('[Admin] No se pudieron limpiar los participantes:', result.error);
+                    showToast('No se pudieron limpiar los participantes.');
+                    return;
+                }
                 badgeWinner.style.display = 'none';
                 showToast('Participantes eliminados. Nuevo sorteo listo.');
             }

@@ -30,14 +30,8 @@ try {
 }
 
 const KING_ADMIN_CONFIG = {
-    STORAGE_KEY_AUTH: 'king_admin_session',
-    STORAGE_KEY_PASS: 'king_admin_password_hash',
-    STORAGE_KEY_PRODUCTS: 'king_live_products_v1',   // constante faltante — CORREGIDA
-    STORAGE_KEY_BANNERS: 'king_live_banners_v1',      // constante faltante — CORREGIDA
-
-    // Credenciales predeterminadas iniciales (Secretaría)
-    DEFAULT_USER: 'secretaria@orbe.local',
-    DEFAULT_PASS_PLAIN: 'King2026!'
+    STORAGE_KEY_PRODUCTS: 'king_live_products_v1',
+    STORAGE_KEY_BANNERS: 'king_live_banners_v1'
 };
 
 // BroadcastChannel para sincronización entre pestañas del mismo dominio
@@ -79,6 +73,7 @@ class KingDatabaseEngine {
             } catch (e) {
                 console.warn('[Verix Engine] initialLoadProducts: usando datos estáticos como fallback', e);
             }
+        }
 
         // Intentar desde localStorage como segundo fallback
         try {
@@ -104,13 +99,14 @@ class KingDatabaseEngine {
                 const doc = await this.db.collection('config').doc('banners').get();
                 if (doc.exists) {
                     const data = doc.data();
-                this.localBanners = data;
-                if (data.phoneWhatsApp) this._phoneWhatsApp = data.phoneWhatsApp;
-                localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_BANNERS, JSON.stringify(data));
-                return data;
+                    this.localBanners = data;
+                    if (data.phoneWhatsApp) this._phoneWhatsApp = data.phoneWhatsApp;
+                    localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_BANNERS, JSON.stringify(data));
+                    return data;
+                }
+            } catch (e) {
+                console.warn('[Verix Engine] initialLoadBanners: usando fallback', e);
             }
-        } catch (e) {
-            console.warn('[Verix Engine] initialLoadBanners: usando fallback', e);
         }
 
         // Intentar desde localStorage
@@ -299,24 +295,60 @@ class KingDatabaseEngine {
      */
     listenSorteoParticipantes(callback) {
         if (!this.db) { callback([]); return null; }
-        return this.db.collection('sorteo_participantes').onSnapshot((snapshot) => {
-            const participantes = [];
-            snapshot.forEach(doc => {
-                participantes.push({ id: doc.id, ...doc.data() });
-            });
-            callback(participantes);
-        });
+        let legacyParticipants = [];
+        let currentParticipants = [];
+        const notify = () => callback([...legacyParticipants, ...currentParticipants]);
+        const readParticipants = (snapshot) => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        const unsubscribeLegacy = this.db.collection('sorteo_participantes').onSnapshot(
+            snapshot => {
+                legacyParticipants = readParticipants(snapshot);
+                notify();
+            },
+            error => console.error('[Verix Engine] No se pudieron leer participantes anteriores:', error)
+        );
+        const unsubscribeCurrent = this.db.collection('sorteo_contactos').onSnapshot(
+            snapshot => {
+                currentParticipants = readParticipants(snapshot);
+                notify();
+            },
+            error => console.error('[Verix Engine] No se pudieron leer contactos del sorteo:', error)
+        );
+
+        return () => {
+            unsubscribeLegacy();
+            unsubscribeCurrent();
+        };
+    }
+
+    listenSorteoCount(callback) {
+        if (!this.db) { callback(0); return null; }
+        return this.db.collection('sorteo_publico').doc('estado').onSnapshot(
+            snapshot => callback(snapshot.exists ? Number(snapshot.data().total) || 0 : 0),
+            error => console.error('[Verix Engine] No se pudo leer el contador publico del sorteo:', error)
+        );
     }
 
     async clearSorteoParticipantes() {
         try {
             if (this.db) {
-                const snapshot = await this.db.collection('sorteo_participantes').get();
-                const batch = this.db.batch();
-                snapshot.docs.forEach((doc) => {
-                    batch.delete(doc.ref);
+                const snapshots = await Promise.all([
+                    this.db.collection('sorteo_participantes').get(),
+                    this.db.collection('sorteo_contactos').get()
+                ]);
+                const docs = snapshots.flatMap(snapshot => snapshot.docs);
+
+                for (let index = 0; index < docs.length; index += 400) {
+                    const batch = this.db.batch();
+                    docs.slice(index, index + 400).forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+                }
+
+                await this.db.collection('sorteo_publico').doc('estado').set({
+                    total: 0,
+                    lastParticipantId: '',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                await batch.commit();
                 await this.db.collection('config').doc('sorteo').set({ ganador: null }, { merge: true });
             }
             return { success: true };
@@ -325,49 +357,66 @@ class KingDatabaseEngine {
         }
     }
 
-    /**
-     * Autenticación básica local de la secretaria
-     */
-    login(user, password) {
-        const cleanUser = user.trim().toLowerCase();
-        const customPass = localStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_PASS) || KING_ADMIN_CONFIG.DEFAULT_PASS_PLAIN;
-        const masterPass = KING_ADMIN_CONFIG.DEFAULT_PASS_PLAIN;
-
-        if ((cleanUser === 'secretaria@orbe.local' || cleanUser === 'admin@orbe.local' || cleanUser === 'secretaria' || cleanUser === 'admin') && (password === customPass || password === masterPass)) {
-            const session = {
-                user: cleanUser,
-                token: 'king_sec_token_' + Math.random().toString(36).substring(2),
-                loginTime: Date.now()
-            };
-            sessionStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_AUTH, JSON.stringify(session));
-            return { success: true, session };
+    async login(email, password) {
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            throw new Error('Firebase Authentication no está disponible.');
         }
-        return { success: false, error: 'Usuario o contraseña incorrectos.' };
+        return firebase.auth().signInWithEmailAndPassword(email.trim(), password);
     }
 
-    isAuthenticated() {
-        try {
-            const session = JSON.parse(sessionStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_AUTH));
-            return session && session.token ? session : false;
-        } catch (e) {
-            return false;
+    async loginWithGoogle() {
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            throw new Error('Firebase Authentication no está disponible.');
         }
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            return await firebase.auth().signInWithPopup(provider);
+        } catch (error) {
+            if (['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
+                .includes(error.code)) {
+                return firebase.auth().signInWithRedirect(provider);
+            }
+            throw error;
+        }
+    }
+
+    async sendPasswordResetEmail(email) {
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            throw new Error('Firebase Authentication no está disponible.');
+        }
+        return firebase.auth().sendPasswordResetEmail(email.trim());
+    }
+
+    async isAuthenticated(user = firebase.auth().currentUser) {
+        if (!user || !this.db) return false;
+
+        const access = await this.db.collection('adminUsers').doc(user.uid).get();
+        if (!access.exists) return false;
+
+        const profile = access.data();
+        return profile.active === true && ['owner', 'secretary'].includes(profile.role) ? user : false;
     }
 
     logout() {
-        sessionStorage.removeItem(KING_ADMIN_CONFIG.STORAGE_KEY_AUTH);
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            throw new Error('Firebase Authentication no está disponible.');
+        }
+        return firebase.auth().signOut();
     }
 
-    changePassword(oldPass, newPass) {
-        const currentPass = localStorage.getItem(KING_ADMIN_CONFIG.STORAGE_KEY_PASS) || KING_ADMIN_CONFIG.DEFAULT_PASS_PLAIN;
-        if (oldPass !== currentPass) {
-            return { success: false, error: 'La contraseña actual no es correcta.' };
+    async changePassword(currentPassword, newPassword) {
+        const user = firebase.auth().currentUser;
+        if (!user || !user.email) {
+            throw new Error('No hay una sesión de correo válida.');
         }
-        if (!newPass || newPass.length < 6) {
-            return { success: false, error: 'La nueva contraseña debe tener al menos 6 caracteres.' };
+        if (!newPassword || newPassword.length < 8) {
+            throw new Error('La nueva contraseña debe tener al menos 8 caracteres.');
         }
-        localStorage.setItem(KING_ADMIN_CONFIG.STORAGE_KEY_PASS, newPass);
-        return { success: true, message: 'Contraseña cambiada exitosamente.' };
+
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+        await user.reauthenticateWithCredential(credential);
+        await user.updatePassword(newPassword);
     }
 
     /**
@@ -464,4 +513,3 @@ class KingDatabaseEngine {
 
 // Instancia global
 window.kingDB = new KingDatabaseEngine();
-

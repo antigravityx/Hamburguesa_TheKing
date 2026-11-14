@@ -2152,3 +2152,40 @@ iframe[src*="netlify"] {
         max-width: 480px;
     }
 }
+
+/* =========================================================
+   👑 ACCESO DIRECTO AL MAPA DEL REINO (HEADER)
+   ========================================================= */
+.header-reino-btn {
+    background: linear-gradient(135deg, rgba(255, 183, 3, 0.18), rgba(20, 22, 35, 0.9));
+    border: 1px solid rgba(255, 183, 3, 0.5);
+    color: #ffb703;
+    border-radius: 20px;
+    padding: 5px 11px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 10px rgba(255, 183, 3, 0.18);
+}
+
+.header-reino-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 183, 3, 0.35), rgba(30, 35, 60, 0.98));
+    border-color: #ffd700;
+    transform: translateY(-2px);
+    box-shadow: 0 0 16px rgba(255, 215, 0, 0.45);
+    color: #fff;
+}
+
+@media (max-width: 400px) {
+    .header-reino-btn {
+        padding: 5px 8px;
+    }
+    .header-reino-text {
+        display: none;
+    }
+}

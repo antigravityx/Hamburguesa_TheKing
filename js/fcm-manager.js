@@ -126,21 +126,21 @@
                     userName: currentUser ? currentUser.displayName : 'Visitante'
                 };
 
-                // Guardar en la colección global de tokens
-                await db.collection('fcm_subscribers').doc(tokenHash).set(tokenData, { merge: true });
+                const hasAdminAccess = currentUser && window.kingDB
+                    ? await window.kingDB.isAuthenticated(currentUser)
+                    : false;
 
-                // Si es el admin / email de la dueña, o sesión de admin activa, guardar en admin_tokens
-                const isAdminEmail = currentUser && currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-                const hasAdminSession = sessionStorage.getItem('king_admin_session');
-
-                if (isAdminEmail || hasAdminSession) {
+                if (hasAdminAccess) {
                     await db.collection('admin_fcm_tokens').doc(tokenHash).set({
                         ...tokenData,
                         role: 'admin',
-                        emailAlert: ADMIN_EMAIL
+                        emailAlert: currentUser.email || ''
                     }, { merge: true });
                     console.log('[KingFCM] Dispositivo registrado como Administrador para alertas de pedidos.');
                 }
+
+                // Guardar en la colección global de tokens
+                await db.collection('fcm_subscribers').doc(tokenHash).set(tokenData, { merge: true });
 
                 // Si hay usuario logueado, actualizar en su documento de usuario
                 if (currentUser) {

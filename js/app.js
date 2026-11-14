@@ -247,6 +247,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 customerAddress.value = friendlyAddr;
                 updateMapPreview(lat, lon, `GPS Sincronizado (${km.toFixed(1)} km)`);
                 showToast(`✅ GPS sincronizado · Envío: $${priceByKm(km).toLocaleString('es-AR')}`);
+
+                // 🏰 Guardado automático de Palacio Real (Google / WhatsApp / Local)
+                if (typeof window.saveKingPalacioReal === 'function') {
+                    window.saveKingPalacioReal(friendlyAddr);
+                }
             },
             (error) => {
                 if (gpsBtn) {
@@ -418,6 +423,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Método 2: OpenStreetMap geocoding para calcular envío y ubicar mapa
             await tryOsmGeocoding(direccion);
 
+            // 🏰 Guardado automático de Palacio Real si el usuario está autenticado
+            if (typeof window.saveKingPalacioReal === 'function') {
+                window.saveKingPalacioReal(direccion);
+            }
+
             // Si OSM no obtuvo coordenadas exactas pero hay texto, mostrar mapa general de Corrientes
             if (!currentLat && mapPreviewContainer) {
                 mapPreviewContainer.style.display = 'block';
@@ -426,6 +436,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         }, 800);
+    });
+
+    // 🏰 Guardar Palacio Real inmediatamente al salir del campo o cambiarlo
+    customerAddress.addEventListener('change', () => {
+        const direccion = customerAddress.value.trim();
+        if (direccion.length >= 4 && typeof window.saveKingPalacioReal === 'function') {
+            window.saveKingPalacioReal(direccion);
+        }
     });
 
     // --- NAVEGACIÓN Y RENDERIZADO ---
@@ -691,7 +709,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- LÓGICA DEL CARRITO ---
-    cartToggle.addEventListener('click', () => cartModal.classList.add('open'));
+    cartToggle.addEventListener('click', () => {
+        cartModal.classList.add('open');
+        if (typeof window.syncCheckoutFields === 'function') {
+            window.syncCheckoutFields();
+        }
+    });
     closeCartBtn.addEventListener('click', () => cartModal.classList.remove('open'));
 
     function addToCart(product) {
@@ -916,6 +939,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (deliveryType === 'Delivery' && !address) {
             showToast('¡Por favor completa tu Dirección de Envío!'); return;
         }
+
+        // 🏰 Respaldar / Guardar Palacio Real al confirmar pedido
+        if (deliveryType === 'Delivery' && address && typeof window.saveKingPalacioReal === 'function') {
+            window.saveKingPalacioReal(address);
+        }
         if (deliveryType === 'Delivery' && deliveryCost === 0) {
             showToast('⚠️ Seleccioná tu zona de envío para calcular el costo total');
             showZoneSelector(true);
@@ -985,6 +1013,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const url = `https://wa.me/${phoneWhatsApp}?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
+
+        // ⚔️ COLISEO DEL REY — Mostrar banner post-pedido
+        setTimeout(() => {
+            if (window.ColiseoRey && typeof window.ColiseoRey.mostrarBannerColiseo === 'function') {
+                window.ColiseoRey.mostrarBannerColiseo();
+            }
+        }, 1500);
 
         let completedOrders = parseInt(localStorage.getItem('king_completed_orders') || '0');
         localStorage.setItem('king_completed_orders', (completedOrders + 1).toString());
@@ -1318,6 +1353,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         prizeLine.append(document.createTextNode('Premio: '), prizeLabel);
         toastSorteo.replaceChildren(headline, winnerLine, prizeLine);
         toastSorteo.style.display = 'block';
+    }
+
+    // 🏰 Sincronizar Palacio Real guardado en el checkout si está disponible
+    if (typeof window.syncCheckoutFields === 'function') {
+        window.syncCheckoutFields();
     }
 
 });

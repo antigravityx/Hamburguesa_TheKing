@@ -61,26 +61,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
             const fbUser = firebase.auth().currentUser;
             const local = getClientSession() || {};
+            const userAddr = local.address || local.palacioReal || '';
             return {
                 uid: fbUser.uid,
                 name: fbUser.displayName || local.name || 'Rey/Reina',
                 email: fbUser.email || '',
                 phone: local.phone || '',
-                address: local.address || '',
+                address: userAddr,
+                palacioReal: userAddr,
                 photo: fbUser.photoURL || '',
                 coronas: local.coronas || 10,
                 isFirebase: true
             };
         }
         const local = getClientSession();
-        if (local && local.name) {
+        if (local && (local.name || local.phone || local.uid)) {
+            const userAddr = local.address || local.palacioReal || '';
             return {
                 uid: local.uid || 'local_' + Date.now(),
-                name: local.name,
-                email: '',
+                name: local.name || 'Rey/Reina',
+                email: local.email || '',
                 phone: local.phone || '',
-                address: local.address || '',
-                photo: '',
+                address: userAddr,
+                palacioReal: userAddr,
+                photo: local.photo || '',
                 coronas: local.coronas || 10,
                 isFirebase: false
             };
@@ -88,16 +92,106 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     }
 
+    // Distintivo visual sutil y amigable de Palacio Real
+    function renderPalacioRealBadge(address) {
+        let badge = document.getElementById('palacio-real-badge');
+        if (!badge) {
+            const container = document.getElementById('delivery-details-container');
+            if (container) {
+                badge = document.createElement('div');
+                badge.id = 'palacio-real-badge';
+                badge.style.cssText = `
+                    display: none; align-items: center; gap: 6px; font-size: 0.78rem;
+                    color: #ffb703; background: rgba(255, 183, 3, 0.08);
+                    border: 1px dashed rgba(255, 183, 3, 0.35); border-radius: 8px;
+                    padding: 6px 10px; margin-bottom: 0.6rem; animation: fadeIn 0.3s ease-out;
+                `;
+                const addressRow = document.getElementById('customer-address')?.parentElement;
+                if (addressRow && addressRow.nextSibling) {
+                    container.insertBefore(badge, addressRow.nextSibling);
+                } else {
+                    container.appendChild(badge);
+                }
+            }
+        }
+        if (!badge) return;
+
+        if (address && String(address).trim().length >= 3) {
+            badge.innerHTML = `<span>🏰</span> <span>Tu Palacio Real guardado <span style="color: #bbb; font-weight: normal;">(podés cambiarlo si estás en otra dirección)</span></span>`;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    // Guardar / Actualizar Palacio Real (dirección) para cualquier usuario autenticado o local
+    async function saveKingPalacioReal(address) {
+        if (!address || typeof address !== 'string') return;
+        const cleanAddr = address.trim();
+        if (cleanAddr.length < 3) return;
+
+        // 1. Guardar siempre en localStorage como respaldo general
+        try {
+            localStorage.setItem('king_customer_address', cleanAddr);
+        } catch (e) {}
+
+        // 2. Actualizar sesión local si existe usuario
+        const local = getClientSession() || {};
+        local.address = cleanAddr;
+        local.palacioReal = cleanAddr;
+        local.lastAddressUpdate = new Date().toISOString();
+        setClientSession(local);
+
+        // Mostrar distintivo visual en checkout
+        renderPalacioRealBadge(cleanAddr);
+
+        // 3. Si el usuario está autenticado en Firebase o Firestore disponible
+        const currentUser = getCurrentKingUser();
+        const uid = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) 
+            ? firebase.auth().currentUser.uid 
+            : (local.uid || (currentUser ? currentUser.uid : null));
+
+        if (uid && typeof firebase !== 'undefined' && firebase.firestore) {
+            try {
+                await firebase.firestore().collection('users').doc(uid).set({
+                    address: cleanAddr,
+                    palacioReal: cleanAddr,
+                    lastAddressUpdate: new Date().toISOString()
+                }, { merge: true });
+                console.log('[Auth] 🏰 Palacio Real guardado en Firestore para uid:', uid);
+            } catch (err) {
+                console.warn('[Auth] Error guardando Palacio Real en Firestore:', err);
+            }
+        }
+    }
+
     // Actualizar campos de checkout automáticamente
     function syncCheckoutFields(user) {
-        if (!user) return;
+        const currentUser = user || getCurrentKingUser();
         const nameInput = document.getElementById('customer-name');
         const addressInput = document.getElementById('customer-address');
-        if (nameInput && !nameInput.value && user.name) {
-            nameInput.value = user.name;
-        }
-        if (addressInput && !addressInput.value && user.address) {
-            addressInput.value = user.address;
+
+        if (currentUser) {
+            if (nameInput && !nameInput.value && currentUser.name) {
+                nameInput.value = currentUser.name;
+            }
+            const savedAddress = currentUser.address || currentUser.palacioReal;
+            if (savedAddress) {
+                if (addressInput && !addressInput.value) {
+                    addressInput.value = savedAddress;
+                    addressInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                renderPalacioRealBadge(savedAddress);
+            }
+        } else {
+            try {
+                const fallbackAddress = localStorage.getItem('king_customer_address') || localStorage.getItem('customer_address');
+                if (fallbackAddress && addressInput && !addressInput.value) {
+                    addressInput.value = fallbackAddress;
+                    addressInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    renderPalacioRealBadge(fallbackAddress);
+                }
+            } catch (e) {}
         }
     }
 
@@ -238,11 +332,23 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const name = document.getElementById('quick-auth-name')?.value.trim();
             const phone = document.getElementById('quick-auth-phone')?.value.trim();
-            const address = document.getElementById('quick-auth-address')?.value.trim() || '';
+            let address = document.getElementById('quick-auth-address')?.value.trim() || '';
 
             if (!name || !phone) {
                 alert('Por favor completá tu nombre y número de WhatsApp.');
                 return;
+            }
+
+            // Si el cliente no puso dirección en el modal, asociar la del checkout o localStorage
+            if (!address) {
+                const checkoutAddrInput = document.getElementById('customer-address');
+                if (checkoutAddrInput && checkoutAddrInput.value.trim().length >= 3) {
+                    address = checkoutAddrInput.value.trim();
+                } else {
+                    try {
+                        address = localStorage.getItem('king_customer_address') || localStorage.getItem('customer_address') || '';
+                    } catch (e) {}
+                }
             }
 
             const submitBtn = document.getElementById('btn-submit-quick-auth');
@@ -258,10 +364,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: name,
                 phone: phone,
                 address: address,
+                palacioReal: address,
                 coronas: 10,
                 authMethod: 'whatsapp',
                 registeredAt: new Date().toISOString()
             };
+            if (address) {
+                sessionData.lastAddressUpdate = new Date().toISOString();
+                try { localStorage.setItem('king_customer_address', address); } catch (e) {}
+            }
 
             setClientSession(sessionData);
 
@@ -283,15 +394,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof firebase !== 'undefined' && firebase.firestore) {
                 try {
                     const docId = (firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser.uid : uid;
-                    await firebase.firestore().collection('users').doc(docId).set({
+                    const fsPayload = {
                         uid: docId,
                         name: name,
                         phone: phone,
                         address: address,
+                        palacioReal: address,
                         coronas: 10,
                         authMethod: 'whatsapp',
                         lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
+                    };
+                    if (address) {
+                        fsPayload.lastAddressUpdate = new Date().toISOString();
+                    }
+                    await firebase.firestore().collection('users').doc(docId).set(fsPayload, { merge: true });
                     console.log('[Auth] ✅ Perfil sincronizado en Firestore:', docId);
                 } catch (fsErr) {
                     console.warn('[Auth] Firestore no disponible temporalmente:', fsErr);
@@ -352,6 +468,36 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleGoogleUserSuccess(user) {
         if (!user) return;
         const local = getClientSession() || {};
+
+        // 🏰 Si el usuario no tiene domicilio guardado, buscar en checkout, localStorage o Firestore
+        let savedAddress = local.address || local.palacioReal || '';
+        if (!savedAddress) {
+            const checkoutAddrInput = document.getElementById('customer-address');
+            if (checkoutAddrInput && checkoutAddrInput.value.trim().length >= 3) {
+                savedAddress = checkoutAddrInput.value.trim();
+            } else {
+                try {
+                    savedAddress = localStorage.getItem('king_customer_address') || 
+                                   localStorage.getItem('customer_address') || '';
+                } catch (e) {}
+            }
+        }
+
+        // Si aún no hay domicilio en local, verificar en Firestore si ya existía en su cuenta
+        if (!savedAddress && typeof firebase !== 'undefined' && firebase.firestore) {
+            try {
+                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    if (data && (data.palacioReal || data.address)) {
+                        savedAddress = data.palacioReal || data.address;
+                    }
+                }
+            } catch (fsErr) {
+                console.log('[Auth] Consulta previa Firestore:', fsErr);
+            }
+        }
+
         const merged = {
             ...local,
             uid: user.uid,
@@ -359,13 +505,19 @@ document.addEventListener('DOMContentLoaded', () => {
             email: user.email || '',
             photo: user.photoURL || '',
             coronas: (local.coronas || 10),
+            address: savedAddress,
+            palacioReal: savedAddress,
             authMethod: 'google'
         };
+        if (savedAddress) {
+            merged.lastAddressUpdate = new Date().toISOString();
+            try { localStorage.setItem('king_customer_address', savedAddress); } catch (e) {}
+        }
         setClientSession(merged);
 
         if (typeof firebase !== 'undefined' && firebase.firestore) {
             try {
-                await firebase.firestore().collection('users').doc(user.uid).set({
+                const fsPayload = {
                     uid: user.uid,
                     name: merged.name,
                     email: merged.email,
@@ -373,7 +525,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     coronas: merged.coronas,
                     authMethod: 'google',
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                };
+                if (savedAddress) {
+                    fsPayload.address = savedAddress;
+                    fsPayload.palacioReal = savedAddress;
+                    fsPayload.lastAddressUpdate = new Date().toISOString();
+                }
+                await firebase.firestore().collection('users').doc(user.uid).set(fsPayload, { merge: true });
+                console.log('[Auth] ✅ Perfil Google sincronizado en Firestore con Palacio Real:', savedAddress || '(sin dirección)');
             } catch (fsErr) {
                 console.warn('[Auth] Error guardando perfil en Firestore:', fsErr);
             }
@@ -441,19 +600,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === MENÚ DE USUARIO AUTENTICADO ===
     function showUserMenu(user) {
-        const existing = document.getElementById('king-user-menu');
+        const existing = document.getElementById('king-user-dropdown') || document.getElementById('king-user-menu');
         if (existing) { existing.remove(); return; }
 
         const menu = document.createElement('div');
-        menu.id = 'king-user-menu';
+        menu.id = 'king-user-dropdown';
+        menu.className = 'king-user-dropdown';
         menu.style.cssText = `
             position: fixed; top: 60px; right: 15px; z-index: 10000;
             background: rgba(20, 22, 35, 0.98); backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 183, 3, 0.35); border-radius: 16px;
-            padding: 1.2rem; min-width: 250px;
+            padding: 1.2rem; min-width: 270px; max-width: 330px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.75);
             animation: fadeInMenu 0.2s ease-out;
         `;
+
+        const castilloBadgeHTML = (typeof window.ReinoCastillos !== 'undefined' && window.ReinoCastillos.getCastilloBadgeHTML)
+            ? window.ReinoCastillos.getCastilloBadgeHTML(user)
+            : '';
 
         menu.innerHTML = `
             <style>
@@ -469,6 +633,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${user.phone ? `<div style="font-size: 0.72rem; color: #888;">📱 ${user.phone}</div>` : ''}
                 </div>
             </div>
+            ${castilloBadgeHTML}
+            <div class="king-menu-item" id="king-menu-reino">
+                <span>🏰</span> <span>Mapa del Reino & Mi Castillo</span>
+            </div>
             <div class="king-menu-item" id="king-menu-edit">
                 <span>✏️</span> <span>Modificar mis datos</span>
             </div>
@@ -481,6 +649,16 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         document.body.appendChild(menu);
+
+        const reinoItem = document.getElementById('king-menu-reino');
+        if (reinoItem) {
+            reinoItem.addEventListener('click', () => {
+                menu.remove();
+                if (typeof window.ReinoCastillos !== 'undefined') {
+                    window.ReinoCastillos.openReinoModal('mapa');
+                }
+            });
+        }
 
         document.getElementById('king-menu-edit').addEventListener('click', () => {
             menu.remove();
@@ -509,6 +687,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, 100);
     }
+
+    // Exponer API global de autenticación y Palacio Real
+    window.KingAuth = {
+        getClientSession,
+        setClientSession,
+        clearClientSession,
+        getCurrentKingUser,
+        saveKingPalacioReal,
+        renderPalacioRealBadge,
+        syncCheckoutFields,
+        updateAuthUI,
+        openAuthModal,
+        closeAuthModal
+    };
+    window.saveKingPalacioReal = saveKingPalacioReal;
+    window.getCurrentKingUser = getCurrentKingUser;
+    window.renderPalacioRealBadge = renderPalacioRealBadge;
+    window.syncCheckoutFields = syncCheckoutFields;
 
     // Inicializar UI al cargar
     updateAuthUI();
